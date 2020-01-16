@@ -1,0 +1,5 @@
+terrview/
+projects/*
+
+!projects/terrview.vcxproj
+!projects/terrview.vcxproj.filters
