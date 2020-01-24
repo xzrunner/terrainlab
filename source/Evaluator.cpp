@@ -1,0 +1,208 @@
+#include "terrview/Evaluator.h"
+#include "terrview/TerrAdapter.h"
+#include "terrview/Node.h"
+#include "terrview/ModelAdapter.h"
+
+#include <blueprint/Node.h>
+#include <blueprint/Pin.h>
+#include <blueprint/Connecting.h>
+#include <blueprint/CompNode.h>
+
+#include <node0/SceneNode.h>
+#include <node0/CompComplex.h>
+#include <node3/CompModel.h>
+#include <terr/Device.h>
+#include <terr/Evaluator.h>
+#include <ns/NodeFactory.h>
+
+#include <queue>
+
+namespace terrv
+{
+
+Evaluator::Evaluator()
+{
+}
+
+void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, bool need_update)
+{
+    auto back = TerrAdapter::CreateBackFromFront(front);
+    if (!back) {
+        return;
+    }
+
+    m_eval.AddDevice(back);
+
+    m_front2back.insert({ &front, back });
+
+    auto scene = ns::NodeFactory::Create3D();
+    ModelAdapter::SetupModel(*scene);
+    m_front2scene.insert({ &front, scene });
+
+    if (front.get_type().is_derived_from<Node>()) {
+        const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
+    }
+
+    TerrAdapter::UpdatePropBackFromFront(front, *back, *this);
+    if (need_update) {
+        Update();
+    }
+}
+
+void Evaluator::OnRemoveNode(const bp::Node& node)
+{
+    auto itr = m_front2back.find(&node);
+    if (itr == m_front2back.end()) {
+        return;
+    }
+
+    m_eval.RemoveDevice(itr->second);
+    m_front2back.erase(itr);
+    m_front2scene.erase(&node);
+
+    Update();
+}
+
+void Evaluator::OnClearAllNodes()
+{
+    m_eval.ClearAllDevices();
+    m_front2back.clear();
+    m_front2scene.clear();
+
+    Update();
+}
+
+void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
+{
+    auto itr = m_front2back.find(node.get());
+    // not terr node
+    if (itr == m_front2back.end()) {
+        return;
+    }
+
+    TerrAdapter::UpdatePropBackFromFront(*node, *itr->second, *this);
+
+    if (node->get_type().is_derived_from<Node>())
+    {
+        auto& terrv_n = std::static_pointer_cast<Node>(node);
+        if (terrv_n->GetName() != itr->second->GetName()) {
+            //m_eval.Rename(itr->second->GetName(), terrv_n->GetName());
+            if (itr->second->GetName() != terrv_n->GetName()) {
+                terrv_n->SetName(itr->second->GetName());
+            }
+        }
+    }
+
+    //m_eval.MakeDirty();
+
+    Update();
+}
+
+void Evaluator::OnConnected(const bp::Connecting& conn)
+{
+    auto f_pin = conn.GetFrom();
+    auto t_pin = conn.GetTo();
+
+    auto f_itr = m_front2back.find(&f_pin->GetParent());
+    auto t_itr = m_front2back.find(&t_pin->GetParent());
+    if (f_itr == m_front2back.end() || t_itr == m_front2back.end()) {
+        return;
+    }
+
+    //if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
+    //    t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
+    //}
+
+    m_eval.Connect(
+        { f_itr->second, f_pin->GetPosIdx() },
+        { t_itr->second, t_pin->GetPosIdx() }
+    );
+
+    Update();
+}
+
+void Evaluator::OnDisconnecting(const bp::Connecting& conn)
+{
+    auto f_pin = conn.GetFrom();
+    auto t_pin = conn.GetTo();
+
+    auto f_itr = m_front2back.find(&f_pin->GetParent());
+    auto t_itr = m_front2back.find(&t_pin->GetParent());
+    if (f_itr == m_front2back.end() || t_itr == m_front2back.end()) {
+        return;
+    }
+
+    m_eval.Disconnect(
+        { f_itr->second, f_pin->GetPosIdx() },
+        { t_itr->second, t_pin->GetPosIdx() }
+    );
+
+    Update();
+}
+
+void Evaluator::OnRebuildConnection()
+{
+    std::vector<std::pair<terr::Device::PortAddr, terr::Device::PortAddr>> conns;
+    for (auto& itr : m_front2back)
+    {
+        auto& front = itr.first;
+        auto& back  = itr.second;
+        for (auto& in : front->GetAllInput())
+        {
+            for (auto& conn : in->GetConnecting())
+            {
+                auto f_pin = conn->GetFrom();
+                auto t_pin = conn->GetTo();
+
+                auto f_itr = m_front2back.find(&f_pin->GetParent());
+                auto t_itr = m_front2back.find(&t_pin->GetParent());
+                if (f_itr == m_front2back.end() || t_itr == m_front2back.end()) {
+                    continue;
+                }
+
+                //if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
+                //    t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
+                //}
+
+                conns.push_back({
+                    { f_itr->second, f_pin->GetPosIdx() },
+                    { t_itr->second, t_pin->GetPosIdx() }
+                });
+            }
+        }
+    }
+
+    m_eval.RebuildConnections(conns);
+
+    Update();
+}
+
+terr::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
+{
+    auto itr = m_front2back.find(&front_node);
+    return itr == m_front2back.end() ? nullptr : itr->second;
+}
+
+n0::SceneNodePtr Evaluator::QuerySceneNode(const bp::Node& front_node) const
+{
+    auto itr = m_front2scene.find(&front_node);
+    return itr == m_front2scene.end() ? nullptr : itr->second;
+}
+
+void Evaluator::Update()
+{
+    m_eval.Update();
+
+    // todo: check dirty
+    for (auto& itr : m_front2scene)
+    {
+        auto itr_back = m_front2back.find(itr.first);
+        assert(itr_back != m_front2back.end());
+        auto hf = itr_back->second->GetHeightField();
+        if (hf) {
+            ModelAdapter::UpdateModel(*hf, *itr.second);
+        }
+    }
+}
+
+}

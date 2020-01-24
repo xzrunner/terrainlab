@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\terrview\Evaluator.h" />
+    <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h" />
+    <ClInclude Include="..\..\..\include\terrview\Node.h" />
+    <ClInclude Include="..\..\..\include\terrview\node_def_gen.h" />
+    <ClInclude Include="..\..\..\include\terrview\node_rttr_gen.h" />
+    <ClInclude Include="..\..\..\include\terrview\PinCallback.h" />
+    <ClInclude Include="..\..\..\include\terrview\PinType.h" />
+    <ClInclude Include="..\..\..\include\terrview\PreviewPage.h" />
+    <ClInclude Include="..\..\..\include\terrview\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\terrview\TerrAdapter.h" />
+    <ClInclude Include="..\..\..\include\terrview\TerrView.h" />
+    <ClInclude Include="..\..\..\include\terrview\WxGraphPage.h" />
+    <ClInclude Include="..\..\..\include\terrview\WxPreviewCanvas.h" />
+    <ClInclude Include="..\..\..\include\terrview\WxToolbarPanel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\Evaluator.cpp" />
+    <ClCompile Include="..\..\..\source\ModelAdapter.cpp" />
+    <ClCompile Include="..\..\..\source\Node.cpp" />
+    <ClCompile Include="..\..\..\source\PinCallback.cpp" />
+    <ClCompile Include="..\..\..\source\PreviewPage.cpp" />
+    <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
+    <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
+    <ClCompile Include="..\..\..\source\TerrAdapter.cpp" />
+    <ClCompile Include="..\..\..\source\TerrView.cpp" />
+    <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
+    <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
+    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>7.terrview</ProjectName>
+    <ProjectGuid>{755C7AED-F6A9-4829-A8CA-210B2664724F}</ProjectGuid>
+    <RootNamespace>terrview</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.26730.12</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\terrview\x86\Debug\</OutDir>
+    <IntDir>..\terrview\x86\Debug\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\terrview\x86\Release\</OutDir>
+    <IntDir>..\terrview\x86\Release\obj\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\terr\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\terr\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

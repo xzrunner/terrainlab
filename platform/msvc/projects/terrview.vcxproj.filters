@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="view">
+      <UniqueIdentifier>{f9ba1db4-1ee4-4d6c-ae3c-c4f16e3dad3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview">
+      <UniqueIdentifier>{9794f820-c69b-4da2-b5d1-49c5828a45a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\editor">
+      <UniqueIdentifier>{8f85b04c-3d50-44ff-915a-89148871e927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{5d46b246-a5cb-4be9-a8c7-6d7d6086cddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\eval">
+      <UniqueIdentifier>{6a9c4fc8-770b-47df-853e-75900227a6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dataset">
+      <UniqueIdentifier>{b31d2ae4-1932-408c-b2c7-331c5e224709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dataset\node">
+      <UniqueIdentifier>{fad59bf1-30bf-4b6c-8278-9c0acf002e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dataset\pin">
+      <UniqueIdentifier>{9e55899c-9959-4f76-a4d3-e628ca8008fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\trans">
+      <UniqueIdentifier>{2aef9f9a-bea1-4195-90a9-2330bd80a38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\rtti">
+      <UniqueIdentifier>{ab1897a7-7861-4be0-a7d7-87a1bb30b798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\toolbar">
+      <UniqueIdentifier>{3685917e-8df9-47ba-9676-776deae54d5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\terrview\WxPreviewCanvas.h">
+      <Filter>view\preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\WxGraphPage.h">
+      <Filter>view\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\Evaluator.h">
+      <Filter>tools\eval</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\Node.h">
+      <Filter>dataset\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\PinType.h">
+      <Filter>dataset\pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\PinCallback.h">
+      <Filter>dataset\pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\TerrAdapter.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\RegistNodes.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\node_def_gen.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\node_rttr_gen.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\TerrView.h" />
+    <ClInclude Include="..\..\..\include\terrview\PreviewPage.h">
+      <Filter>view\preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\WxToolbarPanel.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
+      <Filter>view\preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
+      <Filter>view\editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Evaluator.cpp">
+      <Filter>tools\eval</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Node.cpp">
+      <Filter>dataset\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\PinCallback.cpp">
+      <Filter>dataset\pin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TerrAdapter.cpp">
+      <Filter>tools\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RegistNodes.cpp">
+      <Filter>tools\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RegistRTTR.cpp">
+      <Filter>tools\rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TerrView.cpp" />
+    <ClCompile Include="..\..\..\source\PreviewPage.cpp">
+      <Filter>view\preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
+      <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
+      <Filter>tools\trans</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
