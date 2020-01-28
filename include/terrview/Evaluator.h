@@ -38,7 +38,6 @@ public:
     auto& GetEval() const { return m_eval; }
 
     terr::DevicePtr  QueryBackNode(const bp::Node& front_node) const;
-    n0::SceneNodePtr QuerySceneNode(const bp::Node& front_node) const;
 
 private:
     void Update();
@@ -47,8 +46,6 @@ private:
     terr::Evaluator m_eval;
 
     std::unordered_map<const bp::Node*, terr::DevicePtr> m_front2back;
-
-    std::unordered_map<const bp::Node*, n0::SceneNodePtr> m_front2scene;
 
 }; // Evaluator
 

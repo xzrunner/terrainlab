@@ -76,6 +76,12 @@
     <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\TerrRenderer.h">
+      <Filter>view\preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\MessageID.h">
+      <Filter>tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -111,6 +117,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TerrRenderer.cpp">
+      <Filter>view\preview</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

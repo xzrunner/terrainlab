@@ -1,7 +1,11 @@
 #pragma once
 
+#include "terrview/TerrRenderer.h"
+
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
+
+#include <node0/typedef.h>
 
 namespace terrv
 {
@@ -31,10 +35,14 @@ private:
     void DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         const pt0::RenderContext& rc) const;
 
+    void SetupRenderer();
+
 private:
     const WxGraphPage* m_graph_page = nullptr;
 
     n0::SceneNodePtr m_selected = nullptr;
+
+    TerrRenderer m_renderer;
 
 }; // WxPreviewCanvas
 

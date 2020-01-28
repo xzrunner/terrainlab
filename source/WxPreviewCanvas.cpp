@@ -1,11 +1,13 @@
 #include "terrview/WxPreviewCanvas.h"
 #include "terrview/WxGraphPage.h"
 #include "terrview/Evaluator.h"
+#include "terrview/MessageID.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
 #include <blueprint/Node.h>
 #include <blueprint/CompNode.h>
+#include <blueprint/MessageID.h>
 
 #include <node0/SceneNode.h>
 #include <node3/RenderSystem.h>
@@ -14,7 +16,9 @@
 #include <painting3/Blackboard.h>
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
+#include <painting3/Shader.h>
 #include <tessellation/Painter.h>
+#include <terr/Device.h>
 
 namespace
 {
@@ -31,6 +35,8 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
+    auto sub_mgr = stage->GetSubjectMgr();
+    sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);
 }
 
 WxPreviewCanvas::~WxPreviewCanvas()
@@ -41,6 +47,9 @@ WxPreviewCanvas::~WxPreviewCanvas()
         sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
         sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
     }
+
+    auto sub_mgr = m_stage->GetSubjectMgr();
+    sub_mgr->UnregisterObserver(MSG_HEIGHTMAP_CHANGED, this);
 }
 
 void WxPreviewCanvas::SetGraphPage(const WxGraphPage* graph_page)
@@ -64,6 +73,10 @@ void WxPreviewCanvas::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
     case ee0::MSG_NODE_SELECTION_CLEAR:
         OnSelectionClear(variants);
         break;
+
+    case MSG_HEIGHTMAP_CHANGED:
+        SetupRenderer();
+        break;
 	}
 }
 
@@ -75,6 +88,15 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
+    auto& shaders = m_renderer.GetAllShaders();
+    if (!shaders.empty()) {
+        assert(shaders.size() == 1);
+        auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
+        if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+            std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+        }
+    }
+
     pt0::RenderContext rc;
     rc.AddVar(
         pt3::MaterialMgr::PositionUniforms::light_pos.name,
@@ -120,10 +142,15 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
     GD_ASSERT(GAME_OBJ_VALID(obj), "err scene obj");
 
     m_selected = obj;
+
+    SetupRenderer();
 }
 
 void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 {
+    m_selected.reset();
+
+    m_renderer.Setup(nullptr);
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
@@ -148,18 +175,35 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         return;
     }
 
-    auto node = eval->QuerySceneNode(*cnode.GetNode());
-    if (!node) {
+    auto back_node = eval->QueryBackNode(*cnode.GetNode());
+    assert(back_node);
+    auto hf = back_node->GetHeightField();
+    m_renderer.Draw();
+}
+
+void WxPreviewCanvas::SetupRenderer()
+{
+    if (!m_selected || !m_selected->HasUniqueComp<bp::CompNode>()) {
         return;
     }
 
-    pt3::RenderParams rp;
-    rp.painter = &pt;
-    rp.viewport = &GetViewport();
-    rp.cam_mat = &cam_mat;
-    rp.mask.set(pt3::RenderParams::NotDrawShape);
+    auto eval = m_graph_page->GetEval();
+    if (!eval) {
+        return;
+    }
 
-    n3::RenderSystem::Draw(*node, rp, rc);
+    auto& cnode = m_selected->GetUniqueComp<bp::CompNode>();
+    auto bp_node = cnode.GetNode();
+    if (!bp_node) {
+        return;
+    }
+
+    auto back_node = eval->QueryBackNode(*cnode.GetNode());
+    assert(back_node);
+    auto hf = back_node->GetHeightField();
+    m_renderer.Setup(hf);
+
+    SetDirty();
 }
 
 }

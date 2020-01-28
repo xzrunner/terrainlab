@@ -1,19 +1,14 @@
 #include "terrview/Evaluator.h"
 #include "terrview/TerrAdapter.h"
 #include "terrview/Node.h"
-#include "terrview/ModelAdapter.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
 #include <blueprint/CompNode.h>
 
-#include <node0/SceneNode.h>
-#include <node0/CompComplex.h>
-#include <node3/CompModel.h>
 #include <terr/Device.h>
 #include <terr/Evaluator.h>
-#include <ns/NodeFactory.h>
 
 #include <queue>
 
@@ -35,10 +30,6 @@ void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, 
 
     m_front2back.insert({ &front, back });
 
-    auto scene = ns::NodeFactory::Create3D();
-    ModelAdapter::SetupModel(*scene);
-    m_front2scene.insert({ &front, scene });
-
     if (front.get_type().is_derived_from<Node>()) {
         const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
     }
@@ -58,7 +49,6 @@ void Evaluator::OnRemoveNode(const bp::Node& node)
 
     m_eval.RemoveDevice(itr->second);
     m_front2back.erase(itr);
-    m_front2scene.erase(&node);
 
     Update();
 }
@@ -67,7 +57,6 @@ void Evaluator::OnClearAllNodes()
 {
     m_eval.ClearAllDevices();
     m_front2back.clear();
-    m_front2scene.clear();
 
     Update();
 }
@@ -183,26 +172,9 @@ terr::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
     return itr == m_front2back.end() ? nullptr : itr->second;
 }
 
-n0::SceneNodePtr Evaluator::QuerySceneNode(const bp::Node& front_node) const
-{
-    auto itr = m_front2scene.find(&front_node);
-    return itr == m_front2scene.end() ? nullptr : itr->second;
-}
-
 void Evaluator::Update()
 {
     m_eval.Update();
-
-    // todo: check dirty
-    for (auto& itr : m_front2scene)
-    {
-        auto itr_back = m_front2back.find(itr.first);
-        assert(itr_back != m_front2back.end());
-        auto hf = itr_back->second->GetHeightField();
-        if (hf) {
-            ModelAdapter::UpdateModel(*hf, *itr.second);
-        }
-    }
 }
 
 }

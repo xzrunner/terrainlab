@@ -1,5 +1,6 @@
 #include "terrview/WxGraphPage.h"
 #include "terrview/Evaluator.h"
+#include "terrview/MessageID.h"
 
 #include <ee0/SubjectMgr.h>
 #include <blueprint/MessageID.h>
@@ -87,6 +88,7 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 
 	if (dirty) {
         m_sub_mgr->NotifyObservers(ee0::MSG_SET_CANVAS_DIRTY);
+        m_preview_sub_mgr->NotifyObservers(MSG_HEIGHTMAP_CHANGED);
 	}
 }
 
