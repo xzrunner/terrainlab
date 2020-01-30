@@ -23,6 +23,17 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+#define PARM_FILEPATH "terr/device/FaultFractal.parm.h"
+#define PARM_NODE_CLASS FaultFractal
+#define PARM_NODE_CLASS_STR "FaultFractal"
+#define PARM_NODE_NAME "fault_fractal"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 #define PARM_FILEPATH "terr/device/PerlinNoise.parm.h"
 #define PARM_NODE_CLASS PerlinNoise
 #define PARM_NODE_CLASS_STR "PerlinNoise"

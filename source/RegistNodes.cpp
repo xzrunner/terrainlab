@@ -29,6 +29,15 @@ rttr::registration::class_<terrv::node::BasicNoise>("terrv::basic_noise")
 #undef PARM_FILEPATH
 ;
 
+rttr::registration::class_<terrv::node::FaultFractal>("terrv::fault_fractal")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/FaultFractal.parm.h"
+#define PARM_NODE_CLASS FaultFractal
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 rttr::registration::class_<terrv::node::PerlinNoise>("terrv::perlin_noise")
 .constructor<>()
 #define PARM_FILEPATH "terr/device/PerlinNoise.parm.h"
