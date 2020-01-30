@@ -45,8 +45,7 @@ void WxToolbarPanel::InitLayout(const ee0::SubjectMgrPtr& graph_sub_mgr)
 {
     auto sizer = new wxBoxSizer(wxVERTICAL);
 
-    m_node_prop = new bp::WxNodeProperty(this, graph_sub_mgr);
-    sizer->Add(m_node_prop);
+    sizer->Add(m_node_prop = new bp::WxNodeProperty(this, graph_sub_mgr), wxEXPAND);
 
     SetSizer(sizer);
 }
