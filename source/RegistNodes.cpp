@@ -2,6 +2,8 @@
 
 #include <ee0/ReflectPropTypes.h>
 
+#include <js/RTTR.h>
+
 RTTR_REGISTRATION
 {
 
@@ -36,6 +38,24 @@ rttr::registration::class_<terrv::node::FaultFractal>("terrv::fault_fractal")
 #include "terrview/node_rttr_gen.h"
 #undef PARM_NODE_CLASS
 #undef PARM_FILEPATH
+;
+
+//rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
+//.constructor<>()
+//#define PARM_FILEPATH "terr/device/FileInput.parm.h"
+//#define PARM_NODE_CLASS FileInput
+//#include "terrview/node_rttr_gen.h"
+//#undef PARM_NODE_CLASS
+//#undef PARM_FILEPATH
+//;
+rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
+    .constructor<>()
+    .property("filepath", &terrv::node::FileInput::m_filepath)
+    (
+	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")),
+        rttr::metadata(js::RTTR::FilePathTag(), true),
+        rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))
+    )
 ;
 
 rttr::registration::class_<terrv::node::PerlinNoise>("terrv::perlin_noise")

@@ -34,6 +34,17 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+#define PARM_FILEPATH "terr/device/FileInput.parm.h"
+#define PARM_NODE_CLASS FileInput
+#define PARM_NODE_CLASS_STR "FileInput"
+#define PARM_NODE_NAME "file_input"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 #define PARM_FILEPATH "terr/device/PerlinNoise.parm.h"
 #define PARM_NODE_CLASS PerlinNoise
 #define PARM_NODE_CLASS_STR "PerlinNoise"
