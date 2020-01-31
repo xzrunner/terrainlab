@@ -122,7 +122,7 @@ void TerrRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
 
         for (size_t y = 0; y < h; ++y) {
             for (size_t x = 0; x < w; ++x) {
-                *m_buf.vert_ptr++ = render::Vertex(x, y);
+                *m_buf.vert_ptr++ = render::Vertex(x, y, w, h);
             }
         }
 

@@ -17,18 +17,19 @@ namespace terrv
 namespace render
 {
 
-static const int SIZE = 128;
-
 struct Vertex
 {
     Vertex() {}
-	Vertex(size_t ix, size_t iz)
+	Vertex(size_t ix, size_t iz, size_t size_x, size_t size_z)
 	{
 		static const float off = -1.0f;
 		static const float scale = 1 / 50.0f;
 
 		position.Set(off + ix * scale, 0, off + iz * scale);
-		texcoords.Set(ix / static_cast<float>(SIZE), iz / static_cast<float>(SIZE));
+		texcoords.Set(
+            ix / static_cast<float>(size_x),
+            iz / static_cast<float>(size_z)
+        );
 	}
 
 	sm::vec3 position;
