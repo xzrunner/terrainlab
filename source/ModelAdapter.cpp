@@ -11,7 +11,6 @@
 #include <model/typedef.h>
 #include <terr/HeightField.h>
 #include <terr/HeightFieldEval.h>
-#include <terr/TextureLoader.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
 

@@ -7,7 +7,7 @@
 #include <painting3/Shader.h>
 #include <terr/HeightField.h>
 #include <terr/TextureBaker.h>
-#include <terr/TextureLoader.h>
+#include <model/TextureLoader.h>
 
 namespace
 {
@@ -163,12 +163,12 @@ void TerrRenderer::Draw() const
 
 void TerrRenderer::InitTextuers()
 {
-    m_detail_map = terr::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");
+    m_detail_map = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");
 
-    m_splat_map[0] = terr::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\lowestTile.tga");
-    m_splat_map[1] = terr::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\lowTile.tga");
-    m_splat_map[2] = terr::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\highTile.tga");
-    m_splat_map[3] = terr::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\highestTile.tga");
+    m_splat_map[0] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\lowestTile.tga");
+    m_splat_map[1] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\lowTile.tga");
+    m_splat_map[2] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\highTile.tga");
+    m_splat_map[3] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\highestTile.tga");
 }
 
 void TerrRenderer::InitShader()
