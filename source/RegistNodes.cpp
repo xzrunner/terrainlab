@@ -76,6 +76,17 @@ rttr::registration::class_<terrv::node::PlasmaFractal>("terrv::plasma_fractal")
 #undef PARM_FILEPATH
 ;
 
+// combiner
+
+rttr::registration::class_<terrv::node::Combiner>("terrv::combiner")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/Combiner.parm.h"
+#define PARM_NODE_CLASS Combiner
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 // natural
 
 rttr::registration::class_<terrv::node::Erosion>("terrv::erosion")

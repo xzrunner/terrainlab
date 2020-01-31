@@ -2,6 +2,8 @@
 
 #include "terrview/Node.h"
 
+#include <terr/device/Combiner.h>
+
 namespace terrv
 {
 
@@ -67,6 +69,21 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+// combiner
+
+#define Method terr::device::Combiner::Method
+#define PARM_FILEPATH "terr/device/Combiner.parm.h"
+#define PARM_NODE_CLASS Combiner
+#define PARM_NODE_CLASS_STR "Combiner"
+#define PARM_NODE_NAME "combiner"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+#undef Method
+;
+
 // natural
 
 #define PARM_FILEPATH "terr/device/Erosion.parm.h"
@@ -79,7 +96,6 @@ namespace node
 #undef PARM_NODE_CLASS_STR
 #undef PARM_FILEPATH
 ;
-
 
 }
 
