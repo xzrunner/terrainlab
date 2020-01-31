@@ -87,6 +87,17 @@ rttr::registration::class_<terrv::node::Combiner>("terrv::combiner")
 #undef PARM_FILEPATH
 ;
 
+// filter
+
+rttr::registration::class_<terrv::node::Curves>("terrv::curves")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/Curves.parm.h"
+#define PARM_NODE_CLASS Curves
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 // natural
 
 rttr::registration::class_<terrv::node::Erosion>("terrv::erosion")

@@ -3,6 +3,7 @@
 #include "terrview/Node.h"
 
 #include <terr/device/Combiner.h>
+#include <terr/device/Curves.h>
 
 namespace terrv
 {
@@ -82,6 +83,21 @@ namespace node
 #undef PARM_NODE_CLASS_STR
 #undef PARM_FILEPATH
 #undef Method
+;
+
+// filter
+
+#define Type terr::device::Curves::Type
+#define PARM_FILEPATH "terr/device/Curves.parm.h"
+#define PARM_NODE_CLASS Curves
+#define PARM_NODE_CLASS_STR "Curves"
+#define PARM_NODE_NAME "curves"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+#undef Type
 ;
 
 // natural
