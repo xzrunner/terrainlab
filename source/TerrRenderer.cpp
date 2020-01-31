@@ -128,10 +128,10 @@ void TerrRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
 
         for (size_t y = 0; y < h - 1; ++y) {
             for (size_t x = 0; x < w - 1; ++x) {
-                unsigned short ll = static_cast<unsigned short>(y * w + x);
-                unsigned short rl = ll + 1;
-                unsigned short lh = ll + static_cast<unsigned short>(w);
-                unsigned short rh = lh + 1;
+                size_t ll = y * w + x;
+                size_t rl = ll + 1;
+                size_t lh = ll + w;
+                size_t rh = lh + 1;
                 *m_buf.index_ptr++ = ll;
                 *m_buf.index_ptr++ = lh;
                 *m_buf.index_ptr++ = rh;
@@ -158,7 +158,7 @@ void TerrRenderer::Draw() const
     rc.BindBuffer(ur::INDEXBUFFER, m_ebo);
     rc.BindBuffer(ur::VERTEXBUFFER, m_vbo);
     size_t n = (m_hf->Width() - 1) * (m_hf->Height() - 1) * 6;
-    rc.DrawElements(ur::DRAW_TRIANGLES, 0, n);
+    rc.DrawElements(ur::DRAW_TRIANGLES, 0, n, false);
 }
 
 void TerrRenderer::InitTextuers()

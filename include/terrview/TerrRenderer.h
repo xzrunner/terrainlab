@@ -38,7 +38,7 @@ struct Vertex
 
 }
 
-class TerrRenderer : public rp::IRenderer, private rp::RendererImpl<render::Vertex>, private boost::noncopyable
+class TerrRenderer : public rp::IRenderer, private rp::RendererImpl<render::Vertex, uint32_t>, private boost::noncopyable
 {
 public:
     TerrRenderer();
