@@ -1,4 +1,5 @@
 #include "terrview/Node.h"
+#include "terrview/TerrAdapter.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
@@ -131,6 +132,7 @@ void Node::PortBack2Front(std::vector<PinDesc>& dst,
 
 		auto& s = src[i];
         d.name = s.var.name;
+        d.type = TerrAdapter::TypeBackToFront(s.var.type);
 
         dst.push_back(d);
 	}
