@@ -76,9 +76,14 @@ int TerrAdapter::TypeBackToFront(terr::DeviceVarType type)
     case terr::DeviceVarType::Any:
         ret = bp::PIN_ANY_VAR;
         break;
-    case terr::DeviceVarType::Heightmap:
-        ret = PIN_HEIGHTMAP;
+    case terr::DeviceVarType::Heightfield:
+        ret = PIN_HEIGHTFIELD;
         break;
+    case terr::DeviceVarType::Bitmap:
+        ret = PIN_BITMAP;
+        break;
+    default:
+        assert(0);
     }
 
     return ret;
