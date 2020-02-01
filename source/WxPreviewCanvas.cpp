@@ -88,7 +88,7 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
-    auto& shaders = m_renderer.GetAllShaders();
+    auto& shaders = m_hf_renderer.GetAllShaders();
     if (!shaders.empty()) {
         assert(shaders.size() == 1);
         auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
@@ -150,7 +150,7 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 {
     m_selected.reset();
 
-    m_renderer.Setup(nullptr);
+    m_hf_renderer.Setup(nullptr);
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
@@ -200,8 +200,7 @@ void WxPreviewCanvas::SetupRenderer()
 
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
     assert(back_node);
-    auto hf = back_node->GetHeightField();
-    m_renderer.Setup(hf);
+    m_hf_renderer.Setup(back_node->GetHeightField());
 
     SetDirty();
 }

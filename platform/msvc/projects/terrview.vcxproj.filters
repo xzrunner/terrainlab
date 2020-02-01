@@ -76,11 +76,11 @@
     <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\terrview\TerrRenderer.h">
-      <Filter>view\preview</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\terrview\MessageID.h">
       <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h">
+      <Filter>view\preview\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,8 +118,9 @@
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\TerrRenderer.cpp">
-      <Filter>view\preview</Filter>
+    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
+    </ClCompile>
     </ClCompile>
   </ItemGroup>
 </Project>

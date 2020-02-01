@@ -38,10 +38,10 @@ struct Vertex
 
 }
 
-class TerrRenderer : public rp::IRenderer, private rp::RendererImpl<render::Vertex, uint32_t>, private boost::noncopyable
+class HeightfieldRenderer : public rp::IRenderer, private rp::RendererImpl<render::Vertex, uint32_t>, private boost::noncopyable
 {
 public:
-    TerrRenderer();
+    HeightfieldRenderer();
 
     virtual void Flush() override {}
 
@@ -61,6 +61,6 @@ private:
     ur::TexturePtr m_detail_map = nullptr;
     ur::TexturePtr m_splat_map[4];
 
-}; // TerrRenderer
+}; // HeightfieldRenderer
 
 }

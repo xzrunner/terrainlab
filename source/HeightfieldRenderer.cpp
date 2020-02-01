@@ -1,4 +1,4 @@
-#include "terrview/TerrRenderer.h"
+#include "terrview/HeightfieldRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
@@ -76,13 +76,13 @@ void main()
 namespace terrv
 {
 
-TerrRenderer::TerrRenderer()
+HeightfieldRenderer::HeightfieldRenderer()
 {
     InitTextuers();
     InitShader();
 }
 
-void TerrRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
+void HeightfieldRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
 {
     m_hf = hf;
     if (!m_hf) {
@@ -145,7 +145,7 @@ void TerrRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
     }
 }
 
-void TerrRenderer::Draw() const
+void HeightfieldRenderer::Draw() const
 {
     if (m_shaders.empty() || !m_hf) {
         return;
@@ -161,7 +161,7 @@ void TerrRenderer::Draw() const
     rc.DrawElements(ur::DRAW_TRIANGLES, 0, n, false);
 }
 
-void TerrRenderer::InitTextuers()
+void HeightfieldRenderer::InitTextuers()
 {
     m_detail_map = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");
 
@@ -171,7 +171,7 @@ void TerrRenderer::InitTextuers()
     m_splat_map[3] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\highestTile.tga");
 }
 
-void TerrRenderer::InitShader()
+void HeightfieldRenderer::InitShader()
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
