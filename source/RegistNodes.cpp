@@ -109,6 +109,17 @@ rttr::registration::class_<terrv::node::Erosion>("terrv::erosion")
 #undef PARM_FILEPATH
 ;
 
+// converter
+
+rttr::registration::class_<terrv::node::Colorizer>("terrv::colorizer")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/Colorizer.parm.h"
+#define PARM_NODE_CLASS Colorizer
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 }
 
 namespace terrv

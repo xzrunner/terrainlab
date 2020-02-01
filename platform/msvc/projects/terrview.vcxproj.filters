@@ -34,6 +34,9 @@
     <Filter Include="view\toolbar">
       <UniqueIdentifier>{3685917e-8df9-47ba-9676-776deae54d5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\preview\renderer">
+      <UniqueIdentifier>{92eec5c5-cee0-46bc-9441-84218020ab23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\terrview\WxPreviewCanvas.h">
@@ -82,6 +85,9 @@
     <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h">
       <Filter>view\preview\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\BitmapRenderer.h">
+      <Filter>view\preview\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -121,6 +127,8 @@
     <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
       <Filter>view\preview\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\BitmapRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

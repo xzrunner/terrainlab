@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\terrview\BitmapRenderer.h" />
     <ClInclude Include="..\..\..\include\terrview\Evaluator.h" />
     <ClInclude Include="..\..\..\include\terrview\MessageID.h" />
     <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="..\..\..\include\terrview\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\BitmapRenderer.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "terrview/HeightfieldRenderer.h"
+#include "terrview/BitmapRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
@@ -43,6 +44,7 @@ private:
     n0::SceneNodePtr m_selected = nullptr;
 
     HeightfieldRenderer m_hf_renderer;
+    BitmapRenderer      m_bmp_renderer;
 
 }; // WxPreviewCanvas
 

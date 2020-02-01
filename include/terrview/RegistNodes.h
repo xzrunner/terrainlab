@@ -113,6 +113,19 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+// converter
+
+#define PARM_FILEPATH "terr/device/Colorizer.parm.h"
+#define PARM_NODE_CLASS Colorizer
+#define PARM_NODE_CLASS_STR "Colorizer"
+#define PARM_NODE_NAME "colorizer"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 }
 
 }

@@ -151,6 +151,7 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
     m_selected.reset();
 
     m_hf_renderer.Setup(nullptr);
+    m_bmp_renderer.Setup(nullptr);
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
@@ -177,8 +178,11 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
 
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
     assert(back_node);
-    auto hf = back_node->GetHeightField();
-    m_renderer.Draw();
+    if (back_node->GetHeightField()) {
+        m_hf_renderer.Draw();
+    } else if (back_node->GetBitmap()) {
+        m_bmp_renderer.Draw();
+    }
 }
 
 void WxPreviewCanvas::SetupRenderer()
@@ -201,6 +205,7 @@ void WxPreviewCanvas::SetupRenderer()
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
     assert(back_node);
     m_hf_renderer.Setup(back_node->GetHeightField());
+    m_bmp_renderer.Setup(back_node->GetBitmap());
 
     SetDirty();
 }
