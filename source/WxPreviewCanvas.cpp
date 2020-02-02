@@ -88,12 +88,22 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
-    auto& shaders = m_hf_renderer.GetAllShaders();
+    auto& shaders = m_hf_rd.GetAllShaders();
     if (!shaders.empty()) {
         assert(shaders.size() == 1);
         auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
         if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
             std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+        }
+    }
+    {
+        auto& shaders = m_overlay_rd.GetAllShaders();
+        if (!shaders.empty()) {
+            assert(shaders.size() == 1);
+            auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
+            if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+                std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+            }
         }
     }
 
@@ -150,8 +160,9 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 {
     m_selected.reset();
 
-    m_hf_renderer.Setup(nullptr);
-    m_bmp_renderer.Setup(nullptr);
+    m_hf_rd.Setup(nullptr);
+    m_bmp_rd.Setup(nullptr);
+    m_overlay_rd.Setup(nullptr, nullptr);
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
@@ -178,10 +189,14 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
 
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
     assert(back_node);
-    if (back_node->GetHeightField()) {
-        m_hf_renderer.Draw();
-    } else if (back_node->GetBitmap()) {
-        m_bmp_renderer.Draw();
+    auto hf = back_node->GetHeightField();
+    auto bmp = back_node->GetBitmap();
+    if (hf && bmp) {
+        m_overlay_rd.Draw();
+    } else if (hf) {
+        m_hf_rd.Draw();
+    } else if (bmp) {
+        m_bmp_rd.Draw();
     }
 }
 
@@ -204,8 +219,15 @@ void WxPreviewCanvas::SetupRenderer()
 
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
     assert(back_node);
-    m_hf_renderer.Setup(back_node->GetHeightField());
-    m_bmp_renderer.Setup(back_node->GetBitmap());
+    auto hf = back_node->GetHeightField();
+    auto bmp = back_node->GetBitmap();
+    if (hf && bmp) {
+        m_overlay_rd.Setup(hf, bmp);
+    } else if (hf) {
+        m_hf_rd.Setup(hf);
+    } else if (bmp) {
+        m_bmp_rd.Setup(bmp);
+    }
 
     SetDirty();
 }

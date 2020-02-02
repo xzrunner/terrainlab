@@ -76,6 +76,17 @@ rttr::registration::class_<terrv::node::PlasmaFractal>("terrv::plasma_fractal")
 #undef PARM_FILEPATH
 ;
 
+// output
+
+rttr::registration::class_<terrv::node::OverlayView>("terrv::overlay_view")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/OverlayView.parm.h"
+#define PARM_NODE_CLASS OverlayView
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 // combiner
 
 rttr::registration::class_<terrv::node::Combiner>("terrv::combiner")

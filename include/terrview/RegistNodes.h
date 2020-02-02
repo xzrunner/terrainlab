@@ -70,6 +70,19 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+// output
+
+#define PARM_FILEPATH "terr/device/OverlayView.parm.h"
+#define PARM_NODE_CLASS OverlayView
+#define PARM_NODE_CLASS_STR "OverlayView"
+#define PARM_NODE_NAME "overlay_view"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 // combiner
 
 #define Method terr::device::Combiner::Method

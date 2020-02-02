@@ -1,32 +1,20 @@
 #include "terrview/BitmapRenderer.h"
 
-#include <terr/Bitmap.h>
-#include <model/TextureLoader.h>
-#include <painting2/RenderSystem.h>
+#include <terr/TextureBaker.h>
 #include <unirender/Blackboard.h>
 #include <unirender/RenderContext.h>
+#include <painting2/RenderSystem.h>
+#include <renderpipeline/RenderMgr.h>
 
 namespace terrv
 {
 
 void BitmapRenderer::Setup(const std::shared_ptr<terr::Bitmap>& bmp)
 {
-    if (!bmp) {
-        return;
+    if (bmp) {
+        auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+        m_tex = terr::TextureBaker::GenColorMap(*bmp, rc);
     }
-
-    auto& pixels = bmp->GetValues();
-    if (pixels.empty()) {
-        return;
-    }
-
-    auto w = bmp->Width();
-    auto h = bmp->Height();
-    assert(pixels.size() == w * h * 3);
-
-    m_tex = model::TextureLoader::LoadFromMemory(
-        pixels.data(), w, h, 3
-    );
 }
 
 void BitmapRenderer::Draw() const

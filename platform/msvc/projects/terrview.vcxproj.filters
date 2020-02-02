@@ -37,6 +37,9 @@
     <Filter Include="view\preview\renderer">
       <UniqueIdentifier>{92eec5c5-cee0-46bc-9441-84218020ab23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\preview\renderer\base">
+      <UniqueIdentifier>{22edbbd4-0fe6-48e6-b8a5-222230b159ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\terrview\WxPreviewCanvas.h">
@@ -82,11 +85,20 @@
     <ClInclude Include="..\..\..\include\terrview\MessageID.h">
       <Filter>tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h">
-      <Filter>view\preview\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\terrview\BitmapRenderer.h">
       <Filter>view\preview\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\OverlayRenderer.h">
+      <Filter>view\preview\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\SplatRenderer.h">
+      <Filter>view\preview\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\RenderVertex.h">
+      <Filter>view\preview\renderer\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h">
+      <Filter>view\preview\renderer\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,11 +136,17 @@
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\BitmapRenderer.cpp">
       <Filter>view\preview\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\OverlayRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
+      <Filter>view\preview\renderer\base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

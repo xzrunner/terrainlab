@@ -13,16 +13,19 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\terrview\BitmapRenderer.h" />
     <ClInclude Include="..\..\..\include\terrview\Evaluator.h" />
+    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h" />
     <ClInclude Include="..\..\..\include\terrview\MessageID.h" />
     <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h" />
     <ClInclude Include="..\..\..\include\terrview\Node.h" />
     <ClInclude Include="..\..\..\include\terrview\node_def_gen.h" />
     <ClInclude Include="..\..\..\include\terrview\node_rttr_gen.h" />
+    <ClInclude Include="..\..\..\include\terrview\OverlayRenderer.h" />
     <ClInclude Include="..\..\..\include\terrview\PinCallback.h" />
     <ClInclude Include="..\..\..\include\terrview\PinType.h" />
     <ClInclude Include="..\..\..\include\terrview\PreviewPage.h" />
-    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h" />
+    <ClInclude Include="..\..\..\include\terrview\SplatRenderer.h" />
     <ClInclude Include="..\..\..\include\terrview\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\terrview\RenderVertex.h" />
     <ClInclude Include="..\..\..\include\terrview\TerrAdapter.h" />
     <ClInclude Include="..\..\..\include\terrview\TerrView.h" />
     <ClInclude Include="..\..\..\include\terrview\WxGraphPage.h" />
@@ -32,11 +35,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\source\BitmapRenderer.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
+    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp" />
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
+    <ClCompile Include="..\..\..\source\OverlayRenderer.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />
     <ClCompile Include="..\..\..\source\PreviewPage.cpp" />
-    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp" />
+    <ClCompile Include="..\..\..\source\SplatRenderer.cpp" />
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\TerrAdapter.cpp" />
