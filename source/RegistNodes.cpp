@@ -31,6 +31,24 @@ rttr::registration::class_<terrv::node::BasicNoise>("terrv::basic_noise")
 #undef PARM_FILEPATH
 ;
 
+rttr::registration::class_<terrv::node::BasicNoise>("terrv::basic_noise")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/BasicNoise.parm.h"
+#define PARM_NODE_CLASS BasicNoise
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
+rttr::registration::class_<terrv::node::Color>("terrv::color")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/Color.parm.h"
+#define PARM_NODE_CLASS Color
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 rttr::registration::class_<terrv::node::FaultFractal>("terrv::fault_fractal")
 .constructor<>()
 #define PARM_FILEPATH "terr/device/FaultFractal.parm.h"
@@ -89,6 +107,15 @@ rttr::registration::class_<terrv::node::OverlayView>("terrv::overlay_view")
 
 // combiner
 
+rttr::registration::class_<terrv::node::Chooser>("terrv::chooser")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/Chooser.parm.h"
+#define PARM_NODE_CLASS Chooser
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 rttr::registration::class_<terrv::node::Combiner>("terrv::combiner")
 .constructor<>()
 #define PARM_FILEPATH "terr/device/Combiner.parm.h"
@@ -115,6 +142,26 @@ rttr::registration::class_<terrv::node::Erosion>("terrv::erosion")
 .constructor<>()
 #define PARM_FILEPATH "terr/device/Erosion.parm.h"
 #define PARM_NODE_CLASS Erosion
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
+// selector
+
+rttr::registration::class_<terrv::node::SelectHeight>("terrv::select_height")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/SelectHeight.parm.h"
+#define PARM_NODE_CLASS SelectHeight
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
+rttr::registration::class_<terrv::node::SelectSlope>("terrv::select_slope")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/SelectSlope.parm.h"
+#define PARM_NODE_CLASS SelectSlope
 #include "terrview/node_rttr_gen.h"
 #undef PARM_NODE_CLASS
 #undef PARM_FILEPATH

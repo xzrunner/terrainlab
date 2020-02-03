@@ -26,6 +26,17 @@ namespace node
 #undef PARM_FILEPATH
 ;
 
+#define PARM_FILEPATH "terr/device/Color.parm.h"
+#define PARM_NODE_CLASS Color
+#define PARM_NODE_CLASS_STR "Color"
+#define PARM_NODE_NAME "color"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 #define PARM_FILEPATH "terr/device/FaultFractal.parm.h"
 #define PARM_NODE_CLASS FaultFractal
 #define PARM_NODE_CLASS_STR "FaultFractal"
@@ -85,6 +96,17 @@ namespace node
 
 // combiner
 
+#define PARM_FILEPATH "terr/device/Chooser.parm.h"
+#define PARM_NODE_CLASS Chooser
+#define PARM_NODE_CLASS_STR "Chooser"
+#define PARM_NODE_NAME "chooser"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
 #define Method terr::device::Combiner::Method
 #define PARM_FILEPATH "terr/device/Combiner.parm.h"
 #define PARM_NODE_CLASS Combiner
@@ -119,6 +141,30 @@ namespace node
 #define PARM_NODE_CLASS Erosion
 #define PARM_NODE_CLASS_STR "Erosion"
 #define PARM_NODE_NAME "erosion"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
+// selector
+
+#define PARM_FILEPATH "terr/device/SelectHeight.parm.h"
+#define PARM_NODE_CLASS SelectHeight
+#define PARM_NODE_CLASS_STR "SelectHeight"
+#define PARM_NODE_NAME "select_height"
+#include "terrview/node_def_gen.h"
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_NODE_CLASS_STR
+#undef PARM_FILEPATH
+;
+
+#define PARM_FILEPATH "terr/device/SelectSlope.parm.h"
+#define PARM_NODE_CLASS SelectSlope
+#define PARM_NODE_CLASS_STR "SelectSlope"
+#define PARM_NODE_NAME "select_slope"
 #include "terrview/node_def_gen.h"
 #undef PARM_NODE_NAME
 #undef PARM_NODE_CLASS
