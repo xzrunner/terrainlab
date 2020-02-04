@@ -85,9 +85,6 @@
     <ClInclude Include="..\..\..\include\terrview\MessageID.h">
       <Filter>tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\terrview\BitmapRenderer.h">
-      <Filter>view\preview\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\terrview\OverlayRenderer.h">
       <Filter>view\preview\renderer</Filter>
     </ClInclude>
@@ -99,6 +96,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h">
       <Filter>view\preview\renderer\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrview\ImageRenderer.h">
+      <Filter>view\preview\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +136,6 @@
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\BitmapRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\OverlayRenderer.cpp">
       <Filter>view\preview\renderer</Filter>
     </ClCompile>
@@ -147,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
       <Filter>view\preview\renderer\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ImageRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

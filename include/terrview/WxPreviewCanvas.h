@@ -1,7 +1,7 @@
 #pragma once
 
 #include "terrview/SplatRenderer.h"
-#include "terrview/BitmapRenderer.h"
+#include "terrview/ImageRenderer.h"
 #include "terrview/OverlayRenderer.h"
 
 #include <ee0/typedef.h>
@@ -44,9 +44,9 @@ private:
 
     n0::SceneNodePtr m_selected = nullptr;
 
-    SplatRenderer m_hf_rd;
-    BitmapRenderer      m_bmp_rd;
-    OverlayRenderer     m_overlay_rd;
+    SplatRenderer   m_hf_rd;
+    ImageRenderer   m_img_rd;
+    OverlayRenderer m_overlay_rd;
 
 }; // WxPreviewCanvas
 

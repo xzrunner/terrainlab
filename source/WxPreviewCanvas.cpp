@@ -196,7 +196,7 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     } else if (hf) {
         m_hf_rd.Draw();
     } else if (bmp) {
-        m_bmp_rd.Draw();
+        m_img_rd.Draw();
     }
 }
 
@@ -226,7 +226,7 @@ void WxPreviewCanvas::SetupRenderer()
     } else if (hf) {
         m_hf_rd.Setup(hf);
     } else if (bmp) {
-        m_bmp_rd.Setup(bmp);
+        m_img_rd.Setup(bmp);
     }
 
     SetDirty();

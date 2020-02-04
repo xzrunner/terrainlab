@@ -2,22 +2,24 @@
 
 #include <unirender/Texture.h>
 
-namespace terr { class Bitmap; }
+namespace terr { class Bitmap; class Mask; }
 
 namespace terrv
 {
 
-class BitmapRenderer
+class ImageRenderer
 {
 public:
-
     void Setup(const std::shared_ptr<terr::Bitmap>& bmp);
+    void Setup(const std::shared_ptr<terr::Mask>& mask);
 
     void Draw() const;
+
+    void Clear();
 
 private:
     ur::TexturePtr m_tex = nullptr;
 
-}; // BitmapRenderer
+}; // ImageRenderer
 
 }
