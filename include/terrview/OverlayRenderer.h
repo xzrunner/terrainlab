@@ -16,6 +16,8 @@ public:
 
     virtual void Flush() override {}
 
+    virtual void Clear() override;
+
     void Setup(const std::shared_ptr<terr::HeightField>& hf,
         const std::shared_ptr<terr::Bitmap>& bmp);
 

@@ -63,6 +63,12 @@ OverlayRenderer::OverlayRenderer()
     InitShader();
 }
 
+void OverlayRenderer::Clear()
+{
+    m_height_map.reset();
+    m_color_map.reset();
+}
+
 void OverlayRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf,
                             const std::shared_ptr<terr::Bitmap>& bmp)
 {

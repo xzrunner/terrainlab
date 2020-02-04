@@ -160,9 +160,9 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 {
     m_selected.reset();
 
-    m_hf_rd.Setup(nullptr);
-    m_bmp_rd.Setup(nullptr);
-    m_overlay_rd.Setup(nullptr, nullptr);
+    m_hf_rd.Clear();
+    m_img_rd.Clear();
+    m_overlay_rd.Clear();
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,

@@ -14,6 +14,8 @@ public:
 
     virtual void Flush() override {}
 
+    virtual void Clear() override;
+
     void Setup(const std::shared_ptr<terr::HeightField>& hf);
 
     void Draw() const;

@@ -6,6 +6,11 @@
 namespace terrv
 {
 
+void HeightfieldRenderer::Clear()
+{
+    m_hf.reset();
+}
+
 void HeightfieldRenderer::BuildVertBuf()
 {
     const auto w = m_hf->Width();

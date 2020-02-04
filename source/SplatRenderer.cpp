@@ -127,6 +127,11 @@ void SplatRenderer::Draw() const
     DrawVertBuf();
 }
 
+void SplatRenderer::Clear()
+{
+    m_height_map.reset();
+}
+
 void SplatRenderer::InitTextuers()
 {
     m_detail_map = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");

@@ -15,6 +15,8 @@ namespace terrv
 class HeightfieldRenderer : public rp::IRenderer, public rp::RendererImpl<RenderVertex, uint32_t>, private boost::noncopyable
 {
 protected:
+    virtual void Clear();
+
     void BuildVertBuf();
     void DrawVertBuf() const;
 
