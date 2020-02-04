@@ -13,6 +13,7 @@ const pt0::Color COL_DEFAULT   = pt0::Color(255, 255, 255);
 
 const pt0::Color COL_HEIGHTFIELD = pt0::Color(132, 228, 231);
 const pt0::Color COL_BITMAP      = pt0::Color(154, 239, 146);
+const pt0::Color COL_MASK        = pt0::Color(246, 255, 154);
 
 std::string get_desc_func(const std::string& name, int type)
 {
@@ -24,6 +25,9 @@ std::string get_desc_func(const std::string& name, int type)
         break;
     case terrv::PIN_BITMAP:
         ret += "(B)";
+        break;
+    case terrv::PIN_MASK:
+        ret += "(M)";
         break;
     }
     return ret;
@@ -37,6 +41,8 @@ const pt0::Color& get_color_func(int type)
         return COL_HEIGHTFIELD;
     case terrv::PIN_BITMAP:
         return COL_BITMAP;
+    case terrv::PIN_MASK:
+        return COL_MASK;
     default:
         return COL_DEFAULT;
     }

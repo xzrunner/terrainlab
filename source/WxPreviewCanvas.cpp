@@ -191,11 +191,14 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     assert(back_node);
     auto hf = back_node->GetHeightField();
     auto bmp = back_node->GetBitmap();
+    auto mask = back_node->GetMask();
     if (hf && bmp) {
         m_overlay_rd.Draw();
     } else if (hf) {
         m_hf_rd.Draw();
     } else if (bmp) {
+        m_img_rd.Draw();
+    } else if (mask) {
         m_img_rd.Draw();
     }
 }
@@ -221,12 +224,15 @@ void WxPreviewCanvas::SetupRenderer()
     assert(back_node);
     auto hf = back_node->GetHeightField();
     auto bmp = back_node->GetBitmap();
+    auto mask = back_node->GetMask();
     if (hf && bmp) {
         m_overlay_rd.Setup(hf, bmp);
     } else if (hf) {
         m_hf_rd.Setup(hf);
     } else if (bmp) {
         m_img_rd.Setup(bmp);
+    } else if (mask) {
+        m_img_rd.Setup(mask);
     }
 
     SetDirty();

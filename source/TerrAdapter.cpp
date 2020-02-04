@@ -82,6 +82,9 @@ int TerrAdapter::TypeBackToFront(terr::DeviceVarType type)
     case terr::DeviceVarType::Bitmap:
         ret = PIN_BITMAP;
         break;
+    case terr::DeviceVarType::Mask:
+        ret = PIN_MASK;
+        break;
     default:
         assert(0);
     }
