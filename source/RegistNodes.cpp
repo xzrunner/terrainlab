@@ -76,6 +76,15 @@ rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
     )
 ;
 
+rttr::registration::class_<terrv::node::LayoutGen>("terrv::layout_gen")
+.constructor<>()
+#define PARM_FILEPATH "terr/device/LayoutGen.parm.h"
+#define PARM_NODE_CLASS LayoutGen
+#include "terrview/node_rttr_gen.h"
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH
+;
+
 rttr::registration::class_<terrv::node::PerlinNoise>("terrv::perlin_noise")
 .constructor<>()
 #define PARM_FILEPATH "terr/device/PerlinNoise.parm.h"
