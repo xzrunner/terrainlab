@@ -17,6 +17,7 @@
     <ClInclude Include="..\..\..\include\terrview\MessageID.h" />
     <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h" />
     <ClInclude Include="..\..\..\include\terrview\Node.h" />
+    <ClInclude Include="..\..\..\include\terrview\node_regist_cfg.h" />
     <ClInclude Include="..\..\..\include\terrview\node_def_gen.h" />
     <ClInclude Include="..\..\..\include\terrview\node_rttr_gen.h" />
     <ClInclude Include="..\..\..\include\terrview\OverlayRenderer.h" />

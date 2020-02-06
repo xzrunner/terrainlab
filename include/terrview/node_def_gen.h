@@ -1,17 +1,16 @@
-#ifndef PARM_FILEPATH
-#error "You must define PARM_FILEPATH macro before include this file"
-#endif
+#define XSTR(s) STR(s)
+#define STR(s) #s
 
 #ifndef PARM_NODE_CLASS
 #error "You must define PARM_NODE_CLASS macro before include this file"
 #endif
 
-#ifndef PARM_NODE_CLASS_STR
-#error "You must define PARM_NODE_CLASS macro before include this file"
-#endif
-
 #ifndef PARM_NODE_NAME
 #error "You must define PARM_NODE_NAME macro before include this file"
+#endif
+
+#ifndef PARM_FILEPATH
+#define PARM_FILEPATH terr/device/##PARM_NODE_CLASS##.parm.h
 #endif
 
 #define Bool   bool
@@ -30,20 +29,18 @@ class PARM_NODE_CLASS : public Node
 {
 public:
 	PARM_NODE_CLASS()
-        : Node(PARM_NODE_CLASS_STR)
+        : Node(XSTR(PARM_NODE_CLASS))
 	{
-        InitPins(PARM_NODE_NAME);
+        InitPins(XSTR(PARM_NODE_NAME));
 	}
 
 #define PARAM_INFO(id, type, name, member, default_val) \
     type member = type##default_val;
-#include PARM_FILEPATH
+#include XSTR(PARM_FILEPATH)
 #undef  PARAM_INFO
 
 	RTTR_ENABLE(Node)
 };
-
-#undef TO_STRING
 
 #undef Bool
 #undef Int
@@ -56,3 +53,7 @@ public:
 #undef Float4
 #undef String
 #undef Array
+
+#undef PARM_NODE_NAME
+#undef PARM_NODE_CLASS
+#undef PARM_FILEPATH

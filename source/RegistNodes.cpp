@@ -20,52 +20,12 @@ rttr::registration::class_<terrv::Node>("terrv::node")
 )
 ;
 
-// generator
+#define EXE_FILEPATH "terrview/node_rttr_gen.h"
+#define SKIP_FILE_INPUT
+#include "terrview/node_regist_cfg.h"
+#undef SKIP_FILE_INPUT
+#undef EXE_FILEPATH
 
-rttr::registration::class_<terrv::node::BasicNoise>("terrv::basic_noise")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/BasicNoise.parm.h"
-#define PARM_NODE_CLASS BasicNoise
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::BasicNoise>("terrv::basic_noise")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/BasicNoise.parm.h"
-#define PARM_NODE_CLASS BasicNoise
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::Color>("terrv::color")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Color.parm.h"
-#define PARM_NODE_CLASS Color
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::FaultFractal>("terrv::fault_fractal")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/FaultFractal.parm.h"
-#define PARM_NODE_CLASS FaultFractal
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-//rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
-//.constructor<>()
-//#define PARM_FILEPATH "terr/device/FileInput.parm.h"
-//#define PARM_NODE_CLASS FileInput
-//#include "terrview/node_rttr_gen.h"
-//#undef PARM_NODE_CLASS
-//#undef PARM_FILEPATH
-//;
 rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
     .constructor<>()
     .property("filepath", &terrv::node::FileInput::m_filepath)
@@ -74,117 +34,6 @@ rttr::registration::class_<terrv::node::FileInput>("terrv::file_input")
         rttr::metadata(js::RTTR::FilePathTag(), true),
         rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))
     )
-;
-
-rttr::registration::class_<terrv::node::LayoutGen>("terrv::layout_gen")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/LayoutGen.parm.h"
-#define PARM_NODE_CLASS LayoutGen
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::PerlinNoise>("terrv::perlin_noise")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/PerlinNoise.parm.h"
-#define PARM_NODE_CLASS PerlinNoise
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::PlasmaFractal>("terrv::plasma_fractal")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/PlasmaFractal.parm.h"
-#define PARM_NODE_CLASS PlasmaFractal
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// output
-
-rttr::registration::class_<terrv::node::OverlayView>("terrv::overlay_view")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/OverlayView.parm.h"
-#define PARM_NODE_CLASS OverlayView
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// combiner
-
-rttr::registration::class_<terrv::node::Chooser>("terrv::chooser")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Chooser.parm.h"
-#define PARM_NODE_CLASS Chooser
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::Combiner>("terrv::combiner")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Combiner.parm.h"
-#define PARM_NODE_CLASS Combiner
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// filter
-
-rttr::registration::class_<terrv::node::Curves>("terrv::curves")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Curves.parm.h"
-#define PARM_NODE_CLASS Curves
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// natural
-
-rttr::registration::class_<terrv::node::Erosion>("terrv::erosion")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Erosion.parm.h"
-#define PARM_NODE_CLASS Erosion
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// selector
-
-rttr::registration::class_<terrv::node::SelectHeight>("terrv::select_height")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/SelectHeight.parm.h"
-#define PARM_NODE_CLASS SelectHeight
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-rttr::registration::class_<terrv::node::SelectSlope>("terrv::select_slope")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/SelectSlope.parm.h"
-#define PARM_NODE_CLASS SelectSlope
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
-;
-
-// converter
-
-rttr::registration::class_<terrv::node::Colorizer>("terrv::colorizer")
-.constructor<>()
-#define PARM_FILEPATH "terr/device/Colorizer.parm.h"
-#define PARM_NODE_CLASS Colorizer
-#include "terrview/node_rttr_gen.h"
-#undef PARM_NODE_CLASS
-#undef PARM_FILEPATH
 ;
 
 }
