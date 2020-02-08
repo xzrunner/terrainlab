@@ -1,6 +1,6 @@
 #pragma once
 
-namespace terrv
+namespace wmv
 {
 
 enum MessageID

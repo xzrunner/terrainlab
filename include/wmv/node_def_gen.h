@@ -10,7 +10,7 @@
 #endif
 
 #ifndef PARM_FILEPATH
-#define PARM_FILEPATH terr/device/##PARM_NODE_CLASS##.parm.h
+#define PARM_FILEPATH wm/device/##PARM_NODE_CLASS##.parm.h
 #endif
 
 #define Bool   bool

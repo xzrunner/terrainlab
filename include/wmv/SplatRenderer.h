@@ -2,9 +2,9 @@
 
 #include <unirender/Texture.h>
 
-#include "terrview/HeightfieldRenderer.h"
+#include "wmv/HeightfieldRenderer.h"
 
-namespace terrv
+namespace wmv
 {
 
 class SplatRenderer : public HeightfieldRenderer
@@ -16,7 +16,7 @@ public:
 
     virtual void Clear() override;
 
-    void Setup(const std::shared_ptr<terr::HeightField>& hf);
+    void Setup(const std::shared_ptr<wm::HeightField>& hf);
 
     void Draw() const;
 

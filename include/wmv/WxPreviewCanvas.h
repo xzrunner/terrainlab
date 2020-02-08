@@ -1,15 +1,15 @@
 #pragma once
 
-#include "terrview/SplatRenderer.h"
-#include "terrview/ImageRenderer.h"
-#include "terrview/OverlayRenderer.h"
+#include "wmv/SplatRenderer.h"
+#include "wmv/ImageRenderer.h"
+#include "wmv/OverlayRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
 
 #include <node0/typedef.h>
 
-namespace terrv
+namespace wmv
 {
 
 class WxGraphPage;

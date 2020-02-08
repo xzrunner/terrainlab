@@ -1,6 +1,6 @@
-#include "terrview/WxGraphPage.h"
-#include "terrview/Evaluator.h"
-#include "terrview/MessageID.h"
+#include "wmv/WxGraphPage.h"
+#include "wmv/Evaluator.h"
+#include "wmv/MessageID.h"
 
 #include <ee0/SubjectMgr.h>
 #include <blueprint/MessageID.h>
@@ -29,7 +29,7 @@ const uint32_t MESSAGES[] =
 
 }
 
-namespace terrv
+namespace wmv
 {
 
 WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::GameObj& root,

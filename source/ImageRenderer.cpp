@@ -1,27 +1,27 @@
-#include "terrview/ImageRenderer.h"
+#include "wmv/ImageRenderer.h"
 
-#include <terr/TextureBaker.h>
+#include <wm/TextureBaker.h>
 #include <unirender/Blackboard.h>
 #include <unirender/RenderContext.h>
 #include <painting2/RenderSystem.h>
 #include <renderpipeline/RenderMgr.h>
 
-namespace terrv
+namespace wmv
 {
 
-void ImageRenderer::Setup(const std::shared_ptr<terr::Bitmap>& bmp)
+void ImageRenderer::Setup(const std::shared_ptr<wm::Bitmap>& bmp)
 {
     if (bmp) {
         auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = terr::TextureBaker::GenColorMap(*bmp, rc);
+        m_tex = wm::TextureBaker::GenColorMap(*bmp, rc);
     }
 }
 
-void ImageRenderer::Setup(const std::shared_ptr<terr::Mask>& mask)
+void ImageRenderer::Setup(const std::shared_ptr<wm::Mask>& mask)
 {
     if (mask) {
         auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = terr::TextureBaker::GenColorMap(*mask, rc);
+        m_tex = wm::TextureBaker::GenColorMap(*mask, rc);
     }
 }
 

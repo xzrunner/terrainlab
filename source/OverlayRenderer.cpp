@@ -1,12 +1,12 @@
-#include "terrview/OverlayRenderer.h"
+#include "wmv/OverlayRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
 #include <unirender/RenderContext.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
-#include <terr/HeightField.h>
-#include <terr/TextureBaker.h>
+#include <wm/HeightField.h>
+#include <wm/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -54,7 +54,7 @@ void main()
 
 }
 
-namespace terrv
+namespace wmv
 {
 
 OverlayRenderer::OverlayRenderer()
@@ -69,8 +69,8 @@ void OverlayRenderer::Clear()
     m_color_map.reset();
 }
 
-void OverlayRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf,
-                            const std::shared_ptr<terr::Bitmap>& bmp)
+void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
+                            const std::shared_ptr<wm::Bitmap>& bmp)
 {
     m_hf = hf;
     if (!m_hf) {
@@ -81,11 +81,11 @@ void OverlayRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf,
         return;
     }
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    m_color_map = terr::TextureBaker::GenColorMap(*bmp, rc);
+    m_color_map = wm::TextureBaker::GenColorMap(*bmp, rc);
 
     assert(hf);
     auto old = m_height_map;
-    m_height_map = terr::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
+    m_height_map = wm::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
 
     // textures
     if (m_height_map != old)

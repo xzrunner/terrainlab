@@ -1,9 +1,9 @@
-#include "terrview/HeightfieldRenderer.h"
+#include "wmv/HeightfieldRenderer.h"
 
-#include <terr/HeightField.h>
+#include <wm/HeightField.h>
 #include <painting0/Shader.h>
 
-namespace terrv
+namespace wmv
 {
 
 void HeightfieldRenderer::Clear()

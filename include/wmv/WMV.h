@@ -7,10 +7,10 @@
 #include <vector>
 #include <memory>
 
-namespace terrv
+namespace wmv
 {
 
-class TerrView
+class WMV
 {
 public:
     auto& GetAllNodes() { return m_nodes; }
@@ -21,8 +21,8 @@ private:
 private:
     std::vector<bp::NodePtr> m_nodes;
 
-    CU_SINGLETON_DECLARATION(TerrView)
+    CU_SINGLETON_DECLARATION(WMV)
 
-}; // TerrView
+}; // WMV
 
 }

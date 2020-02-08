@@ -1,4 +1,4 @@
-#include "terrview/RegistNodes.h"
+#include "wmv/RegistNodes.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -8,7 +8,7 @@ extern void regist_sm_rttr();
 extern void regist_pt0_rttr();
 }
 
-namespace terrv
+namespace wmv
 {
 
 void regist_rttr()

@@ -1,4 +1,4 @@
-#include "terrview/WxToolbarPanel.h"
+#include "wmv/WxToolbarPanel.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/GameObj.h>
@@ -9,7 +9,7 @@
 
 #include <wx/sizer.h>
 
-namespace terrv
+namespace wmv
 {
 
 WxToolbarPanel::WxToolbarPanel(wxWindow* parent, const ee0::SubjectMgrPtr& graph_sub_mgr)

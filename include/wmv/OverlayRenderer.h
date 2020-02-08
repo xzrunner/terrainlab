@@ -2,11 +2,11 @@
 
 #include <unirender/Texture.h>
 
-#include "terrview/HeightfieldRenderer.h"
+#include "wmv/HeightfieldRenderer.h"
 
-namespace terr { class Bitmap; }
+namespace wm { class Bitmap; }
 
-namespace terrv
+namespace wmv
 {
 
 class OverlayRenderer : public HeightfieldRenderer
@@ -18,8 +18,8 @@ public:
 
     virtual void Clear() override;
 
-    void Setup(const std::shared_ptr<terr::HeightField>& hf,
-        const std::shared_ptr<terr::Bitmap>& bmp);
+    void Setup(const std::shared_ptr<wm::HeightField>& hf,
+        const std::shared_ptr<wm::Bitmap>& bmp);
 
     void Draw() const;
 

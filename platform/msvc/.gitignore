@@ -1,5 +1,5 @@
-terrview/
+wmv/
 projects/*
 
-!projects/terrview.vcxproj
-!projects/terrview.vcxproj.filters
+!projects/wmv.vcxproj
+!projects/wmv.vcxproj.filters

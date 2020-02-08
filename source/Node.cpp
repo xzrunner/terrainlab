@@ -1,10 +1,10 @@
-#include "terrview/Node.h"
-#include "terrview/TerrAdapter.h"
+#include "wmv/Node.h"
+#include "wmv/WmAdapter.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
 
-namespace terrv
+namespace wmv
 {
 
 const char* Node::STR_PROP_DISPLAY = "Display";
@@ -46,7 +46,7 @@ void Node::Draw(const n2::RenderParams& rp) const
     //}
 }
 
-void Node::UpdatePins(const terr::Device& node)
+void Node::UpdatePins(const wm::Device& node)
 {
     std::vector<PinDesc> input, output;
     PortBack2Front(input, node.GetImports());
@@ -65,7 +65,7 @@ void Node::InitPins(const std::vector<PinDesc>& input,
 
 void Node::InitPins(const std::string& name)
 {
-	rttr::type t = rttr::type::get_by_name("terr::" + name);
+	rttr::type t = rttr::type::get_by_name("wm::" + name);
     if (!t.is_valid()) {
         return;
     }
@@ -77,15 +77,15 @@ void Node::InitPins(const std::string& name)
 	assert(method_imports.is_valid());
 	auto var_imports = method_imports.invoke(var);
 	assert(var_imports.is_valid()
-		&& var_imports.is_type<std::vector<terr::Device::Port>>());
-	auto& imports = var_imports.get_value<std::vector<terr::Device::Port>>();
+		&& var_imports.is_type<std::vector<wm::Device::Port>>());
+	auto& imports = var_imports.get_value<std::vector<wm::Device::Port>>();
 
 	auto method_exports = t.get_method("GetExports");
 	assert(method_exports.is_valid());
 	auto var_exports = method_exports.invoke(var);
 	assert(var_exports.is_valid()
-		&& var_exports.is_type<std::vector<terr::Device::Port>>());
-	auto& exports = var_exports.get_value<std::vector<terr::Device::Port>>();
+		&& var_exports.is_type<std::vector<wm::Device::Port>>());
+	auto& exports = var_exports.get_value<std::vector<wm::Device::Port>>();
 
 	std::vector<PinDesc> input, output;
     PortBack2Front(input, imports);
@@ -123,7 +123,7 @@ void Node::InitPinsImpl(const std::vector<PinDesc>& pins, bool is_input)
 }
 
 void Node::PortBack2Front(std::vector<PinDesc>& dst,
-                          const std::vector<terr::Device::Port>& src)
+                          const std::vector<wm::Device::Port>& src)
 {
 	dst.reserve(dst.size() + src.size());
 	for (int i = 0, n = src.size(); i < n; ++i)
@@ -131,7 +131,7 @@ void Node::PortBack2Front(std::vector<PinDesc>& dst,
         PinDesc d;
 
 		auto& s = src[i];
-        d.type = TerrAdapter::TypeBackToFront(s.var.type);
+        d.type = WmAdapter::TypeBackToFront(s.var.type);
         d.name = s.var.full_name;
 
         dst.push_back(d);

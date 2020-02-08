@@ -7,7 +7,7 @@
 
 namespace bp { class WxNodeProperty; }
 
-namespace terrv
+namespace wmv
 {
 
 class WxToolbarPanel : public wxPanel, public ee0::Observer

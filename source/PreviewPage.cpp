@@ -1,10 +1,10 @@
-#include "terrview/PreviewPage.h"
+#include "wmv/PreviewPage.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee3/WxStageCanvas.h>
 #include <ee3/CameraDriveOP.h>
 
-namespace terrv
+namespace wmv
 {
 
 PreviewPage::PreviewPage(ee0::WxStagePage& stage_page)

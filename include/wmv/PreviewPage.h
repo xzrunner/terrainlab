@@ -6,7 +6,7 @@
 
 namespace ee0 { class WxStagePage; }
 
-namespace terrv
+namespace wmv
 {
 
 class PreviewPage : public ee0::Observer

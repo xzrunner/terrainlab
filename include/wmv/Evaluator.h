@@ -2,8 +2,8 @@
 
 #include <blueprint/typedef.h>
 
-#include <terr/Evaluator.h>
-#include <terr/typedef.h>
+#include <wm/Evaluator.h>
+#include <wm/typedef.h>
 #include <node0/typedef.h>
 
 #include <boost/noncopyable.hpp>
@@ -13,7 +13,7 @@
 
 namespace bp { class Connecting; }
 
-namespace terrv
+namespace wmv
 {
 
 class Evaluator : boost::noncopyable
@@ -37,15 +37,15 @@ public:
 
     auto& GetEval() const { return m_eval; }
 
-    terr::DevicePtr  QueryBackNode(const bp::Node& front_node) const;
+    wm::DevicePtr  QueryBackNode(const bp::Node& front_node) const;
 
 private:
     void Update();
 
 private:
-    terr::Evaluator m_eval;
+    wm::Evaluator m_eval;
 
-    std::unordered_map<const bp::Node*, terr::DevicePtr> m_front2back;
+    std::unordered_map<const bp::Node*, wm::DevicePtr> m_front2back;
 
 }; // Evaluator
 

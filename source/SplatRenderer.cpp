@@ -1,12 +1,12 @@
-#include "terrview/SplatRenderer.h"
+#include "wmv/SplatRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
 #include <unirender/RenderContext.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
-#include <terr/HeightField.h>
-#include <terr/TextureBaker.h>
+#include <wm/HeightField.h>
+#include <wm/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -73,7 +73,7 @@ void main()
 
 }
 
-namespace terrv
+namespace wmv
 {
 
 SplatRenderer::SplatRenderer()
@@ -82,7 +82,7 @@ SplatRenderer::SplatRenderer()
     InitShader();
 }
 
-void SplatRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
+void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
 {
     m_hf = hf;
     if (!m_hf) {
@@ -92,7 +92,7 @@ void SplatRenderer::Setup(const std::shared_ptr<terr::HeightField>& hf)
     assert(hf);
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     auto old = m_height_map;
-    m_height_map = terr::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
+    m_height_map = wm::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
 
     // textures
     if (m_height_map != old)

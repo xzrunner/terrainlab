@@ -1,9 +1,9 @@
 #pragma once
 
 #include <blueprint/Node.h>
-#include <terr/Device.h>
+#include <wm/Device.h>
 
-namespace terrv
+namespace wmv
 {
 
 class Node : public bp::Node
@@ -22,7 +22,7 @@ public:
     bool GetDisplay() const { return m_display; }
     void SetDisplay(bool display) { m_display = display; }
 
-    void UpdatePins(const terr::Device& node);
+    void UpdatePins(const wm::Device& node);
 
 protected:
     struct PinDesc
@@ -48,7 +48,7 @@ private:
         bool is_input);
 
     static void PortBack2Front(std::vector<PinDesc>& dst,
-        const std::vector<terr::Device::Port>& src);
+        const std::vector<wm::Device::Port>& src);
 
 private:
     std::string m_name;

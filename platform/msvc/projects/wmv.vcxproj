@@ -11,27 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\terrview\ImageRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrview\Evaluator.h" />
-    <ClInclude Include="..\..\..\include\terrview\HeightfieldRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrview\MessageID.h" />
-    <ClInclude Include="..\..\..\include\terrview\ModelAdapter.h" />
-    <ClInclude Include="..\..\..\include\terrview\Node.h" />
-    <ClInclude Include="..\..\..\include\terrview\node_regist_cfg.h" />
-    <ClInclude Include="..\..\..\include\terrview\node_def_gen.h" />
-    <ClInclude Include="..\..\..\include\terrview\node_rttr_gen.h" />
-    <ClInclude Include="..\..\..\include\terrview\OverlayRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrview\PinCallback.h" />
-    <ClInclude Include="..\..\..\include\terrview\PinType.h" />
-    <ClInclude Include="..\..\..\include\terrview\PreviewPage.h" />
-    <ClInclude Include="..\..\..\include\terrview\SplatRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrview\RegistNodes.h" />
-    <ClInclude Include="..\..\..\include\terrview\RenderVertex.h" />
-    <ClInclude Include="..\..\..\include\terrview\TerrAdapter.h" />
-    <ClInclude Include="..\..\..\include\terrview\TerrView.h" />
-    <ClInclude Include="..\..\..\include\terrview\WxGraphPage.h" />
-    <ClInclude Include="..\..\..\include\terrview\WxPreviewCanvas.h" />
-    <ClInclude Include="..\..\..\include\terrview\WxToolbarPanel.h" />
+    <ClInclude Include="..\..\..\include\wmv\ImageRenderer.h" />
+    <ClInclude Include="..\..\..\include\wmv\Evaluator.h" />
+    <ClInclude Include="..\..\..\include\wmv\HeightfieldRenderer.h" />
+    <ClInclude Include="..\..\..\include\wmv\MessageID.h" />
+    <ClInclude Include="..\..\..\include\wmv\ModelAdapter.h" />
+    <ClInclude Include="..\..\..\include\wmv\Node.h" />
+    <ClInclude Include="..\..\..\include\wmv\node_regist_cfg.h" />
+    <ClInclude Include="..\..\..\include\wmv\node_def_gen.h" />
+    <ClInclude Include="..\..\..\include\wmv\node_rttr_gen.h" />
+    <ClInclude Include="..\..\..\include\wmv\OverlayRenderer.h" />
+    <ClInclude Include="..\..\..\include\wmv\PinCallback.h" />
+    <ClInclude Include="..\..\..\include\wmv\PinType.h" />
+    <ClInclude Include="..\..\..\include\wmv\PreviewPage.h" />
+    <ClInclude Include="..\..\..\include\wmv\SplatRenderer.h" />
+    <ClInclude Include="..\..\..\include\wmv\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\wmv\RenderVertex.h" />
+    <ClInclude Include="..\..\..\include\wmv\WmAdapter.h" />
+    <ClInclude Include="..\..\..\include\wmv\WMV.h" />
+    <ClInclude Include="..\..\..\include\wmv\WxGraphPage.h" />
+    <ClInclude Include="..\..\..\include\wmv\WxPreviewCanvas.h" />
+    <ClInclude Include="..\..\..\include\wmv\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\ImageRenderer.cpp" />
@@ -45,16 +45,16 @@
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp" />
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
-    <ClCompile Include="..\..\..\source\TerrAdapter.cpp" />
-    <ClCompile Include="..\..\..\source\TerrView.cpp" />
+    <ClCompile Include="..\..\..\source\WmAdapter.cpp" />
+    <ClCompile Include="..\..\..\source\WMV.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>7.terrview</ProjectName>
+    <ProjectName>7.wmv</ProjectName>
     <ProjectGuid>{755C7AED-F6A9-4829-A8CA-210B2664724F}</ProjectGuid>
-    <RootNamespace>terrview</RootNamespace>
+    <RootNamespace>wmv</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -84,17 +84,17 @@
     <_ProjectFileVersion>15.0.26730.12</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\terrview\x86\Debug\</OutDir>
-    <IntDir>..\terrview\x86\Debug\obj\</IntDir>
+    <OutDir>..\wmv\x86\Debug\</OutDir>
+    <IntDir>..\wmv\x86\Debug\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\terrview\x86\Release\</OutDir>
-    <IntDir>..\terrview\x86\Release\obj\</IntDir>
+    <OutDir>..\wmv\x86\Release\</OutDir>
+    <IntDir>..\wmv\x86\Release\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\terr\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\wm\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -109,7 +109,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\terr\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\memmgr\include;..\..\..\..\serializerx\include;..\..\..\..\halfedge\include;..\..\..\..\primitive\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\polymesh3\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\dag\include;..\..\..\..\wm\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\node3\include;..\..\..\..\nserializer\include;..\..\..\..\easygui\include;..\..\..\..\moon\include;..\..\..\..\facade\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\draft2\include;..\..\..\..\draft3\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\python27\include\python27;..\..\..\..\external-editor\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

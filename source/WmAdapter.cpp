@@ -1,23 +1,23 @@
-#include "terrview/TerrAdapter.h"
-#include "terrview/RegistNodes.h"
-#include "terrview/PinType.h"
-#include "terrview/Node.h"
+#include "wmv/WmAdapter.h"
+#include "wmv/RegistNodes.h"
+#include "wmv/PinType.h"
+#include "wmv/Node.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 
-#include <terr/Device.h>
+#include <wm/Device.h>
 
-namespace terrv
+namespace wmv
 {
 
-void TerrAdapter::UpdatePropBackFromFront(const bp::Node& front, terr::Device& back,
+void WmAdapter::UpdatePropBackFromFront(const bp::Node& front, wm::Device& back,
                                           const Evaluator& eval)
 {
     auto f_type = front.get_type();
     auto b_type = back.get_type();
     if (f_type.is_derived_from<Node>() &&
-        b_type.is_derived_from<terr::Device>())
+        b_type.is_derived_from<wm::Device>())
     {
         for (auto& dst_prop : b_type.get_properties())
         {
@@ -28,18 +28,18 @@ void TerrAdapter::UpdatePropBackFromFront(const bp::Node& front, terr::Device& b
     }
 }
 
-terr::DevicePtr TerrAdapter::CreateBackFromFront(const bp::Node& node)
+wm::DevicePtr WmAdapter::CreateBackFromFront(const bp::Node& node)
 {
     auto type = node.get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
-    std::string lib_str = "terr";
-    auto find_lib = src_type.find("terrv::");
+    std::string lib_str = "wm";
+    auto find_lib = src_type.find("wmv::");
     if (find_lib != std::string::npos) {
-        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("terrv::"));
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("wmv::"));
     }
 
-    terr::DevicePtr dst = nullptr;
+    wm::DevicePtr dst = nullptr;
 
     if (!dst_type.empty())
     {
@@ -54,7 +54,7 @@ terr::DevicePtr TerrAdapter::CreateBackFromFront(const bp::Node& node)
             rttr::variant var = t.create();
             assert(var.is_valid());
 
-            dst = var.get_value<std::shared_ptr<terr::Device>>();
+            dst = var.get_value<std::shared_ptr<wm::Device>>();
             assert(dst);
         }
     }
@@ -67,22 +67,22 @@ terr::DevicePtr TerrAdapter::CreateBackFromFront(const bp::Node& node)
 }
 
 
-int TerrAdapter::TypeBackToFront(terr::DeviceVarType type)
+int WmAdapter::TypeBackToFront(wm::DeviceVarType type)
 {
     int ret = -1;
 
     switch (type)
     {
-    case terr::DeviceVarType::Any:
+    case wm::DeviceVarType::Any:
         ret = bp::PIN_ANY_VAR;
         break;
-    case terr::DeviceVarType::Heightfield:
+    case wm::DeviceVarType::Heightfield:
         ret = PIN_HEIGHTFIELD;
         break;
-    case terr::DeviceVarType::Bitmap:
+    case wm::DeviceVarType::Bitmap:
         ret = PIN_BITMAP;
         break;
-    case terr::DeviceVarType::Mask:
+    case wm::DeviceVarType::Mask:
         ret = PIN_MASK;
         break;
     default:

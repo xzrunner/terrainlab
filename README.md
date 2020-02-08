@@ -1,3 +1,3 @@
-# terrview
+# wmv
 
-Terrain front-end.
+WorldMachine front-end.

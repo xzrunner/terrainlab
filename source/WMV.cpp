@@ -1,22 +1,22 @@
-#include "terrview/TerrView.h"
-#include "terrview/PinCallback.h"
-#include "terrview/Node.h"
+#include "wmv/WMV.h"
+#include "wmv/PinCallback.h"
+#include "wmv/Node.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
 
-#include <terr/Terr.h>
+#include <wm/WM.h>
 
-namespace terrv
+namespace wmv
 {
 
-CU_SINGLETON_DEFINITION(TerrView);
+CU_SINGLETON_DEFINITION(WMV);
 
 extern void regist_rttr();
 
-TerrView::TerrView()
+WMV::WMV()
 {
-	terr::Terr::Instance();
+	wm::WM::Instance();
 
 	regist_rttr();
 
@@ -25,7 +25,7 @@ TerrView::TerrView()
     InitPinCallback();
 }
 
-void TerrView::InitNodes()
+void WMV::InitNodes()
 {
     const int bp_count = 1;
 

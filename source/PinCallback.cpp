@@ -1,5 +1,5 @@
-#include "terrview/PinCallback.h"
-#include "terrview/PinType.h"
+#include "wmv/PinCallback.h"
+#include "wmv/PinType.h"
 
 #include <painting0/Color.h>
 #include <blueprint/Pin.h>
@@ -20,13 +20,13 @@ std::string get_desc_func(const std::string& name, int type)
     std::string ret = name;
     switch (type)
     {
-    case terrv::PIN_HEIGHTFIELD:
+    case wmv::PIN_HEIGHTFIELD:
         ret += "(H)";
         break;
-    case terrv::PIN_BITMAP:
+    case wmv::PIN_BITMAP:
         ret += "(B)";
         break;
-    case terrv::PIN_MASK:
+    case wmv::PIN_MASK:
         ret += "(M)";
         break;
     }
@@ -37,11 +37,11 @@ const pt0::Color& get_color_func(int type)
 {
     switch (type)
     {
-    case terrv::PIN_HEIGHTFIELD:
+    case wmv::PIN_HEIGHTFIELD:
         return COL_HEIGHTFIELD;
-    case terrv::PIN_BITMAP:
+    case wmv::PIN_BITMAP:
         return COL_BITMAP;
-    case terrv::PIN_MASK:
+    case wmv::PIN_MASK:
         return COL_MASK;
     default:
         return COL_DEFAULT;
@@ -63,7 +63,7 @@ bool can_type_cast_func(int type_from, int type_to)
 
 }
 
-namespace terrv
+namespace wmv
 {
 
 void InitPinCallback()

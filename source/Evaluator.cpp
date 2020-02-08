@@ -1,18 +1,18 @@
-#include "terrview/Evaluator.h"
-#include "terrview/TerrAdapter.h"
-#include "terrview/Node.h"
+#include "wmv/Evaluator.h"
+#include "wmv/WmAdapter.h"
+#include "wmv/Node.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
 #include <blueprint/CompNode.h>
 
-#include <terr/Device.h>
-#include <terr/Evaluator.h>
+#include <wm/Device.h>
+#include <wm/Evaluator.h>
 
 #include <queue>
 
-namespace terrv
+namespace wmv
 {
 
 Evaluator::Evaluator()
@@ -21,7 +21,7 @@ Evaluator::Evaluator()
 
 void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, bool need_update)
 {
-    auto back = TerrAdapter::CreateBackFromFront(front);
+    auto back = WmAdapter::CreateBackFromFront(front);
     if (!back) {
         return;
     }
@@ -34,7 +34,7 @@ void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, 
         const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
     }
 
-    TerrAdapter::UpdatePropBackFromFront(front, *back, *this);
+    WmAdapter::UpdatePropBackFromFront(front, *back, *this);
     if (need_update) {
         Update();
     }
@@ -64,12 +64,12 @@ void Evaluator::OnClearAllNodes()
 void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
 {
     auto itr = m_front2back.find(node.get());
-    // not terr node
+    // not wm node
     if (itr == m_front2back.end()) {
         return;
     }
 
-    TerrAdapter::UpdatePropBackFromFront(*node, *itr->second, *this);
+    WmAdapter::UpdatePropBackFromFront(*node, *itr->second, *this);
 
     if (node->get_type().is_derived_from<Node>())
     {
@@ -131,7 +131,7 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
 void Evaluator::OnRebuildConnection()
 {
-    std::vector<std::pair<terr::Device::PortAddr, terr::Device::PortAddr>> conns;
+    std::vector<std::pair<wm::Device::PortAddr, wm::Device::PortAddr>> conns;
     for (auto& itr : m_front2back)
     {
         auto& front = itr.first;
@@ -166,7 +166,7 @@ void Evaluator::OnRebuildConnection()
     Update();
 }
 
-terr::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
+wm::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 {
     auto itr = m_front2back.find(&front_node);
     return itr == m_front2back.end() ? nullptr : itr->second;

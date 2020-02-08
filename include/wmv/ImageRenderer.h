@@ -2,16 +2,16 @@
 
 #include <unirender/Texture.h>
 
-namespace terr { class Bitmap; class Mask; }
+namespace wm { class Bitmap; class Mask; }
 
-namespace terrv
+namespace wmv
 {
 
 class ImageRenderer
 {
 public:
-    void Setup(const std::shared_ptr<terr::Bitmap>& bmp);
-    void Setup(const std::shared_ptr<terr::Mask>& mask);
+    void Setup(const std::shared_ptr<wm::Bitmap>& bmp);
+    void Setup(const std::shared_ptr<wm::Mask>& mask);
 
     void Draw() const;
 

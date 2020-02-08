@@ -1,7 +1,7 @@
-#include "terrview/WxPreviewCanvas.h"
-#include "terrview/WxGraphPage.h"
-#include "terrview/Evaluator.h"
-#include "terrview/MessageID.h"
+#include "wmv/WxPreviewCanvas.h"
+#include "wmv/WxGraphPage.h"
+#include "wmv/Evaluator.h"
+#include "wmv/MessageID.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -18,7 +18,7 @@
 #include <painting3/PerspCam.h>
 #include <painting3/Shader.h>
 #include <tessellation/Painter.h>
-#include <terr/Device.h>
+#include <wm/Device.h>
 
 namespace
 {
@@ -28,7 +28,7 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 
 }
 
-namespace terrv
+namespace wmv
 {
 
 WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM

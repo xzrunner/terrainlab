@@ -1,4 +1,4 @@
-#include "terrview/ModelAdapter.h"
+#include "wmv/ModelAdapter.h"
 
 #include <node0/SceneNode.h>
 #include <node0/CompMaterial.h>
@@ -9,12 +9,12 @@
 #include <painting3/MaterialMgr.h>
 #include <model/Model.h>
 #include <model/typedef.h>
-#include <terr/HeightField.h>
-#include <terr/HeightFieldEval.h>
+#include <wm/HeightField.h>
+#include <wm/HeightFieldEval.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
 
-namespace terrv
+namespace wmv
 {
 
 // todo: copy from sop::GeoAdaptor::Init
@@ -46,7 +46,7 @@ void ModelAdapter::SetupModel(n0::SceneNode& node)
     caabb.SetAABB(model->aabb);
 }
 
-void ModelAdapter::UpdateModel(const terr::HeightField& hf,
+void ModelAdapter::UpdateModel(const wm::HeightField& hf,
                                const n0::SceneNode& node)
 {
     auto model = std::make_shared<model::Model>();
@@ -58,7 +58,7 @@ void ModelAdapter::UpdateModel(const terr::HeightField& hf,
 }
 
 std::unique_ptr<model::Model::Mesh>
-ModelAdapter::HeightFieldToMesh(const terr::HeightField& hf)
+ModelAdapter::HeightFieldToMesh(const wm::HeightField& hf)
 {
     const float tot_w = 1.0f;
     const float tot_h = 1.0f;
@@ -77,7 +77,7 @@ ModelAdapter::HeightFieldToMesh(const terr::HeightField& hf)
             auto pos = sm::vec3(x, hf.Get(x, y), y) * scale;
             vertices.insert(vertices.end(), pos.xyz, pos.xyz + 3);
 
-            auto norm = terr::HeightFieldEval::Normal(hf, x, y, scale);
+            auto norm = wm::HeightFieldEval::Normal(hf, x, y, scale);
             vertices.insert(vertices.end(), norm.xyz, norm.xyz + 3);
 
             // texcoords

@@ -2,7 +2,7 @@
 
 #include <SM_Vector.h>
 
-namespace terrv
+namespace wmv
 {
 
 struct RenderVertex
