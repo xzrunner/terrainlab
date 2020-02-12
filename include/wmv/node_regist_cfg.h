@@ -12,6 +12,10 @@
 #define PARM_NODE_NAME color
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS Constant
+#define PARM_NODE_NAME constant
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS FaultFractal
 #define PARM_NODE_NAME fault_fractal
 #include EXE_FILEPATH
@@ -21,6 +25,10 @@
 #define PARM_NODE_NAME file_input
 #include EXE_FILEPATH
 #endif // SKIP_FILE_INPUT
+
+#define PARM_NODE_CLASS Gradient
+#define PARM_NODE_NAME gradient
+#include EXE_FILEPATH
 
 #define PARM_NODE_CLASS LayoutGen
 #define PARM_NODE_NAME layout_gen
