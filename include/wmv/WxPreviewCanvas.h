@@ -1,6 +1,5 @@
 #pragma once
 
-#include "wmv/SplatRenderer.h"
 #include "wmv/ImageRenderer.h"
 #include "wmv/OverlayRenderer.h"
 
@@ -44,7 +43,7 @@ private:
 
     n0::SceneNodePtr m_selected = nullptr;
 
-    SplatRenderer   m_hf_rd;
+    std::shared_ptr<HeightfieldRenderer> m_hf_rd = nullptr;
     ImageRenderer   m_img_rd;
     OverlayRenderer m_overlay_rd;
 

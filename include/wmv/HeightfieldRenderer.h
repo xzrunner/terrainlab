@@ -14,9 +14,12 @@ namespace wmv
 
 class HeightfieldRenderer : public rp::IRenderer, public rp::RendererImpl<RenderVertex, uint32_t>, private boost::noncopyable
 {
-protected:
+public:
     virtual void Clear();
+    virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) = 0;
+    virtual void Draw() const = 0;
 
+protected:
     void BuildVertBuf();
     void DrawVertBuf() const;
 

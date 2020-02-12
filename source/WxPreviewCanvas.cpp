@@ -2,6 +2,8 @@
 #include "wmv/WxGraphPage.h"
 #include "wmv/Evaluator.h"
 #include "wmv/MessageID.h"
+#include "wmv/SplatRenderer.h"
+#include "wmv/GrayRenderer.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -35,6 +37,8 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
+    m_hf_rd = std::make_shared<GrayRenderer>();
+
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);
 }
@@ -88,7 +92,7 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
-    auto& shaders = m_hf_rd.GetAllShaders();
+    auto& shaders = m_hf_rd->GetAllShaders();
     if (!shaders.empty()) {
         assert(shaders.size() == 1);
         auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
@@ -160,7 +164,7 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 {
     m_selected.reset();
 
-    m_hf_rd.Clear();
+    m_hf_rd->Clear();
     m_img_rd.Clear();
     m_overlay_rd.Clear();
 }
@@ -195,7 +199,7 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     if (hf && bmp) {
         m_overlay_rd.Draw();
     } else if (hf) {
-        m_hf_rd.Draw();
+        m_hf_rd->Draw();
     } else if (bmp) {
         m_img_rd.Draw();
     } else if (mask) {
@@ -221,14 +225,17 @@ void WxPreviewCanvas::SetupRenderer()
     }
 
     auto back_node = eval->QueryBackNode(*cnode.GetNode());
-    assert(back_node);
+    if (!back_node) {
+        return;
+    }
+
     auto hf = back_node->GetHeightField();
     auto bmp = back_node->GetBitmap();
     auto mask = back_node->GetMask();
     if (hf && bmp) {
         m_overlay_rd.Setup(hf, bmp);
     } else if (hf) {
-        m_hf_rd.Setup(hf);
+        m_hf_rd->Setup(hf);
     } else if (bmp) {
         m_img_rd.Setup(bmp);
     } else if (mask) {

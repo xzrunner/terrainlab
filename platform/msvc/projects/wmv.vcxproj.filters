@@ -103,6 +103,9 @@
     <ClInclude Include="..\..\..\include\wmv\WmAdapter.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\GrayRenderer.h">
+      <Filter>view\preview\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -150,6 +153,9 @@
     <ClCompile Include="..\..\..\source\WMV.cpp" />
     <ClCompile Include="..\..\..\source\WmAdapter.cpp">
       <Filter>tools\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\GrayRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

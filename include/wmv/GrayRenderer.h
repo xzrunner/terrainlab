@@ -7,10 +7,10 @@
 namespace wmv
 {
 
-class SplatRenderer : public HeightfieldRenderer
+class GrayRenderer : public HeightfieldRenderer
 {
 public:
-    SplatRenderer();
+    GrayRenderer();
 
     virtual void Flush() override {}
 
@@ -19,15 +19,11 @@ public:
     virtual void Draw() const override;
 
 private:
-    void InitTextuers();
     void InitShader();
 
 private:
     ur::TexturePtr m_height_map = nullptr;
 
-    ur::TexturePtr m_detail_map = nullptr;
-    ur::TexturePtr m_splat_map[4];
-
-}; // SplatRenderer
+}; // GrayRenderer
 
 }
