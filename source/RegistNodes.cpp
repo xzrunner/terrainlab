@@ -21,14 +21,24 @@ rttr::registration::class_<wmv::Node>("wmv::node")
 ;
 
 #define EXE_FILEPATH "wmv/node_rttr_gen.h"
-#define SKIP_FILE_INPUT
+#define SKIP_FILE_NODE
 #include "wmv/node_regist_cfg.h"
-#undef SKIP_FILE_INPUT
+#undef SKIP_FILE_NODE
 #undef EXE_FILEPATH
 
 rttr::registration::class_<wmv::node::FileInput>("wmv::file_input")
     .constructor<>()
     .property("filepath", &wmv::node::FileInput::m_filepath)
+    (
+	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")),
+        rttr::metadata(js::RTTR::FilePathTag(), true),
+        rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))
+    )
+;
+
+rttr::registration::class_<wmv::node::HeightOutput>("wmv::height_output")
+    .constructor<>()
+    .property("filepath", &wmv::node::HeightOutput::m_filepath)
     (
 	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")),
         rttr::metadata(js::RTTR::FilePathTag(), true),

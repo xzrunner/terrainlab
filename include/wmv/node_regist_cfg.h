@@ -20,11 +20,11 @@
 #define PARM_NODE_NAME fault_fractal
 #include EXE_FILEPATH
 
-#ifndef SKIP_FILE_INPUT
+#ifndef SKIP_FILE_NODE
 #define PARM_NODE_CLASS FileInput
 #define PARM_NODE_NAME file_input
 #include EXE_FILEPATH
-#endif // SKIP_FILE_INPUT
+#endif // SKIP_FILE_NODE
 
 #define PARM_NODE_CLASS Gradient
 #define PARM_NODE_NAME gradient
@@ -43,6 +43,12 @@
 #include EXE_FILEPATH
 
 // output
+
+#ifndef SKIP_FILE_NODE
+#define PARM_NODE_CLASS HeightOutput
+#define PARM_NODE_NAME height_output
+#include EXE_FILEPATH
+#endif // SKIP_FILE_NODE
 
 #define PARM_NODE_CLASS OverlayView
 #define PARM_NODE_NAME overlay_view
