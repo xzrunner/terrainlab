@@ -4,10 +4,6 @@
 
 // generator
 
-#define PARM_NODE_CLASS BasicNoise
-#define PARM_NODE_NAME basic_noise
-#include EXE_FILEPATH
-
 #define PARM_NODE_CLASS Color
 #define PARM_NODE_NAME color
 #include EXE_FILEPATH
@@ -16,8 +12,8 @@
 #define PARM_NODE_NAME constant
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS FaultFractal
-#define PARM_NODE_NAME fault_fractal
+#define PARM_NODE_CLASS Gradient
+#define PARM_NODE_NAME gradient
 #include EXE_FILEPATH
 
 #ifndef SKIP_FILE_NODE
@@ -26,20 +22,28 @@
 #include EXE_FILEPATH
 #endif // SKIP_FILE_NODE
 
-#define PARM_NODE_CLASS Gradient
-#define PARM_NODE_NAME gradient
-#include EXE_FILEPATH
-
 #define PARM_NODE_CLASS LayoutGen
 #define PARM_NODE_NAME layout_gen
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS PerlinNoise
-#define PARM_NODE_NAME perlin_noise
+#define PARM_NODE_CLASS FaultFractal
+#define PARM_NODE_NAME fault_fractal
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS PlasmaFractal
 #define PARM_NODE_NAME plasma_fractal
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS AdvanceNoise
+#define PARM_NODE_NAME advance_noise
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS BasicNoise
+#define PARM_NODE_NAME basic_noise
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS PerlinNoise
+#define PARM_NODE_NAME perlin_noise
 #include EXE_FILEPATH
 
 // output

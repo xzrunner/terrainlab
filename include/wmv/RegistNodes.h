@@ -2,6 +2,7 @@
 
 #include "wmv/Node.h"
 
+#include <wm/device/AdvanceNoise.h>
 #include <wm/device/Combiner.h>
 #include <wm/device/Curves.h>
 
