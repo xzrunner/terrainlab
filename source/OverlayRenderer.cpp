@@ -85,7 +85,7 @@ void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
 
     assert(hf);
     auto old = m_height_map;
-    m_height_map = wm::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
+    m_height_map = hf->GetHeightmap();
 
     // textures
     if (m_height_map != old)

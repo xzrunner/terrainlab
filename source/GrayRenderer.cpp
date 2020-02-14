@@ -6,7 +6,6 @@
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
 #include <wm/HeightField.h>
-#include <wm/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -80,19 +79,15 @@ void GrayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     }
 
     assert(hf);
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     auto old = m_height_map;
-    m_height_map = wm::TextureBaker::GenHeightMap(*hf, rc, m_height_map);
+    m_height_map = hf->GetHeightmap();
 
     // textures
-    if (m_height_map != old)
-    {
-        std::vector<uint32_t> texture_ids;
-        texture_ids.push_back(m_height_map->TexID());
+    std::vector<uint32_t> texture_ids;
+    texture_ids.push_back(m_height_map->TexID());
 
-        assert(m_shaders.size() == 1);
-        m_shaders.front()->SetUsedTextures(texture_ids);
-    }
+    assert(m_shaders.size() == 1);
+    m_shaders.front()->SetUsedTextures(texture_ids);
 
     // vertex buffer
     if (!old ||
