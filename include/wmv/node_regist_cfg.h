@@ -74,10 +74,30 @@
 #define PARM_NODE_NAME curves
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS Gaussian
+#define PARM_NODE_NAME gaussian
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Incline
+#define PARM_NODE_NAME incline
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Step
+#define PARM_NODE_NAME step
+#include EXE_FILEPATH
+
 // natural
 
 #define PARM_NODE_CLASS Erosion
 #define PARM_NODE_NAME erosion
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS ErosionGPU
+#define PARM_NODE_NAME erosion_gpu
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Wind
+#define PARM_NODE_NAME wind
 #include EXE_FILEPATH
 
 // selector
