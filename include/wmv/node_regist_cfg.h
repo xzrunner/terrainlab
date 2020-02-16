@@ -34,10 +34,6 @@
 #define PARM_NODE_NAME plasma_fractal
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS AdvanceNoise
-#define PARM_NODE_NAME advance_noise
-#include EXE_FILEPATH
-
 #define PARM_NODE_CLASS BasicNoise
 #define PARM_NODE_NAME basic_noise
 #include EXE_FILEPATH
@@ -48,6 +44,10 @@
 
 #define PARM_NODE_CLASS PerlinNoise
 #define PARM_NODE_NAME perlin_noise
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS TurbulenceNoise
+#define PARM_NODE_NAME turbulence_noise
 #include EXE_FILEPATH
 
 // output
