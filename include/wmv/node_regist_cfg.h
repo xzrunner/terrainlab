@@ -96,8 +96,12 @@
 #define PARM_NODE_NAME erosion
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS ErosionGPU
-#define PARM_NODE_NAME erosion_gpu
+#define PARM_NODE_CLASS HydraulicErosion
+#define PARM_NODE_NAME hydraulic_erosion
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS StreamPowerErosion
+#define PARM_NODE_NAME stream_power_erosion
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS ThermalWeathering
