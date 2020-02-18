@@ -16,6 +16,10 @@
 #define PARM_NODE_NAME gradient
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS AutoGen
+#define PARM_NODE_NAME auto_gen
+#include EXE_FILEPATH
+
 #ifndef SKIP_FILE_NODE
 #define PARM_NODE_CLASS FileInput
 #define PARM_NODE_NAME file_input
@@ -86,6 +90,10 @@
 #define PARM_NODE_NAME incline
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS Inverter
+#define PARM_NODE_NAME inverter
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS Step
 #define PARM_NODE_NAME step
 #include EXE_FILEPATH
@@ -126,4 +134,8 @@
 
 #define PARM_NODE_CLASS Colorizer
 #define PARM_NODE_NAME colorizer
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Resize
+#define PARM_NODE_NAME resize
 #include EXE_FILEPATH
