@@ -154,6 +154,10 @@
 #define PARM_NODE_NAME select_height
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS SelectMask
+#define PARM_NODE_NAME select_mask
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS SelectSlope
 #define PARM_NODE_NAME select_slope
 #include EXE_FILEPATH
