@@ -42,6 +42,10 @@
 #define PARM_NODE_NAME basic_noise
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS Billow
+#define PARM_NODE_NAME billow
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS CellularNoise
 #define PARM_NODE_NAME cellular_noise
 #include EXE_FILEPATH
@@ -50,8 +54,24 @@
 #define PARM_NODE_NAME perlin_noise
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS PerlinNoise2
+#define PARM_NODE_NAME perlin_noise2
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS RidgedMulti
+#define PARM_NODE_NAME ridged_multi
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS TurbulenceNoise
 #define PARM_NODE_NAME turbulence_noise
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS TurbulenceNoise2
+#define PARM_NODE_NAME turbulence_noise2
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Voronoi
+#define PARM_NODE_NAME voronoi
 #include EXE_FILEPATH
 
 // output
@@ -78,6 +98,10 @@
 
 // filter
 
+#define PARM_NODE_CLASS Clamp
+#define PARM_NODE_NAME clamp
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS Curves
 #define PARM_NODE_NAME curves
 #include EXE_FILEPATH
@@ -92,6 +116,10 @@
 
 #define PARM_NODE_CLASS Inverter
 #define PARM_NODE_NAME inverter
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS ScaleBias
+#define PARM_NODE_NAME scale_bias
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS Step
