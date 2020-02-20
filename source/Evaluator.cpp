@@ -82,6 +82,7 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
         }
     }
 
+    m_eval.PropChanged(itr->second);
     //m_eval.MakeDirty();
 
     Update();
