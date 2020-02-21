@@ -28,10 +28,12 @@ varying vec2  v_texcoord;
 
 void main()
 {
+    const float h_scale = 0.2;
+
 	v_height = texture2D(u_heightmap, texcoord).a;
 
 	vec4 pos = position;
-	pos.y = v_height;
+	pos.y = v_height * h_scale;
 	gl_Position = u_projection * u_view * u_model * pos;
 
 	v_texcoord = texcoord;

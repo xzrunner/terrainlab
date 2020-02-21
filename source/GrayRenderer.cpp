@@ -22,30 +22,24 @@ uniform mat4 u_model;
 
 uniform sampler2D u_heightmap;
 
-varying float v_height;
-varying vec2  v_texcoord;
-varying vec3  v_fragpos;
+varying vec3 v_fragpos;
 
 void main()
 {
-	v_height = texture2D(u_heightmap, texcoord).a;
+    const float h_scale = 0.2;
 
 	vec4 pos = position;
-	pos.y = v_height;
+	pos.y = texture2D(u_heightmap, texcoord).a * h_scale;
 
     v_fragpos = vec3(u_model * pos);
 	gl_Position = u_projection * u_view * u_model * pos;
-
-	v_texcoord = texcoord;
 }
 
 )";
 
 const char* fs = R"(
 
-varying float v_height;
-varying vec2  v_texcoord;
-varying vec3  v_fragpos;
+varying vec3 v_fragpos;
 
 void main()
 {
