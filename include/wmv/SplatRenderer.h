@@ -25,7 +25,6 @@ private:
 private:
     ur::TexturePtr m_height_map = nullptr;
 
-    ur::TexturePtr m_detail_map = nullptr;
     ur::TexturePtr m_splat_map[4];
 
 }; // SplatRenderer

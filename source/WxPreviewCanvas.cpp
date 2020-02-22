@@ -37,7 +37,8 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
-    m_hf_rd = std::make_shared<GrayRenderer>();
+    //m_hf_rd = std::make_shared<GrayRenderer>();
+    m_hf_rd = std::make_shared<SplatRenderer>();
 
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);
