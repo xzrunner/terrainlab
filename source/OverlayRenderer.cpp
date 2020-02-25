@@ -40,15 +40,13 @@ void main()
 const char* fs = R"(
 
 uniform sampler2D u_colormap;
-uniform sampler2D u_detailmap;
 
 varying vec2 v_texcoord;
 
 void main()
 {
     vec4 base_col = texture2D(u_colormap, v_texcoord);
-	vec4 detail_col = texture2D(u_detailmap, v_texcoord);
-	gl_FragColor = base_col * detail_col;
+	gl_FragColor = base_col;
 }
 
 )";
@@ -60,7 +58,6 @@ namespace wmv
 
 OverlayRenderer::OverlayRenderer()
 {
-    InitTextuers();
     InitShader();
 }
 
@@ -92,10 +89,9 @@ void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
     if (m_height_map != old)
     {
         std::vector<uint32_t> texture_ids;
-        texture_ids.reserve(3);
+        texture_ids.reserve(2);
         texture_ids.push_back(m_height_map->TexID());
         texture_ids.push_back(m_color_map->TexID());
-        texture_ids.push_back(m_detail_map->TexID());
 
         assert(m_shaders.size() == 1);
         m_shaders.front()->SetUsedTextures(texture_ids);
@@ -118,11 +114,6 @@ void OverlayRenderer::Draw() const
     DrawVertBuf();
 }
 
-void OverlayRenderer::InitTextuers()
-{
-    m_detail_map = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");
-}
-
 void OverlayRenderer::InitShader()
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
@@ -135,7 +126,6 @@ void OverlayRenderer::InitShader()
     std::vector<std::string> texture_names;
     texture_names.push_back("u_heightmap");
     texture_names.push_back("u_colormap");
-    texture_names.push_back("u_detailmap");
 
     pt3::Shader::Params sp(texture_names, layout);
     sp.vs = vs;

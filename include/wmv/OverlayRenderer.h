@@ -24,14 +24,11 @@ public:
         const std::shared_ptr<wm::Bitmap>& bmp);
 
 private:
-    void InitTextuers();
     void InitShader();
 
 private:
     ur::TexturePtr m_height_map = nullptr;
-
     ur::TexturePtr m_color_map  = nullptr;
-    ur::TexturePtr m_detail_map = nullptr;
 
 }; // OverlayRenderer
 
