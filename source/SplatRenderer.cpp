@@ -15,8 +15,6 @@ namespace
 
 const char* vs = R"(
 
-#version 130
-
 attribute vec4 position;
 attribute vec2 texcoord;
 
@@ -27,7 +25,9 @@ uniform mat4 u_model;
 uniform sampler2D u_heightmap;
 
 varying float v_height;
+#ifdef BUILD_NORMAL_MAP
 varying vec2  v_texcoord;
+#endif // BUILD_NORMAL_MAP
 varying vec3  v_fragpos;
 
 void main()
@@ -40,7 +40,9 @@ void main()
 	pos.y = v_height * h_scale;
 	gl_Position = u_projection * u_view * u_model * pos;
 
-	v_texcoord = texcoord;
+#ifdef BUILD_NORMAL_MAP
+    v_texcoord = texcoord;
+#endif // BUILD_NORMAL_MAP
     v_fragpos = vec3(u_model * pos);
 }
 
@@ -48,7 +50,8 @@ void main()
 
 const char* fs = R"(
 
-#version 130
+#define MULTIPROJECT
+//#define TEX_NO_TILE
 
 uniform vec3 u_light_dir;
 
@@ -57,9 +60,18 @@ uniform sampler2D u_splatmap1;
 uniform sampler2D u_splatmap2;
 uniform sampler2D u_splatmap3;
 
+#ifdef BUILD_NORMAL_MAP
+uniform sampler2D u_normal_map;
+varying vec2 v_texcoord;
+#endif // BUILD_NORMAL_MAP
+#ifdef BUILD_SHADOW_MAP
+uniform sampler2D u_shadow_map;
+#endif // BUILD_SHADOW_MAP
+
 varying float v_height;
-varying vec2  v_texcoord;
 varying vec3  v_fragpos;
+
+const float UV_SCALE = 32.0;
 
 vec4 hash4( vec2 p ) { return fract(sin(vec4( 1.0+dot(p,vec2(37.0,17.0)),
                                               2.0+dot(p,vec2(11.0,47.0)),
@@ -158,22 +170,37 @@ vec4 textureNoTile2( sampler2D samp, in vec2 uv )
 //
 //}
 
-vec4 TexSample(sampler2D samp, in vec3 world_pos, in vec3 weights)
+#ifdef TEX_NO_TILE
+vec4 TexSampleMultiProj(sampler2D samp, in vec3 world_pos, in vec3 weights)
 {
-    const float uv_scale = 16;
-    vec3 uv = uv_scale * world_pos;
+    vec3 uv = UV_SCALE * world_pos;
 	vec3 blended = weights.xxx * textureNoTile2(samp, uv.yz).rgb +
 	               weights.yyy * textureNoTile2(samp, uv.zx).rgb +
 	               weights.zzz * textureNoTile2(samp, uv.xy).rgb;
     return vec4(blended, 1.0);
 }
+#else
+vec4 TexSampleMultiProj(sampler2D samp, in vec3 world_pos, in vec3 weights)
+{
+    vec3 uv = UV_SCALE * world_pos;
+	vec3 blended = weights.xxx * texture(samp, uv.yz).rgb +
+	               weights.yyy * texture(samp, uv.zx).rgb +
+	               weights.zzz * texture(samp, uv.xy).rgb;
+    return vec4(blended, 1.0);
+}
+#endif // TEX_NO_TILE
 
 void main()
 {
-    // normal
+#ifdef BUILD_NORMAL_MAP
+    // fixme
+    //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
+    vec3 N = normalize(texture2D(u_normal_map, v_texcoord).rgb);
+#else
     vec3 fdx = dFdx(v_fragpos);
     vec3 fdy = dFdy(v_fragpos);
     vec3 N = normalize(cross(fdx, fdy));
+#endif // BUILD_NORMAL_MAP
 
     float h = v_fragpos.y;
     vec4 real_height = vec4(h, h, h, h);
@@ -205,10 +232,18 @@ void main()
 
     vec3 lerp_weights_norm = N * N;
 
-    vec3 splat_col = TexSample(u_splatmap0, v_fragpos, lerp_weights_norm).rgb;
-    splat_col = mix(splat_col, TexSample(u_splatmap1, v_fragpos, lerp_weights_norm).rgb, lerp_weights.x);
-    splat_col = mix(splat_col, TexSample(u_splatmap2, v_fragpos, lerp_weights_norm).rgb, lerp_weights.y);
-    splat_col = mix(splat_col, TexSample(u_splatmap3, v_fragpos, lerp_weights_norm).rgb, lerp_weights.z);
+#ifdef MULTIPROJECT
+    vec3 splat_col = TexSampleMultiProj(u_splatmap0, v_fragpos, lerp_weights_norm).rgb;
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap1, v_fragpos, lerp_weights_norm).rgb, lerp_weights.x);
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap2, v_fragpos, lerp_weights_norm).rgb, lerp_weights.y);
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap3, v_fragpos, lerp_weights_norm).rgb, lerp_weights.z);
+#else
+    vec2 tex_coord = UV_SCALE * v_fragpos.xz;
+    vec3 splat_col = texture(u_splatmap0, tex_coord).rgb;
+    splat_col = lerp(color, texture(u_splatmap1, tex_coord).rgb, lerp_weights.x);
+    splat_col = lerp(color, texture(u_splatmap2, tex_coord).rgb, lerp_weights.y);
+    splat_col = lerp(color, texture(u_splatmap3, tex_coord).rgb, lerp_weights.z);
+#endif // MULTIPROJECT
 
     // N dot L
     vec3 light_dir = normalize(u_light_dir);
@@ -219,8 +254,16 @@ void main()
     vec4 sun_col = vec4(1.0, 0.9, 0.7, 0.0);
     float sub_overbright = 1.6;
 
-    vec4 diff_col = mix(sky_col * sky_overbright, sun_col * sub_overbright, n_dot_l);
-    vec3 color = diff_col.rgb * splat_col;
+#ifdef BUILD_SHADOW_MAP
+    vec3 shadow = texture2D(u_shadow_map, v_texcoord).rgb;
+#endif
+
+    vec3 env_col = mix(sky_col * sky_overbright, sun_col * sub_overbright, n_dot_l).rgb;
+#ifdef BUILD_SHADOW_MAP
+    vec3 color = env_col * splat_col * shadow;
+#else
+    vec3 color = env_col * splat_col;
+#endif // BUILD_SHADOW_MAP
 
     gl_FragColor = vec4(color, 1.0);
 }
@@ -251,9 +294,16 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
         return;
     }
     assert(hf);
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     auto old = m_height_map;
     m_height_map = hf->GetHeightmap();
+
+    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+#ifdef BUILD_NORMAL_MAP
+    m_normal_map = wm::TextureBaker::GenNormalMap(*hf, rc);
+#endif // BUILD_NORMAL_MAP
+#ifdef BUILD_SHADOW_MAP
+    m_shadow_map = wm::TextureBaker::GenShadowMap(*hf, rc, m_light_dir);
+#endif // BUILD_SHADOW_MAP
 
     // textures
     if (m_height_map != old)
@@ -261,7 +311,12 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
         std::vector<uint32_t> texture_ids;
         texture_ids.reserve(6);
         texture_ids.push_back(m_height_map->TexID());
-        //texture_ids.push_back(m_detail_map->TexID());
+#ifdef BUILD_NORMAL_MAP
+        texture_ids.push_back(m_normal_map->TexID());
+#endif // BUILD_NORMAL_MAP
+#ifdef BUILD_SHADOW_MAP
+        texture_ids.push_back(m_shadow_map->TexID());
+#endif // BUILD_SHADOW_MAP
         texture_ids.push_back(m_splat_map[0]->TexID());
         texture_ids.push_back(m_splat_map[1]->TexID());
         texture_ids.push_back(m_splat_map[2]->TexID());
@@ -282,7 +337,7 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
 
     // update uniforms
     pt0::ShaderUniforms vals;
-    vals.AddVar("u_light_dir", pt0::RenderVariant(sm::vec3(1, -1, 2)));
+    vals.AddVar("u_light_dir", pt0::RenderVariant(m_light_dir));
     vals.Bind(*shader);
 }
 
@@ -302,12 +357,17 @@ void SplatRenderer::Clear()
 
 void SplatRenderer::InitTextuers()
 {
-    //m_detail_map = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\detailMap.tga");
-
-    m_splat_map[0] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\dark_dirt.jpg");
-    m_splat_map[1] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\rock.jpg");
-    m_splat_map[2] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\grass.jpg");
-    m_splat_map[3] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\snow.png");
+    const std::string filenames[4] = {
+        "dark_dirt.jpg",
+        "rock.jpg",
+        "grass.jpg",
+        "snow.png",
+    };
+    const int mipmap_levels = 32;
+    for (size_t i = 0; i < 4; ++i) {
+        std::string filepath = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\" + filenames[i];
+        m_splat_map[i] = model::TextureLoader::LoadFromFile(filepath.c_str(), mipmap_levels);
+    }
 }
 
 void SplatRenderer::InitShader()
@@ -321,19 +381,34 @@ void SplatRenderer::InitShader()
 
     std::vector<std::string> texture_names;
     texture_names.push_back("u_heightmap");
+#ifdef BUILD_NORMAL_MAP
+    texture_names.push_back("u_normal_map");
+#endif // BUILD_NORMAL_MAP
+#ifdef BUILD_SHADOW_MAP
+    texture_names.push_back("u_shadow_map");
+#endif // BUILD_SHADOW_MAP
     texture_names.push_back("u_splatmap0");
     texture_names.push_back("u_splatmap1");
     texture_names.push_back("u_splatmap2");
     texture_names.push_back("u_splatmap3");
 
     pt3::Shader::Params sp(texture_names, layout);
-    sp.vs = vs;
-    sp.fs = fs;
+    std::string _vs(vs);
+    std::string _fs(fs);
+#ifdef BUILD_NORMAL_MAP
+    _vs = "#version 130\n#define BUILD_NORMAL_MAP\n" + _vs;
+    _fs = "#version 130\n#define BUILD_NORMAL_MAP\n" + _fs;
+#else
+    _vs = "#version 130\n" + _vs;
+    _fs = "#version 130\n" + _fs;
+#endif // BUILD_NORMAL_MAP
+    sp.vs = _vs.c_str();
+    sp.fs = _fs.c_str();
 
     sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
     sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
     sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-    //sp.uniform_names.Add(pt0::UniformTypes::CamPos, sw::node::CameraPos::CamPosName());
+    //sp.uniform_names.Add(pt0::UniformTypes::CamPos,   "u_cam_pos");
 
     auto shader = std::make_shared<pt3::Shader>(&rc, sp);
     m_shaders.push_back(shader);

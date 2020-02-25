@@ -6,6 +6,7 @@
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
 #include <wm/HeightField.h>
+#include <wm/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -22,6 +23,9 @@ uniform mat4 u_model;
 
 uniform sampler2D u_heightmap;
 
+#ifdef BUILD_NORMAL_MAP
+varying vec2 v_texcoord;
+#endif // BUILD_NORMAL_MAP
 varying vec3 v_fragpos;
 
 void main()
@@ -31,6 +35,9 @@ void main()
 	vec4 pos = position;
 	pos.y = texture2D(u_heightmap, texcoord).a * h_scale;
 
+#ifdef BUILD_NORMAL_MAP
+    v_texcoord = texcoord;
+#endif // BUILD_NORMAL_MAP
     v_fragpos = vec3(u_model * pos);
 	gl_Position = u_projection * u_view * u_model * pos;
 }
@@ -39,13 +46,23 @@ void main()
 
 const char* fs = R"(
 
+#ifdef BUILD_NORMAL_MAP
+uniform sampler2D u_normal_map;
+varying vec2 v_texcoord;
+#endif // BUILD_NORMAL_MAP
 varying vec3 v_fragpos;
 
 void main()
 {
+#ifdef BUILD_NORMAL_MAP
+    // fixme
+    //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
+    vec3 N = normalize(texture2D(u_normal_map, v_texcoord).rgb);
+#else
     vec3 fdx = dFdx(v_fragpos);
     vec3 fdy = dFdy(v_fragpos);
     vec3 N = normalize(cross(fdx, fdy));
+#endif // BUILD_NORMAL_MAP
 
     vec3 light_dir = normalize(vec3(0, -10, 10) - v_fragpos);
     float diff = max(dot(N, light_dir), 0.0);
@@ -76,9 +93,17 @@ void GrayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     auto old = m_height_map;
     m_height_map = hf->GetHeightmap();
 
+#ifdef BUILD_NORMAL_MAP
+    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    m_normal_map = wm::TextureBaker::GenNormalMap(*hf, rc);
+#endif // BUILD_NORMAL_MAP
+
     // textures
     std::vector<uint32_t> texture_ids;
     texture_ids.push_back(m_height_map->TexID());
+#ifdef BUILD_NORMAL_MAP
+    texture_ids.push_back(m_normal_map->TexID());
+#endif // BUILD_NORMAL_MAP
 
     assert(m_shaders.size() == 1);
     m_shaders.front()->SetUsedTextures(texture_ids);
@@ -118,10 +143,20 @@ void GrayRenderer::InitShader()
 
     std::vector<std::string> texture_names;
     texture_names.push_back("u_heightmap");
+#ifdef BUILD_NORMAL_MAP
+    texture_names.push_back("u_normal_map");
+#endif // BUILD_NORMAL_MAP
 
     pt3::Shader::Params sp(texture_names, layout);
+#ifdef BUILD_NORMAL_MAP
+    std::string _vs = "#define BUILD_NORMAL_MAP\n" + std::string(vs);
+    std::string _fs = "#define BUILD_NORMAL_MAP\n" + std::string(fs);
+    sp.vs = _vs.c_str();
+    sp.fs = _fs.c_str();
+#else
     sp.vs = vs;
     sp.fs = fs;
+#endif // BUILD_NORMAL_MAP
 
     sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
     sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);

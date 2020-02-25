@@ -4,6 +4,8 @@
 
 #include "wmv/HeightfieldRenderer.h"
 
+//#define BUILD_NORMAL_MAP
+
 namespace wmv
 {
 
@@ -23,6 +25,9 @@ private:
 
 private:
     ur::TexturePtr m_height_map = nullptr;
+#ifdef BUILD_NORMAL_MAP
+    ur::TexturePtr m_normal_map = nullptr;
+#endif // BUILD_NORMAL_MAP
 
 }; // GrayRenderer
 
