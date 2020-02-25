@@ -4,7 +4,7 @@
 
 #include "wmv/HeightfieldRenderer.h"
 
-#define BUILD_NORMAL_MAP
+//#define BUILD_NORMAL_MAP
 //#define BUILD_SHADOW_MAP
 
 namespace wmv
