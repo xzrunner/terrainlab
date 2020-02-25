@@ -2,8 +2,9 @@
 #include "wmv/WxGraphPage.h"
 #include "wmv/Evaluator.h"
 #include "wmv/MessageID.h"
-#include "wmv/SplatRenderer.h"
 #include "wmv/GrayRenderer.h"
+#include "wmv/SplatRenderer.h"
+#include "wmv/SplatPbrRenderer.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -39,6 +40,7 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
 {
     //m_hf_rd = std::make_shared<GrayRenderer>();
     m_hf_rd = std::make_shared<SplatRenderer>();
+    //m_hf_rd = std::make_shared<SplatPbrRenderer>();
 
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);

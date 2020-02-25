@@ -37,8 +37,17 @@
     <Filter Include="view\preview\renderer">
       <UniqueIdentifier>{92eec5c5-cee0-46bc-9441-84218020ab23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view\preview\renderer\base">
-      <UniqueIdentifier>{22edbbd4-0fe6-48e6-b8a5-222230b159ee}</UniqueIdentifier>
+    <Filter Include="view\preview\renderer\bitmap">
+      <UniqueIdentifier>{fb961d33-f794-41b0-bf2b-4af30e9ce87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview\renderer\heightmap">
+      <UniqueIdentifier>{923ca281-5004-4021-8405-360193782130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview\renderer\heightmap\gray">
+      <UniqueIdentifier>{dd6ac323-bd76-42d7-b34e-72f4718e55d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview\renderer\heightmap\color">
+      <UniqueIdentifier>{e0740d41-010c-4d9c-bea3-f216a21a24ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -81,21 +90,6 @@
     <ClInclude Include="..\..\..\include\wmv\MessageID.h">
       <Filter>tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\OverlayRenderer.h">
-      <Filter>view\preview\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\SplatRenderer.h">
-      <Filter>view\preview\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\RenderVertex.h">
-      <Filter>view\preview\renderer\base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\HeightfieldRenderer.h">
-      <Filter>view\preview\renderer\base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\ImageRenderer.h">
-      <Filter>view\preview\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wmv\node_regist_cfg.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
@@ -103,8 +97,26 @@
     <ClInclude Include="..\..\..\include\wmv\WmAdapter.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\GrayRenderer.h">
+    <ClInclude Include="..\..\..\include\wmv\ImageRenderer.h">
+      <Filter>view\preview\renderer\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\HeightfieldRenderer.h">
+      <Filter>view\preview\renderer\heightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\RenderVertex.h">
       <Filter>view\preview\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\GrayRenderer.h">
+      <Filter>view\preview\renderer\heightmap\gray</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\OverlayRenderer.h">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\SplatPbrRenderer.h">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\SplatRenderer.h">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,24 +150,27 @@
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\OverlayRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
-      <Filter>view\preview\renderer\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\ImageRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\WMV.cpp" />
     <ClCompile Include="..\..\..\source\WmAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\ImageRenderer.cpp">
+      <Filter>view\preview\renderer\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
+      <Filter>view\preview\renderer\heightmap</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\source\GrayRenderer.cpp">
-      <Filter>view\preview\renderer</Filter>
+      <Filter>view\preview\renderer\heightmap\gray</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\OverlayRenderer.cpp">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\SplatPbrRenderer.cpp">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
+      <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
