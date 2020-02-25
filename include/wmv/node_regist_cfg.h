@@ -50,6 +50,10 @@
 #define PARM_NODE_NAME cellular_noise
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS FBM
+#define PARM_NODE_NAME fbm
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS PerlinNoise
 #define PARM_NODE_NAME perlin_noise
 #include EXE_FILEPATH
@@ -72,6 +76,22 @@
 
 #define PARM_NODE_CLASS Voronoi
 #define PARM_NODE_NAME voronoi
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Archipelago
+#define PARM_NODE_NAME archipelago
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Island
+#define PARM_NODE_NAME island
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Planet
+#define PARM_NODE_NAME planet
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Rock
+#define PARM_NODE_NAME rock
 #include EXE_FILEPATH
 
 // output
@@ -164,8 +184,24 @@
 
 // converter
 
+#define PARM_NODE_CLASS AlbedoMap
+#define PARM_NODE_NAME albedo_map
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS AmbientOcclusion
+#define PARM_NODE_NAME ambient_occlusion
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS NormalMap
+#define PARM_NODE_NAME normal_map
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS Colorizer
 #define PARM_NODE_NAME colorizer
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Lighting
+#define PARM_NODE_NAME lighting
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS Resize
