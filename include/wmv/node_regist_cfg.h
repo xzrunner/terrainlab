@@ -192,8 +192,16 @@
 #define PARM_NODE_NAME ambient_occlusion
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS LightMap
+#define PARM_NODE_NAME light_map
+#include EXE_FILEPATH
+
 #define PARM_NODE_CLASS NormalMap
 #define PARM_NODE_NAME normal_map
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS ShadowMap
+#define PARM_NODE_NAME shadow_map
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS Colorizer
