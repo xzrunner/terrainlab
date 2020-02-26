@@ -212,6 +212,6 @@
 #define PARM_NODE_NAME lighting
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS Resize
-#define PARM_NODE_NAME resize
+#define PARM_NODE_CLASS Resample
+#define PARM_NODE_NAME resample
 #include EXE_FILEPATH
