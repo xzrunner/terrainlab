@@ -55,6 +55,14 @@ const char* fs = R"(
 
 uniform vec3 u_light_dir;
 
+uniform vec4 u_layer_height_scale;
+uniform vec4 u_layer_height_bias;
+uniform vec4 u_layer_slope_scale;
+uniform vec4 u_layer_slope_bias;
+uniform mat4 u_layer_distort;
+
+uniform sampler2D u_noise_map;
+
 uniform sampler2D u_splatmap0;
 uniform sampler2D u_splatmap1;
 uniform sampler2D u_splatmap2;
@@ -202,37 +210,21 @@ void main()
     vec3 N = normalize(cross(fdx, fdy));
 #endif // BUILD_NORMAL_MAP
 
-    float h = v_fragpos.y;
-    vec4 real_height = vec4(h, h, h, h);
+#ifdef TEX_NO_TILE
+    vec4 global_col = textureNoTile2(u_noise_map, UV_SCALE * v_fragpos.xz);
+#else
+    vec4 global_col = texture(u_noise_map, UV_SCALE * v_fragpos.xz);
+#endif // TEX_NO_TILE
+    vec4 distortion = u_layer_distort * (global_col - 0.5) * 0;
 
-    const float height[4] = { 0, 0.2, 0.12, 0.14 };
-    const bool height_up[4] = { false, true, false, true };
-    const float height_var[4] = { 0, 0.05, 0.2, 0.01 };
-    const float layer2Lo = height[1] - (height_up[1] ? 0.5f : -0.5f) * max(0.001f, height_var[1]);
-    const float layer2Hi = height[1] + (height_up[1] ? 0.5f : -0.5f) * max(0.001f, height_var[1]);
-    const float layer3Lo = height[2] - (height_up[2] ? 0.5f : -0.5f) * max(0.001f, height_var[2]);
-    const float layer3Hi = height[2] + (height_up[2] ? 0.5f : -0.5f) * max(0.001f, height_var[2]);
-    const float layer4Lo = height[3] - (height_up[3] ? 0.5f : -0.5f) * max(0.001f, height_var[3]);
-    const float layer4Hi = height[3] + (height_up[3] ? 0.5f : -0.5f) * max(0.001f, height_var[3]);
-
-    const vec4 layer_height_scale = vec4(
-        1.0f / (layer2Hi - layer2Lo), // weight of layer2 (sand)
-        1.0f / (layer3Hi - layer3Lo),  // weight of layer3 (rock)
-        1.0f / (layer4Hi - layer4Lo), // weight of layer4 (snow)
-        0.0f
-    );
-    const vec4 layer_height_bias = vec4(
-        -layer2Lo / (layer2Hi - layer2Lo), // weight of layer2 (sand)
-        -layer3Lo / (layer3Hi - layer3Lo),  // weight of layer3 (rock)
-        -layer4Lo / (layer4Hi - layer4Lo), // weight of layer4 (snow)
-        0.0f
-    );
-
-    vec4 lerp_weights = clamp(real_height * layer_height_scale + layer_height_bias, 0.0, 1.0);
-
-    vec3 lerp_weights_norm = N * N;
+    float h = v_height;
+    vec4 real_height = v_height + distortion * 0.03;
+    vec4 lerp_weights = clamp(real_height * u_layer_height_scale + u_layer_height_bias, 0.0, 1.0);
+    vec4 lerp_weights2 = clamp((distortion.w + length(vec2(N.x, N.z))) * u_layer_slope_scale + u_layer_slope_bias, 0.0, 1.0);
+    lerp_weights = lerp_weights * lerp_weights2;
 
 #ifdef MULTIPROJECT
+    vec3 lerp_weights_norm = N * N;
     vec3 splat_col = TexSampleMultiProj(u_splatmap0, v_fragpos, lerp_weights_norm).rgb;
     splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap1, v_fragpos, lerp_weights_norm).rgb, lerp_weights.x);
     splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap2, v_fragpos, lerp_weights_norm).rgb, lerp_weights.y);
@@ -279,6 +271,7 @@ SplatRenderer::SplatRenderer()
 {
     InitTextuers();
     InitShader();
+    InitUniforms();
 }
 
 void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
@@ -317,6 +310,7 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
 #ifdef BUILD_SHADOW_MAP
         texture_ids.push_back(m_shadow_map->TexID());
 #endif // BUILD_SHADOW_MAP
+        texture_ids.push_back(m_noise_map->TexID());
         texture_ids.push_back(m_splat_map[0]->TexID());
         texture_ids.push_back(m_splat_map[1]->TexID());
         texture_ids.push_back(m_splat_map[2]->TexID());
@@ -338,6 +332,11 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     // update uniforms
     pt0::ShaderUniforms vals;
     vals.AddVar("u_light_dir", pt0::RenderVariant(m_light_dir));
+    vals.AddVar("u_layer_height_scale", pt0::RenderVariant(m_layer_height_scale));
+    vals.AddVar("u_layer_height_bias",  pt0::RenderVariant(m_layer_height_bias));
+    vals.AddVar("u_layer_slope_scale",  pt0::RenderVariant(m_layer_slope_scale));
+    vals.AddVar("u_layer_slope_bias",   pt0::RenderVariant(m_layer_slope_bias));
+    vals.AddVar("u_layer_distort",      pt0::RenderVariant(m_layer_distort));
     vals.Bind(*shader);
 }
 
@@ -357,15 +356,20 @@ void SplatRenderer::Clear()
 
 void SplatRenderer::InitTextuers()
 {
+    const std::string filedir = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\";
+    const int mipmap_levels = 32;
+
+    auto noise_path = filedir + "fractalnoise.jpg";
+    m_noise_map = model::TextureLoader::LoadFromFile(noise_path.c_str());
+
     const std::string filenames[4] = {
         "dark_dirt.jpg",
         "rock.jpg",
         "grass.jpg",
         "snow.png",
     };
-    const int mipmap_levels = 32;
     for (size_t i = 0; i < 4; ++i) {
-        std::string filepath = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\" + filenames[i];
+        std::string filepath = filedir + filenames[i];
         m_splat_map[i] = model::TextureLoader::LoadFromFile(filepath.c_str(), mipmap_levels);
     }
 }
@@ -387,6 +391,7 @@ void SplatRenderer::InitShader()
 #ifdef BUILD_SHADOW_MAP
     texture_names.push_back("u_shadow_map");
 #endif // BUILD_SHADOW_MAP
+    texture_names.push_back("u_noise_map");
     texture_names.push_back("u_splatmap0");
     texture_names.push_back("u_splatmap1");
     texture_names.push_back("u_splatmap2");
@@ -412,6 +417,73 @@ void SplatRenderer::InitShader()
 
     auto shader = std::make_shared<pt3::Shader>(&rc, sp);
     m_shaders.push_back(shader);
+}
+
+void SplatRenderer::InitUniforms()
+{
+    // height
+
+    const float height[4]     = { 0.0f, 1.0f, 0.6f, 0.8f };
+    const bool  height_up[4]  = { false, true, false, true };
+    const float height_var[4] = { 0.0f, 0.1f, 0.32f, 0.02f };
+
+    const float height2_lo = height[1] - (height_up[1] ? 0.5f : -0.5f) * std::max(0.001f, height_var[1]);
+    const float height2_hi = height[1] + (height_up[1] ? 0.5f : -0.5f) * std::max(0.001f, height_var[1]);
+    const float height3_lo = height[2] - (height_up[2] ? 0.5f : -0.5f) * std::max(0.001f, height_var[2]);
+    const float height3_hi = height[2] + (height_up[2] ? 0.5f : -0.5f) * std::max(0.001f, height_var[2]);
+    const float height4_lo = height[3] - (height_up[3] ? 0.5f : -0.5f) * std::max(0.001f, height_var[3]);
+    const float height4_hi = height[3] + (height_up[3] ? 0.5f : -0.5f) * std::max(0.001f, height_var[3]);
+
+    m_layer_height_scale = sm::vec4(
+        1.0f / (height2_hi - height2_lo), // weight of layer2 (rock)
+        1.0f / (height3_hi - height3_lo), // weight of layer3 (grass)
+        1.0f / (height4_hi - height4_lo), // weight of layer4 (snow)
+        0.0f
+    );
+    m_layer_height_bias = sm::vec4(
+        -height2_lo / (height2_hi - height2_lo), // weight of layer2 (rock)
+        -height3_lo / (height3_hi - height3_lo), // weight of layer3 (grass)
+        -height4_lo / (height4_hi - height4_lo), // weight of layer4 (snow)
+        0.0f
+    );
+
+    // slope
+
+    const float slope[4]     = { 0, 23, 8, 34 };
+    const bool  slope_up[4]  = { false, true, false, false };
+    const float slope_var[4] = { 0, 68, 72, 140 };
+	const float slope2_lo_tan = std::tan(0.01745f * (slope[1] - (slope_up[1] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[1])));
+	const float slope2_hi_tan = std::tan(0.01745f * (slope[1] + (slope_up[1] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[1])));
+	const float slope3_lo_tan = std::tan(0.01745f * (slope[2] - (slope_up[2] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[2])));
+	const float slope3_hi_tan = std::tan(0.01745f * (slope[2] + (slope_up[2] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[2])));
+	const float slope4_lo_tan = std::tan(0.01745f * (slope[3] - (slope_up[3] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[3])));
+	const float slope4_hi_tan = std::tan(0.01745f * (slope[3] + (slope_up[3] ? 0.5f : -0.5f) * std::max(0.001f, slope_var[3])));
+
+    m_layer_slope_scale = sm::vec4(
+		1.0f / (slope2_hi_tan - slope2_lo_tan),  // weight of layer2 (rock)
+		1.0f / (slope3_hi_tan - slope3_lo_tan),  // weight of layer3 (grass)
+		1.0f / (slope4_hi_tan - slope4_lo_tan),  // weight of layer4 (snow)
+		0.0f);
+
+    m_layer_slope_bias = sm::vec4(
+		-slope2_lo_tan / (slope2_hi_tan - slope2_lo_tan),  // weight of layer2 (rock)
+		-slope3_lo_tan / (slope3_hi_tan - slope3_lo_tan),  // weight of layer3 (grass)
+		-slope4_lo_tan / (slope4_hi_tan - slope4_lo_tan),  // weight of layer4 (snow)
+		0.0);
+
+    // distort
+
+    const float distort_hi[4]  = { 0, 218.001f, 1.001f, 1.001f };
+    const float distort_lo[4]  = { 0, 0.001f,   3.001f, 2.001f };
+    const float distort_mid[4] = { 0, 13.001f,  2.001f, 0.001f };
+    const float slope_distort_hi  = 5.001f;
+    const float slope_distort_lo  = 28.001f;
+    const float slope_distort_mid = 14.001f;
+    auto m = m_layer_distort.x;
+    m[0] = 10.0f * distort_hi[1];    m[1] = 10.0f * distort_mid[1];   m[2] = 10.0f * distort_lo[1];    m[3] = 0.0f;
+    m[4] = 10.0f * distort_hi[2];    m[5] = 10.0f * distort_mid[2];   m[6] = 10.0f * distort_lo[2];    m[7] = 0.0f,
+    m[8] = 10.0f * distort_hi[3];    m[9] = 10.0f * distort_mid[3];   m[10]= 10.0f * distort_lo[3];    m[11]= 0.0f;
+    m[12]= 0.1f  * slope_distort_hi; m[13]= 0.1f * slope_distort_mid; m[14]= 0.1f  * slope_distort_lo; m[15]= 0.0f;
 }
 
 }
