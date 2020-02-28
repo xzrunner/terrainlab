@@ -1,5 +1,6 @@
 #include "wmv/TemplateBrushOP.h"
 #include "wmv/GrayRenderer.h"
+#include "wmv/SplatRenderer.h"
 #include "wmv/RegistNodes.h"
 
 #include <ee0/MsgHelper.h>
@@ -20,7 +21,7 @@ TemplateBrushOP::TemplateBrushOP(const std::shared_ptr<pt0::Camera>& camera,
     : ee3::CameraDriveOP(camera, vp, sub_mgr)
     , m_vp(vp)
 {
-    m_renderer = std::make_shared<GrayRenderer>();
+    m_renderer = std::make_shared<SplatRenderer>();
 }
 
 bool TemplateBrushOP::OnMouseLeftDown(int x, int y)
