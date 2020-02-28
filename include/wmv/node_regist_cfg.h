@@ -20,6 +20,10 @@
 #define PARM_NODE_NAME auto_gen
 #include EXE_FILEPATH
 
+#define PARM_NODE_CLASS TemplateBrush
+#define PARM_NODE_NAME template_brush
+#include EXE_FILEPATH
+
 #ifndef SKIP_FILE_NODE
 #define PARM_NODE_CLASS FileInput
 #define PARM_NODE_NAME file_input
@@ -144,6 +148,10 @@
 
 #define PARM_NODE_CLASS Step
 #define PARM_NODE_NAME step
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS Transform
+#define PARM_NODE_NAME transform
 #include EXE_FILEPATH
 
 // natural

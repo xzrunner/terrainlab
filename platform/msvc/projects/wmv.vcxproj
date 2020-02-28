@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\wmv\TemplateBrushOP.h" />
     <ClInclude Include="..\..\..\include\wmv\GrayRenderer.h" />
     <ClInclude Include="..\..\..\include\wmv\ImageRenderer.h" />
     <ClInclude Include="..\..\..\include\wmv\Evaluator.h" />
@@ -36,6 +37,7 @@
     <ClInclude Include="..\..\..\include\wmv\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\TemplateBrushOP.cpp" />
     <ClCompile Include="..\..\..\source\GrayRenderer.cpp" />
     <ClCompile Include="..\..\..\source\ImageRenderer.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />

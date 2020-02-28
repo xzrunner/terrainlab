@@ -1,4 +1,5 @@
 #include "wmv/PreviewPage.h"
+#include "wmv/WxPreviewCanvas.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee3/WxStageCanvas.h>
@@ -7,9 +8,10 @@
 namespace wmv
 {
 
-PreviewPage::PreviewPage(ee0::WxStagePage& stage_page)
+PreviewPage::PreviewPage(ee0::WxStagePage& stage_page, const ee0::RenderContext& rc)
     : m_stage_page(stage_page)
 {
+    Init(rc);
 }
 
 PreviewPage::~PreviewPage()
@@ -20,19 +22,18 @@ void PreviewPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 {
 }
 
-void PreviewPage::InitEditOP()
+void PreviewPage::Init(const ee0::RenderContext& rc)
 {
-    auto canvas = m_stage_page.GetImpl().GetCanvas();
-    assert(canvas);
-    auto sub_mgr = m_stage_page.GetSubjectMgr();
-    assert(sub_mgr);
+    auto canvas = std::make_shared<WxPreviewCanvas>(&m_stage_page, ECS_WORLD_VAR rc);
+    m_stage_page.GetImpl().SetCanvas(canvas);
 
+    auto cam = canvas->GetCamera();
     auto& vp = std::static_pointer_cast<ee3::WxStageCanvas>(canvas)->GetViewport();
-    auto edit_op = std::make_shared<ee3::CameraDriveOP>(
-        canvas->GetCamera(), vp, sub_mgr
-    );
+    auto sub_mgr = m_stage_page.GetSubjectMgr();
+    auto op = std::make_shared<ee3::CameraDriveOP>(cam, vp, sub_mgr);
+    m_stage_page.GetImpl().SetEditOP(op);
 
-    m_stage_page.GetImpl().SetEditOP(edit_op);
+    canvas->InitEditOP(op);
 }
 
 }

@@ -5,8 +5,12 @@
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
+#include <blueprint/typedef.h>
 
 #include <node0/typedef.h>
+#include <wm/typedef.h>
+
+#include <array>
 
 namespace wmv
 {
@@ -24,6 +28,8 @@ public:
 
     void SetGraphPage(const WxGraphPage* graph_page);
 
+    void InitEditOP(const ee0::EditOPPtr& default_op);
+
 protected:
     virtual void DrawBackground3D() const override;
     virtual void DrawForeground3D() const override;
@@ -38,6 +44,17 @@ private:
 
     void SetupRenderer();
 
+    bp::NodePtr GetSelectedNode() const;
+    wm::DevicePtr GetSelectedDevice() const;
+
+private:
+    enum OperatorID
+    {
+        OP_DEFAULT,
+        OP_TEMP_BRUSH,
+        OP_MAX_NUM
+    };
+
 private:
     const WxGraphPage* m_graph_page = nullptr;
 
@@ -46,6 +63,8 @@ private:
     std::shared_ptr<HeightfieldRenderer> m_hf_rd = nullptr;
     ImageRenderer   m_img_rd;
     OverlayRenderer m_overlay_rd;
+
+    std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
 
 }; // WxPreviewCanvas
 

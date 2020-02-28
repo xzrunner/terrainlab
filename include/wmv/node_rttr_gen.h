@@ -19,7 +19,7 @@ rttr::registration::class_<wmv::node::PARM_NODE_CLASS>(XSTR(RTTR_NAME))
 .constructor<>()
 
 #define PARAM_INFO(id, type, name, member, default_val)        \
-.property(#name, &wmv::node::##PARM_NODE_CLASS::member)      \
+.property(#name, &wmv::node::##PARM_NODE_CLASS::member)        \
 (                                                              \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(#id)) \
 )

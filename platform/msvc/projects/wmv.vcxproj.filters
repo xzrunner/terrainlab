@@ -49,6 +49,9 @@
     <Filter Include="view\preview\renderer\heightmap\color">
       <UniqueIdentifier>{e0740d41-010c-4d9c-bea3-f216a21a24ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\preview\operator">
+      <UniqueIdentifier>{c45312e6-7b5f-44c6-a253-349fabd6f1ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\wmv\WxPreviewCanvas.h">
@@ -118,6 +121,9 @@
     <ClInclude Include="..\..\..\include\wmv\SplatRenderer.h">
       <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\TemplateBrushOP.h">
+      <Filter>view\preview\operator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -171,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
       <Filter>view\preview\renderer\heightmap\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TemplateBrushOP.cpp">
+      <Filter>view\preview\operator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
