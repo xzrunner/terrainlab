@@ -32,7 +32,7 @@ public:
     auto GetRenderer() const { return m_renderer; }
 
 private:
-    sm::vec2 CalcBrushPos(int x, int y) const;
+    sm::mat4 CalcBrushTrans(int x, int y) const;
 
 private:
     const pt3::Viewport& m_vp;
@@ -43,7 +43,7 @@ private:
 
     std::shared_ptr<HeightfieldRenderer> m_renderer = nullptr;
 
-    sm::vec2 m_brush_pos;
+    sm::mat4 m_brush_trans;
 
 }; // TemplateBrushOP
 
