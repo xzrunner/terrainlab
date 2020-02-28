@@ -34,7 +34,7 @@ void main()
 {
     const float h_scale = 0.2;
 
-	v_height = texture2D(u_heightmap, texcoord).a;
+	v_height = texture2D(u_heightmap, texcoord).r;
 
 	vec4 pos = position;
 	pos.y = v_height * h_scale;

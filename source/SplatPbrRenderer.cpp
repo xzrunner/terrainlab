@@ -34,7 +34,7 @@ void main()
 {
     const float h_scale = 0.2;
 
-	v_height = texture2D(u_heightmap, texcoord).a;
+	v_height = texture2D(u_heightmap, texcoord).r;
 
 	vec4 pos = position;
 	pos.y = v_height * h_scale;
@@ -316,7 +316,7 @@ void main()
     vec3 albedo     = splat_col;
     float metallic  = 0.5;
     float roughness = 0.5;
-    float ao        = texture(u_ao_map, v_texcoord).a;
+    float ao        = texture(u_ao_map, v_texcoord).r;
 
     vec3 V = normalize(u_cam_pos - v_fragpos);
 

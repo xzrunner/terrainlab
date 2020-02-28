@@ -29,7 +29,7 @@ void main()
 {
     const float h_scale = 0.2;
 	vec4 pos = position;
-	pos.y = texture2D(u_heightmap, texcoord).a * h_scale;
+	pos.y = texture2D(u_heightmap, texcoord).r * h_scale;
 	gl_Position = u_projection * u_view * u_model * pos;
 
 	v_texcoord = texcoord;
