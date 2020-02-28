@@ -105,15 +105,6 @@ void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
     }
 }
 
-void OverlayRenderer::Draw() const
-{
-    if (m_shaders.empty() || !m_hf) {
-        return;
-    }
-
-    DrawVertBuf();
-}
-
 void OverlayRenderer::InitShader()
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();

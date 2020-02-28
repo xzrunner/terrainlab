@@ -4,6 +4,7 @@
 
 #include <renderpipeline/IRenderer.h>
 #include <renderpipeline/RendererImpl.h>
+#include <SM_Matrix.h>
 
 #include <boost/noncopyable.hpp>
 
@@ -17,7 +18,8 @@ class HeightfieldRenderer : public rp::IRenderer, public rp::RendererImpl<Render
 public:
     virtual void Clear();
     virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) = 0;
-    virtual void Draw() const = 0;
+
+    void Draw(const sm::mat4& mt = sm::mat4()) const;
 
 protected:
     void BuildVertBuf();

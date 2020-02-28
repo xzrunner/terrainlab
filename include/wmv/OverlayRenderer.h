@@ -17,7 +17,6 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Draw() const override;
     virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) override {}
 
     void Setup(const std::shared_ptr<wm::HeightField>& hf,

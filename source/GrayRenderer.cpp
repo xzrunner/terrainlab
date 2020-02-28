@@ -116,15 +116,6 @@ void GrayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     }
 }
 
-void GrayRenderer::Draw() const
-{
-    if (m_shaders.empty() || !m_hf) {
-        return;
-    }
-
-    DrawVertBuf();
-}
-
 void GrayRenderer::Clear()
 {
     HeightfieldRenderer::Clear();

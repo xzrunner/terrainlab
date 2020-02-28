@@ -11,6 +11,17 @@ void HeightfieldRenderer::Clear()
     m_hf.reset();
 }
 
+void HeightfieldRenderer::Draw(const sm::mat4& mt) const
+{
+    if (m_shaders.empty() || !m_hf) {
+        return;
+    }
+
+    m_shaders[0]->UpdateModelMat(mt);
+
+    DrawVertBuf();
+}
+
 void HeightfieldRenderer::BuildVertBuf()
 {
     const auto w = m_hf->Width();

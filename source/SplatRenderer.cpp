@@ -340,15 +340,6 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     vals.Bind(*shader);
 }
 
-void SplatRenderer::Draw() const
-{
-    if (m_shaders.empty() || !m_hf) {
-        return;
-    }
-
-    DrawVertBuf();
-}
-
 void SplatRenderer::Clear()
 {
     m_height_map.reset();
