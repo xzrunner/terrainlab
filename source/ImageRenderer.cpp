@@ -1,27 +1,27 @@
-#include "wmv/ImageRenderer.h"
+#include "terrainlab/ImageRenderer.h"
 
-#include <wm/TextureBaker.h>
+#include <terraingraph/TextureBaker.h>
 #include <unirender/Blackboard.h>
 #include <unirender/RenderContext.h>
 #include <painting2/RenderSystem.h>
 #include <renderpipeline/RenderMgr.h>
 
-namespace wmv
+namespace terrainlab
 {
 
-void ImageRenderer::Setup(const std::shared_ptr<wm::Bitmap>& bmp)
+void ImageRenderer::Setup(const std::shared_ptr<terraingraph::Bitmap>& bmp)
 {
     if (bmp) {
         auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = wm::TextureBaker::GenColorMap(*bmp, rc);
+        m_tex = terraingraph::TextureBaker::GenColorMap(*bmp, rc);
     }
 }
 
-void ImageRenderer::Setup(const std::shared_ptr<wm::Mask>& mask)
+void ImageRenderer::Setup(const std::shared_ptr<terraingraph::Mask>& mask)
 {
     if (mask) {
         auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = wm::TextureBaker::GenColorMap(*mask, rc);
+        m_tex = terraingraph::TextureBaker::GenColorMap(*mask, rc);
     }
 }
 

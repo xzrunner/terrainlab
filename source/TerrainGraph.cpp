@@ -1,23 +1,23 @@
-#include "wmv/WmAdapter.h"
-#include "wmv/RegistNodes.h"
-#include "wmv/PinType.h"
-#include "wmv/Node.h"
+#include "terrainlab/TerrainGraph.h"
+#include "terrainlab/RegistNodes.h"
+#include "terrainlab/PinType.h"
+#include "terrainlab/Node.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 
-#include <wm/Device.h>
+#include <terraingraph/Device.h>
 
-namespace wmv
+namespace terrainlab
 {
 
-void WmAdapter::UpdatePropBackFromFront(const bp::Node& front, wm::Device& back,
+void TerrainGraph::UpdatePropBackFromFront(const bp::Node& front, terraingraph::Device& back,
                                           const Evaluator& eval)
 {
     auto f_type = front.get_type();
     auto b_type = back.get_type();
     if (f_type.is_derived_from<Node>() &&
-        b_type.is_derived_from<wm::Device>())
+        b_type.is_derived_from<terraingraph::Device>())
     {
         for (auto& dst_prop : b_type.get_properties())
         {
@@ -28,18 +28,18 @@ void WmAdapter::UpdatePropBackFromFront(const bp::Node& front, wm::Device& back,
     }
 }
 
-wm::DevicePtr WmAdapter::CreateBackFromFront(const bp::Node& node)
+terraingraph::DevicePtr TerrainGraph::CreateBackFromFront(const bp::Node& node)
 {
     auto type = node.get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
-    std::string lib_str = "wm";
-    auto find_lib = src_type.find("wmv::");
+    std::string lib_str = "terraingraph";
+    auto find_lib = src_type.find("terrainlab::");
     if (find_lib != std::string::npos) {
-        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("wmv::"));
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("terrainlab::"));
     }
 
-    wm::DevicePtr dst = nullptr;
+    terraingraph::DevicePtr dst = nullptr;
 
     if (!dst_type.empty())
     {
@@ -54,7 +54,7 @@ wm::DevicePtr WmAdapter::CreateBackFromFront(const bp::Node& node)
             rttr::variant var = t.create();
             assert(var.is_valid());
 
-            dst = var.get_value<std::shared_ptr<wm::Device>>();
+            dst = var.get_value<std::shared_ptr<terraingraph::Device>>();
             assert(dst);
         }
     }
@@ -67,22 +67,22 @@ wm::DevicePtr WmAdapter::CreateBackFromFront(const bp::Node& node)
 }
 
 
-int WmAdapter::TypeBackToFront(wm::DeviceVarType type)
+int TerrainGraph::TypeBackToFront(terraingraph::DeviceVarType type)
 {
     int ret = -1;
 
     switch (type)
     {
-    case wm::DeviceVarType::Any:
+    case terraingraph::DeviceVarType::Any:
         ret = bp::PIN_ANY_VAR;
         break;
-    case wm::DeviceVarType::Heightfield:
+    case terraingraph::DeviceVarType::Heightfield:
         ret = PIN_HEIGHTFIELD;
         break;
-    case wm::DeviceVarType::Bitmap:
+    case terraingraph::DeviceVarType::Bitmap:
         ret = PIN_BITMAP;
         break;
-    case wm::DeviceVarType::Mask:
+    case terraingraph::DeviceVarType::Mask:
         ret = PIN_MASK;
         break;
     default:

@@ -4,9 +4,9 @@
 
 #include <node0/typedef.h>
 
-namespace wm { class HeightField; }
+namespace terraingraph { class HeightField; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class HeightfieldRenderer;
@@ -21,7 +21,7 @@ public:
     auto GetRenderer() const { return m_renderer; }
 
     void Setup(const std::shared_ptr<Node>& brush_node,
-        const std::shared_ptr<wm::HeightField>& hf,
+        const std::shared_ptr<terraingraph::HeightField>& hf,
         const n0::SceneNodePtr& editor_node);
 
     void SetEditorSubMgr(const ee0::SubjectMgrPtr& editor_sub_mgr) {

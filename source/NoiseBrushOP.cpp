@@ -1,8 +1,8 @@
-#include "wmv/NoiseBrushOP.h"
-#include "wmv/RegistNodes.h"
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/NoiseBrushOP.h"
+#include "terrainlab/RegistNodes.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
-namespace wmv
+namespace terrainlab
 {
 
 NoiseBrushOP::NoiseBrushOP(const std::shared_ptr<pt0::Camera>& camera,
@@ -58,8 +58,8 @@ void NoiseBrushOP::AddToBrush(int x, int y) const
         return;
     }
 
-    assert(m_brush_node->get_type() == rttr::type::get<wmv::node::NoiseBrush>());
-    auto brush = std::static_pointer_cast<wmv::node::NoiseBrush>(m_brush_node);
+    assert(m_brush_node->get_type() == rttr::type::get<terrainlab::node::NoiseBrush>());
+    auto brush = std::static_pointer_cast<terrainlab::node::NoiseBrush>(m_brush_node);
     if (brush->m_path.size() > 256) {
         brush->m_path.clear();
     }

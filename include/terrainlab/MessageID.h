@@ -1,6 +1,6 @@
 #pragma once
 
-namespace wmv
+namespace terrainlab
 {
 
 enum MessageID

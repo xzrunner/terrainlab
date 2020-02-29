@@ -1,22 +1,22 @@
-#include "wmv/WMV.h"
-#include "wmv/PinCallback.h"
-#include "wmv/Node.h"
+#include "terrainlab/TerrainLab.h"
+#include "terrainlab/PinCallback.h"
+#include "terrainlab/Node.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
 
-#include <wm/WM.h>
+#include <terraingraph/TerrainGraph.h>
 
-namespace wmv
+namespace terrainlab
 {
 
-CU_SINGLETON_DEFINITION(WMV);
+CU_SINGLETON_DEFINITION(TerrainLab);
 
 extern void regist_rttr();
 
-WMV::WMV()
+TerrainLab::TerrainLab()
 {
-	wm::WM::Instance();
+	terraingraph::TerrainGraph::Instance();
 
 	regist_rttr();
 
@@ -25,7 +25,7 @@ WMV::WMV()
     InitPinCallback();
 }
 
-void WMV::InitNodes()
+void TerrainLab::InitNodes()
 {
     const int bp_count = 1;
 

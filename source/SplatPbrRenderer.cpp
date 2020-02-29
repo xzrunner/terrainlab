@@ -1,4 +1,4 @@
-#include "wmv/SplatPbrRenderer.h"
+#include "terrainlab/SplatPbrRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
@@ -6,8 +6,8 @@
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting3/Shader.h>
-#include <wm/HeightField.h>
-#include <wm/TextureBaker.h>
+#include <terraingraph/HeightField.h>
+#include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -380,7 +380,7 @@ void main()
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 SplatPbrRenderer::SplatPbrRenderer()
@@ -389,7 +389,7 @@ SplatPbrRenderer::SplatPbrRenderer()
     InitShader();
 }
 
-void SplatPbrRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
+void SplatPbrRenderer::Setup(const std::shared_ptr<terraingraph::HeightField>& hf)
 {
     if (m_shaders.empty()) {
         return;
@@ -406,8 +406,8 @@ void SplatPbrRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
     auto old = m_height_map;
     m_height_map = hf->GetHeightmap();
 
-    m_normal_map = wm::TextureBaker::GenNormalMap(*hf, rc);
-    m_ao_map = wm::TextureBaker::GenAmbientOcclusionMap(*hf, rc);
+    m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);
+    m_ao_map = terraingraph::TextureBaker::GenAmbientOcclusionMap(*hf, rc);
 
     // textures
     if (m_height_map != old)

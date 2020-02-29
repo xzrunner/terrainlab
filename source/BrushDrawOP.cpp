@@ -1,5 +1,5 @@
-#include "wmv/BrushDrawOP.h"
-#include "wmv/SplatRenderer.h"
+#include "terrainlab/BrushDrawOP.h"
+#include "terrainlab/SplatRenderer.h"
 
 #include <ee0/MsgHelper.h>
 #include <ee0/SubjectMgr.h>
@@ -11,7 +11,7 @@
 #include <painting3/PerspCam.h>
 #include <painting3/Viewport.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 BrushDrawOP::BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
@@ -24,7 +24,7 @@ BrushDrawOP::BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
 }
 
 void BrushDrawOP::Setup(const std::shared_ptr<Node>& brush_node,
-                        const std::shared_ptr<wm::HeightField>& hf,
+                        const std::shared_ptr<terraingraph::HeightField>& hf,
                         const n0::SceneNodePtr& editor_node)
 {
     if (m_brush_node == brush_node) {

@@ -1,12 +1,12 @@
-#include "wmv/GrayRenderer.h"
+#include "terrainlab/GrayRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
 #include <unirender/RenderContext.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
-#include <wm/HeightField.h>
-#include <wm/TextureBaker.h>
+#include <terraingraph/HeightField.h>
+#include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -74,7 +74,7 @@ void main()
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 GrayRenderer::GrayRenderer()
@@ -82,7 +82,7 @@ GrayRenderer::GrayRenderer()
     InitShader();
 }
 
-void GrayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
+void GrayRenderer::Setup(const std::shared_ptr<terraingraph::HeightField>& hf)
 {
     m_hf = hf;
     if (!m_hf) {
@@ -95,7 +95,7 @@ void GrayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
 
 #ifdef BUILD_NORMAL_MAP
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    m_normal_map = wm::TextureBaker::GenNormalMap(*hf, rc);
+    m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);
 #endif // BUILD_NORMAL_MAP
 
     // textures

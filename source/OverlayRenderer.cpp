@@ -1,12 +1,12 @@
-#include "wmv/OverlayRenderer.h"
+#include "terrainlab/OverlayRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
 #include <unirender/RenderContext.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
-#include <wm/HeightField.h>
-#include <wm/TextureBaker.h>
+#include <terraingraph/HeightField.h>
+#include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -53,7 +53,7 @@ void main()
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 OverlayRenderer::OverlayRenderer()
@@ -67,8 +67,8 @@ void OverlayRenderer::Clear()
     m_color_map.reset();
 }
 
-void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
-                            const std::shared_ptr<wm::Bitmap>& bmp)
+void OverlayRenderer::Setup(const std::shared_ptr<terraingraph::HeightField>& hf,
+                            const std::shared_ptr<terraingraph::Bitmap>& bmp)
 {
     m_hf = hf;
     if (!m_hf) {
@@ -79,7 +79,7 @@ void OverlayRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf,
         return;
     }
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    m_color_map = wm::TextureBaker::GenColorMap(*bmp, rc);
+    m_color_map = terraingraph::TextureBaker::GenColorMap(*bmp, rc);
 
     assert(hf);
     auto old = m_height_map;

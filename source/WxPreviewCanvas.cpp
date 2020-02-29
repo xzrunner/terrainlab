@@ -1,14 +1,14 @@
-#include "wmv/WxPreviewCanvas.h"
-#include "wmv/PreviewPage.h"
-#include "wmv/WxGraphPage.h"
-#include "wmv/Evaluator.h"
-#include "wmv/MessageID.h"
-#include "wmv/GrayRenderer.h"
-#include "wmv/SplatRenderer.h"
-#include "wmv/SplatPbrRenderer.h"
-#include "wmv/TemplateBrushOP.h"
-#include "wmv/NoiseBrushOP.h"
-#include "wmv/RegistNodes.h"
+#include "terrainlab/WxPreviewCanvas.h"
+#include "terrainlab/PreviewPage.h"
+#include "terrainlab/WxGraphPage.h"
+#include "terrainlab/Evaluator.h"
+#include "terrainlab/MessageID.h"
+#include "terrainlab/GrayRenderer.h"
+#include "terrainlab/SplatRenderer.h"
+#include "terrainlab/SplatPbrRenderer.h"
+#include "terrainlab/TemplateBrushOP.h"
+#include "terrainlab/NoiseBrushOP.h"
+#include "terrainlab/RegistNodes.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -25,8 +25,8 @@
 #include <painting3/PerspCam.h>
 #include <painting3/Shader.h>
 #include <tessellation/Painter.h>
-#include <wm/Device.h>
-#include <wm/device/TemplateBrush.h>
+#include <terraingraph/Device.h>
+#include <terraingraph/device/TemplateBrush.h>
 
 namespace
 {
@@ -36,7 +36,7 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
@@ -214,13 +214,13 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
         auto type = node->get_type();
         if (type == rttr::type::get<node::TemplateBrush>())
         {
-            std::shared_ptr<wm::HeightField> hf = nullptr;
+            std::shared_ptr<terraingraph::HeightField> hf = nullptr;
 
             auto eval = m_graph_page->GetEval();
             if (eval) {
                 auto back_node = eval->QueryBackNode(*node);
                 if (back_node) {
-                    hf = std::static_pointer_cast<wm::device::TemplateBrush>(back_node)->GetBrush();
+                    hf = std::static_pointer_cast<terraingraph::device::TemplateBrush>(back_node)->GetBrush();
                 }
             }
 
@@ -320,7 +320,7 @@ bp::NodePtr WxPreviewCanvas::GetSelectedNode() const
     return cnode.GetNode();
 }
 
-wm::DevicePtr WxPreviewCanvas::GetSelectedDevice() const
+terraingraph::DevicePtr WxPreviewCanvas::GetSelectedDevice() const
 {
     if (!m_graph_page) {
         return nullptr;

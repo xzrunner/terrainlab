@@ -2,7 +2,7 @@
 
 #include <SM_Vector.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 struct RenderVertex

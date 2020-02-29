@@ -1,8 +1,8 @@
 #pragma once
 
-#include "wmv/BrushDrawOP.h"
+#include "terrainlab/BrushDrawOP.h"
 
-namespace wmv
+namespace terrainlab
 {
 
 namespace node { class TemplateBrush; }

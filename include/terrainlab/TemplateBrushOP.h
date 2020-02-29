@@ -1,10 +1,10 @@
 #pragma once
 
-#include "wmv/BrushDrawOP.h"
+#include "terrainlab/BrushDrawOP.h"
 
 #include <SM_Matrix.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 namespace node { class TemplateBrush; }

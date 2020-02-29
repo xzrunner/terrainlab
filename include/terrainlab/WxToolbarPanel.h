@@ -7,7 +7,7 @@
 
 namespace bp { class WxNodeProperty; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class WxToolbarPanel : public wxPanel, public ee0::Observer

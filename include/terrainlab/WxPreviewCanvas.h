@@ -1,18 +1,18 @@
 #pragma once
 
-#include "wmv/ImageRenderer.h"
-#include "wmv/OverlayRenderer.h"
+#include "terrainlab/ImageRenderer.h"
+#include "terrainlab/OverlayRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
 #include <blueprint/typedef.h>
 
 #include <node0/typedef.h>
-#include <wm/typedef.h>
+#include <terraingraph/typedef.h>
 
 #include <array>
 
-namespace wmv
+namespace terrainlab
 {
 
 class WxGraphPage;
@@ -45,7 +45,7 @@ private:
     void SetupRenderer();
 
     bp::NodePtr GetSelectedNode() const;
-    wm::DevicePtr GetSelectedDevice() const;
+    terraingraph::DevicePtr GetSelectedDevice() const;
 
 private:
     enum OperatorID

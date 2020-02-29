@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wmv/RenderVertex.h"
+#include "terrainlab/RenderVertex.h"
 
 #include <renderpipeline/IRenderer.h>
 #include <renderpipeline/RendererImpl.h>
@@ -8,16 +8,16 @@
 
 #include <boost/noncopyable.hpp>
 
-namespace wm { class HeightField; }
+namespace terraingraph { class HeightField; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class HeightfieldRenderer : public rp::IRenderer, public rp::RendererImpl<RenderVertex, uint32_t>, private boost::noncopyable
 {
 public:
     virtual void Clear();
-    virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) = 0;
+    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) = 0;
 
     void Draw(const sm::mat4& mt = sm::mat4()) const;
 
@@ -26,7 +26,7 @@ protected:
     void DrawVertBuf() const;
 
 protected:
-    std::shared_ptr<wm::HeightField> m_hf = nullptr;
+    std::shared_ptr<terraingraph::HeightField> m_hf = nullptr;
 
 }; // HeightfieldRenderer
 

@@ -3,9 +3,9 @@
 #include <model/Model.h>
 
 namespace n0 { class SceneNode; }
-namespace wm { class HeightField; }
+namespace terraingraph { class HeightField; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class ModelAdapter
@@ -13,12 +13,12 @@ class ModelAdapter
 public:
     static void SetupModel(n0::SceneNode& node);
 
-    static void UpdateModel(const wm::HeightField& hf,
+    static void UpdateModel(const terraingraph::HeightField& hf,
         const n0::SceneNode& node);
 
 private:
     static std::unique_ptr<model::Model::Mesh>
-        HeightFieldToMesh(const wm::HeightField& hf);
+        HeightFieldToMesh(const terraingraph::HeightField& hf);
 
 }; // ModelAdapter
 

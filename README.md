@@ -1,3 +1,3 @@
-# wmv
+# terrainlab
 
-WorldMachine front-end.
+Node based terrain editor. Editor of terraingraph.

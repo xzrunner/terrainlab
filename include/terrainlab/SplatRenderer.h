@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
 #include <unirender/Texture.h>
 #include <SM_Matrix.h>
@@ -8,7 +8,7 @@
 //#define BUILD_NORMAL_MAP
 //#define BUILD_SHADOW_MAP
 
-namespace wmv
+namespace terrainlab
 {
 
 class SplatRenderer : public HeightfieldRenderer
@@ -19,7 +19,7 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) override;
+    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) override;
 
 private:
     void InitTextuers();

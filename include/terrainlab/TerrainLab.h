@@ -7,10 +7,10 @@
 #include <vector>
 #include <memory>
 
-namespace wmv
+namespace terrainlab
 {
 
-class WMV
+class TerrainLab
 {
 public:
     auto& GetAllNodes() { return m_nodes; }
@@ -21,8 +21,8 @@ private:
 private:
     std::vector<bp::NodePtr> m_nodes;
 
-    CU_SINGLETON_DECLARATION(WMV)
+    CU_SINGLETON_DECLARATION(TerrainLab)
 
-}; // WMV
+}; // TerrainLab
 
 }

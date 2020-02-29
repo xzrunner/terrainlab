@@ -1,5 +1,5 @@
-wmv/
+terrainlab/
 projects/*
 
-!projects/wmv.vcxproj
-!projects/wmv.vcxproj.filters
+!projects/terrainlab.vcxproj
+!projects/terrainlab.vcxproj.filters

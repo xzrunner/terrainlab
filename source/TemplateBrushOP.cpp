@@ -1,8 +1,8 @@
-#include "wmv/TemplateBrushOP.h"
-#include "wmv/RegistNodes.h"
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/TemplateBrushOP.h"
+#include "terrainlab/RegistNodes.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
-namespace wmv
+namespace terrainlab
 {
 
 TemplateBrushOP::TemplateBrushOP(const std::shared_ptr<pt0::Camera>& camera,
@@ -22,8 +22,8 @@ bool TemplateBrushOP::OnMouseLeftDown(int x, int y)
         return false;
     }
 
-    assert(m_brush_node->get_type() == rttr::type::get<wmv::node::TemplateBrush>());
-    std::static_pointer_cast<wmv::node::TemplateBrush>(m_brush_node)
+    assert(m_brush_node->get_type() == rttr::type::get<terrainlab::node::TemplateBrush>());
+    std::static_pointer_cast<terrainlab::node::TemplateBrush>(m_brush_node)
         ->m_matrixes.push_back(CalcBrushTrans(x, y));
 
     OnEditorChanged();
@@ -64,8 +64,8 @@ sm::mat4 TemplateBrushOP::CalcBrushTrans(int x, int y) const
         return sm::mat4();
     }
 
-    assert(m_brush_node->get_type() == rttr::type::get<wmv::node::TemplateBrush>());
-    auto brush = std::static_pointer_cast<wmv::node::TemplateBrush>(m_brush_node);
+    assert(m_brush_node->get_type() == rttr::type::get<terrainlab::node::TemplateBrush>());
+    auto brush = std::static_pointer_cast<terrainlab::node::TemplateBrush>(m_brush_node);
 
     auto s = brush->m_scale;
     auto s_mt = sm::mat4::Scaled(s, s, s);

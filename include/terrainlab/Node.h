@@ -1,9 +1,9 @@
 #pragma once
 
 #include <blueprint/Node.h>
-#include <wm/Device.h>
+#include <terraingraph/Device.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 class Node : public bp::Node
@@ -22,7 +22,7 @@ public:
     bool GetDisplay() const { return m_display; }
     void SetDisplay(bool display) { m_display = display; }
 
-    void UpdatePins(const wm::Device& node);
+    void UpdatePins(const terraingraph::Device& node);
 
 protected:
     struct PinDesc
@@ -48,7 +48,7 @@ private:
         bool is_input);
 
     static void PortBack2Front(std::vector<PinDesc>& dst,
-        const std::vector<wm::Device::Port>& src);
+        const std::vector<terraingraph::Device::Port>& src);
 
 private:
     std::string m_name;

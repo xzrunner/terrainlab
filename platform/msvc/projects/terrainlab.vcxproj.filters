@@ -54,81 +54,81 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\wmv\WxPreviewCanvas.h">
+    <ClInclude Include="..\..\..\include\terrainlab\WxPreviewCanvas.h">
       <Filter>view\preview</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\WxGraphPage.h">
+    <ClInclude Include="..\..\..\include\terrainlab\WxGraphPage.h">
       <Filter>view\editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\Evaluator.h">
+    <ClInclude Include="..\..\..\include\terrainlab\Evaluator.h">
       <Filter>tools\eval</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\Node.h">
+    <ClInclude Include="..\..\..\include\terrainlab\Node.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\PinType.h">
+    <ClInclude Include="..\..\..\include\terrainlab\PinType.h">
       <Filter>dataset\pin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\PinCallback.h">
+    <ClInclude Include="..\..\..\include\terrainlab\PinCallback.h">
       <Filter>dataset\pin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\RegistNodes.h">
+    <ClInclude Include="..\..\..\include\terrainlab\RegistNodes.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\node_def_gen.h">
+    <ClInclude Include="..\..\..\include\terrainlab\node_def_gen.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\node_rttr_gen.h">
+    <ClInclude Include="..\..\..\include\terrainlab\node_rttr_gen.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\PreviewPage.h">
+    <ClInclude Include="..\..\..\include\terrainlab\PreviewPage.h">
       <Filter>view\preview</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\WxToolbarPanel.h">
+    <ClInclude Include="..\..\..\include\terrainlab\WxToolbarPanel.h">
       <Filter>view\toolbar</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\ModelAdapter.h">
+    <ClInclude Include="..\..\..\include\terrainlab\ModelAdapter.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\MessageID.h">
+    <ClInclude Include="..\..\..\include\terrainlab\MessageID.h">
       <Filter>tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\node_regist_cfg.h">
+    <ClInclude Include="..\..\..\include\terrainlab\node_regist_cfg.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\WMV.h" />
-    <ClInclude Include="..\..\..\include\wmv\WmAdapter.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\ImageRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\ImageRenderer.h">
       <Filter>view\preview\renderer\bitmap</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\HeightfieldRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\HeightfieldRenderer.h">
       <Filter>view\preview\renderer\heightmap</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\RenderVertex.h">
+    <ClInclude Include="..\..\..\include\terrainlab\RenderVertex.h">
       <Filter>view\preview\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\GrayRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\GrayRenderer.h">
       <Filter>view\preview\renderer\heightmap\gray</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\OverlayRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\OverlayRenderer.h">
       <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\SplatPbrRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\SplatPbrRenderer.h">
       <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\SplatRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\SplatRenderer.h">
       <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\TemplateBrushOP.h">
+    <ClInclude Include="..\..\..\include\terrainlab\TemplateBrushOP.h">
       <Filter>view\preview\operator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\NoiseBrushOP.h">
+    <ClInclude Include="..\..\..\include\terrainlab\NoiseBrushOP.h">
       <Filter>view\preview\operator</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wmv\BrushDrawOP.h">
+    <ClInclude Include="..\..\..\include\terrainlab\BrushDrawOP.h">
       <Filter>view\preview\operator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\TerrainLab.h" />
+    <ClInclude Include="..\..\..\include\terrainlab\TerrainGraph.h">
+      <Filter>tools\trans</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,10 +162,6 @@
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WMV.cpp" />
-    <ClCompile Include="..\..\..\source\WmAdapter.cpp">
-      <Filter>tools\trans</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\ImageRenderer.cpp">
       <Filter>view\preview\renderer\bitmap</Filter>
     </ClCompile>
@@ -192,6 +188,10 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\BrushDrawOP.cpp">
       <Filter>view\preview\operator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TerrainLab.cpp" />
+    <ClCompile Include="..\..\..\source\TerrainGraph.cpp">
+      <Filter>tools\trans</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

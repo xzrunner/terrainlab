@@ -2,11 +2,11 @@
 
 #include <unirender/Texture.h>
 
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
-namespace wm { class Bitmap; }
+namespace terraingraph { class Bitmap; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class OverlayRenderer : public HeightfieldRenderer
@@ -17,10 +17,10 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) override {}
+    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) override {}
 
-    void Setup(const std::shared_ptr<wm::HeightField>& hf,
-        const std::shared_ptr<wm::Bitmap>& bmp);
+    void Setup(const std::shared_ptr<terraingraph::HeightField>& hf,
+        const std::shared_ptr<terraingraph::Bitmap>& bmp);
 
 private:
     void InitShader();

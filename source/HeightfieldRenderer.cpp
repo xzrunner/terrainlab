@@ -1,9 +1,9 @@
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
-#include <wm/HeightField.h>
+#include <terraingraph/HeightField.h>
 #include <painting0/Shader.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 void HeightfieldRenderer::Clear()

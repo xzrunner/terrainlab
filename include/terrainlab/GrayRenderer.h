@@ -2,11 +2,11 @@
 
 #include <unirender/Texture.h>
 
-#include "wmv/HeightfieldRenderer.h"
+#include "terrainlab/HeightfieldRenderer.h"
 
 //#define BUILD_NORMAL_MAP
 
-namespace wmv
+namespace terrainlab
 {
 
 class GrayRenderer : public HeightfieldRenderer
@@ -17,7 +17,7 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Setup(const std::shared_ptr<wm::HeightField>& hf) override;
+    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) override;
 
 private:
     void InitShader();

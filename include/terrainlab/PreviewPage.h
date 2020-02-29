@@ -7,7 +7,7 @@
 
 namespace ee0 { class WxStagePage; class RenderContext; }
 
-namespace wmv
+namespace terrainlab
 {
 
 class PreviewPage : public ee0::Observer

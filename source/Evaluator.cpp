@@ -1,18 +1,18 @@
-#include "wmv/Evaluator.h"
-#include "wmv/WmAdapter.h"
-#include "wmv/Node.h"
+#include "terrainlab/Evaluator.h"
+#include "terrainlab/TerrainGraph.h"
+#include "terrainlab/Node.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
 #include <blueprint/CompNode.h>
 
-#include <wm/Device.h>
-#include <wm/Evaluator.h>
+#include <terraingraph/Device.h>
+#include <terraingraph/Evaluator.h>
 
 #include <queue>
 
-namespace wmv
+namespace terrainlab
 {
 
 Evaluator::Evaluator()
@@ -21,7 +21,7 @@ Evaluator::Evaluator()
 
 void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, bool need_update)
 {
-    auto back = WmAdapter::CreateBackFromFront(front);
+    auto back = TerrainGraph::CreateBackFromFront(front);
     if (!back) {
         return;
     }
@@ -34,7 +34,7 @@ void Evaluator::OnAddNode(const bp::Node& front, const n0::SceneNodePtr& snode, 
         const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
     }
 
-    WmAdapter::UpdatePropBackFromFront(front, *back, *this);
+    TerrainGraph::UpdatePropBackFromFront(front, *back, *this);
     if (need_update) {
         Update();
     }
@@ -64,12 +64,12 @@ void Evaluator::OnClearAllNodes()
 void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
 {
     auto itr = m_front2back.find(node.get());
-    // not wm node
+    // not terraingraph node
     if (itr == m_front2back.end()) {
         return;
     }
 
-    WmAdapter::UpdatePropBackFromFront(*node, *itr->second, *this);
+    TerrainGraph::UpdatePropBackFromFront(*node, *itr->second, *this);
 
     if (node->get_type().is_derived_from<Node>())
     {
@@ -132,7 +132,7 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
 void Evaluator::OnRebuildConnection()
 {
-    std::vector<std::pair<wm::Device::PortAddr, wm::Device::PortAddr>> conns;
+    std::vector<std::pair<terraingraph::Device::PortAddr, terraingraph::Device::PortAddr>> conns;
     for (auto& itr : m_front2back)
     {
         auto& front = itr.first;
@@ -167,7 +167,7 @@ void Evaluator::OnRebuildConnection()
     Update();
 }
 
-wm::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
+terraingraph::DevicePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 {
     auto itr = m_front2back.find(&front_node);
     return itr == m_front2back.end() ? nullptr : itr->second;

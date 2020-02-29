@@ -1,11 +1,11 @@
-#include "wmv/PreviewPage.h"
-#include "wmv/WxPreviewCanvas.h"
+#include "terrainlab/PreviewPage.h"
+#include "terrainlab/WxPreviewCanvas.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee3/WxStageCanvas.h>
 #include <ee3/CameraDriveOP.h>
 
-namespace wmv
+namespace terrainlab
 {
 
 PreviewPage::PreviewPage(ee0::WxStagePage& stage_page, const ee0::RenderContext& rc)

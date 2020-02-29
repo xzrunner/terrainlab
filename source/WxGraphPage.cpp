@@ -1,6 +1,6 @@
-#include "wmv/WxGraphPage.h"
-#include "wmv/Evaluator.h"
-#include "wmv/MessageID.h"
+#include "terrainlab/WxGraphPage.h"
+#include "terrainlab/Evaluator.h"
+#include "terrainlab/MessageID.h"
 
 #include <ee0/SubjectMgr.h>
 #include <blueprint/MessageID.h>
@@ -29,7 +29,7 @@ const uint32_t MESSAGES[] =
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::GameObj& root,

@@ -10,16 +10,16 @@
 #endif
 
 #ifndef PARM_FILEPATH
-#define PARM_FILEPATH wm/device/##PARM_NODE_CLASS##.parm.h
+#define PARM_FILEPATH terraingraph/device/##PARM_NODE_CLASS##.parm.h
 #endif
 
-#define RTTR_NAME wmv::##PARM_NODE_NAME
+#define RTTR_NAME terrainlab::##PARM_NODE_NAME
 
-rttr::registration::class_<wmv::node::PARM_NODE_CLASS>(XSTR(RTTR_NAME))
+rttr::registration::class_<terrainlab::node::PARM_NODE_CLASS>(XSTR(RTTR_NAME))
 .constructor<>()
 
 #define PARAM_INFO(id, type, name, member, default_val)        \
-.property(#name, &wmv::node::##PARM_NODE_CLASS::member)        \
+.property(#name, &terrainlab::node::##PARM_NODE_CLASS::member)        \
 (                                                              \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(#id)) \
 )

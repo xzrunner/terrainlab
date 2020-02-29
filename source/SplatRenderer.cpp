@@ -1,4 +1,4 @@
-#include "wmv/SplatRenderer.h"
+#include "terrainlab/SplatRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
@@ -6,8 +6,8 @@
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting3/Shader.h>
-#include <wm/HeightField.h>
-#include <wm/TextureBaker.h>
+#include <terraingraph/HeightField.h>
+#include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
 namespace
@@ -264,7 +264,7 @@ void main()
 
 }
 
-namespace wmv
+namespace terrainlab
 {
 
 SplatRenderer::SplatRenderer()
@@ -274,7 +274,7 @@ SplatRenderer::SplatRenderer()
     InitUniforms();
 }
 
-void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
+void SplatRenderer::Setup(const std::shared_ptr<terraingraph::HeightField>& hf)
 {
     if (m_shaders.empty()) {
         return;
@@ -292,10 +292,10 @@ void SplatRenderer::Setup(const std::shared_ptr<wm::HeightField>& hf)
 
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 #ifdef BUILD_NORMAL_MAP
-    m_normal_map = wm::TextureBaker::GenNormalMap(*hf, rc);
+    m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);
 #endif // BUILD_NORMAL_MAP
 #ifdef BUILD_SHADOW_MAP
-    m_shadow_map = wm::TextureBaker::GenShadowMap(*hf, rc, m_light_dir);
+    m_shadow_map = terraingraph::TextureBaker::GenShadowMap(*hf, rc, m_light_dir);
 #endif // BUILD_SHADOW_MAP
 
     // textures
