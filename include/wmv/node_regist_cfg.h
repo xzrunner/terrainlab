@@ -16,12 +16,16 @@
 #define PARM_NODE_NAME gradient
 #include EXE_FILEPATH
 
-#define PARM_NODE_CLASS AutoGen
-#define PARM_NODE_NAME auto_gen
+#define PARM_NODE_CLASS NoiseBrush
+#define PARM_NODE_NAME noise_brush
 #include EXE_FILEPATH
 
 #define PARM_NODE_CLASS TemplateBrush
 #define PARM_NODE_NAME template_brush
+#include EXE_FILEPATH
+
+#define PARM_NODE_CLASS AutoGen
+#define PARM_NODE_NAME auto_gen
 #include EXE_FILEPATH
 
 #ifndef SKIP_FILE_NODE

@@ -52,6 +52,7 @@ private:
     {
         OP_DEFAULT,
         OP_TEMP_BRUSH,
+        OP_NOISE_BRUSH,
         OP_MAX_NUM
     };
 

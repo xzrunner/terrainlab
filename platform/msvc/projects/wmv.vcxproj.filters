@@ -124,6 +124,12 @@
     <ClInclude Include="..\..\..\include\wmv\TemplateBrushOP.h">
       <Filter>view\preview\operator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\NoiseBrushOP.h">
+      <Filter>view\preview\operator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wmv\BrushDrawOP.h">
+      <Filter>view\preview\operator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -179,6 +185,12 @@
       <Filter>view\preview\renderer\heightmap\color</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\TemplateBrushOP.cpp">
+      <Filter>view\preview\operator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\NoiseBrushOP.cpp">
+      <Filter>view\preview\operator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\BrushDrawOP.cpp">
       <Filter>view\preview\operator</Filter>
     </ClCompile>
   </ItemGroup>

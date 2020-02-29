@@ -7,6 +7,7 @@
 #include "wmv/SplatRenderer.h"
 #include "wmv/SplatPbrRenderer.h"
 #include "wmv/TemplateBrushOP.h"
+#include "wmv/NoiseBrushOP.h"
 #include "wmv/RegistNodes.h"
 
 #include <ee0/WxStagePage.h>
@@ -71,15 +72,26 @@ void WxPreviewCanvas::SetGraphPage(const WxGraphPage* graph_page)
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
 
-    auto brush_op = std::static_pointer_cast<TemplateBrushOP>(m_ops[OP_TEMP_BRUSH]);
-    brush_op->SetGroupSubMgr(m_graph_page->GetSubjectMgr());
+    // regist editor's sub_mgr to brush ops
+    for (size_t i = 0; i < OP_MAX_NUM; ++i)
+    {
+        if (!m_ops[i]) {
+            continue;
+        }
+        auto brush_op = std::dynamic_pointer_cast<BrushDrawOP>(m_ops[i]);
+        if (brush_op) {
+            brush_op->SetEditorSubMgr(m_graph_page->GetSubjectMgr());
+        }
+    }
 }
 
 void WxPreviewCanvas::InitEditOP(const ee0::EditOPPtr& default_op)
 {
     m_ops[OP_DEFAULT] = default_op;
-
     m_ops[OP_TEMP_BRUSH] = std::make_shared<TemplateBrushOP>(
+        m_camera, GetViewport(), m_stage->GetSubjectMgr()
+    );
+    m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(
         m_camera, GetViewport(), m_stage->GetSubjectMgr()
     );
 }
@@ -129,9 +141,17 @@ void WxPreviewCanvas::DrawForeground3D() const
             }
         }
     }
-    if (m_ops[OP_TEMP_BRUSH])
+    // update brush op's renderer
+    for (size_t i = 0; i < OP_MAX_NUM; ++i)
     {
-        auto renderer = std::static_pointer_cast<TemplateBrushOP>(m_ops[OP_TEMP_BRUSH])->GetRenderer();
+        if (!m_ops[i]) {
+            continue;
+        }
+        auto brush_op = std::dynamic_pointer_cast<BrushDrawOP>(m_ops[OP_TEMP_BRUSH]);
+        if (!brush_op) {
+            continue;
+        }
+        auto renderer = brush_op->GetRenderer();
         auto& shaders = renderer->GetAllShaders();
         if (!shaders.empty()) {
             assert(shaders.size() == 1);
@@ -207,9 +227,15 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             if (hf)
             {
                 auto brush_op = std::static_pointer_cast<TemplateBrushOP>(m_ops[OP_TEMP_BRUSH]);
-                brush_op->SetBrush(std::dynamic_pointer_cast<node::TemplateBrush>(node), hf, obj);
+                brush_op->Setup(std::static_pointer_cast<Node>(node), hf, obj);
                 m_stage->GetImpl().SetEditOP(m_ops[OP_TEMP_BRUSH]);
             }
+        }
+        else if (type == rttr::type::get<node::NoiseBrush>())
+        {
+            auto brush_op = std::static_pointer_cast<NoiseBrushOP>(m_ops[OP_NOISE_BRUSH]);
+            brush_op->Setup(std::static_pointer_cast<Node>(node), nullptr, obj);
+            m_stage->GetImpl().SetEditOP(m_ops[OP_NOISE_BRUSH]);
         }
         else
         {
