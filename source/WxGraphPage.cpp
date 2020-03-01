@@ -1,5 +1,4 @@
 #include "terrainlab/WxGraphPage.h"
-#include "terrainlab/Evaluator.h"
 #include "terrainlab/MessageID.h"
 
 #include <ee0/SubjectMgr.h>
@@ -40,7 +39,7 @@ WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::GameObj& root,
 {
     bp::Blueprint::Instance();
 
-    m_eval = std::make_shared<Evaluator>();
+    m_eval = std::make_shared<bp::BackendGraph<terraingraph::DeviceVarType>>("terraingraph", "terrainlab");
 
     for (auto& msg : MESSAGES) {
         m_sub_mgr->RegisterObserver(msg, this);

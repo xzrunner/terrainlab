@@ -14,10 +14,6 @@ rttr::registration::class_<terrainlab::Node>("terrainlab::node")
 (
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Name"))
 )
-.property("display", &terrainlab::Node::GetDisplay, &terrainlab::Node::SetDisplay)
-(
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(terrainlab::Node::STR_PROP_DISPLAY))
-)
 ;
 
 #define EXE_FILEPATH "terrainlab/node_rttr_gen.h"

@@ -13,9 +13,6 @@
     <Filter Include="tools">
       <UniqueIdentifier>{5d46b246-a5cb-4be9-a8c7-6d7d6086cddc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="tools\eval">
-      <UniqueIdentifier>{6a9c4fc8-770b-47df-853e-75900227a6a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="dataset">
       <UniqueIdentifier>{b31d2ae4-1932-408c-b2c7-331c5e224709}</UniqueIdentifier>
     </Filter>
@@ -59,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\WxGraphPage.h">
       <Filter>view\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\terrainlab\Evaluator.h">
-      <Filter>tools\eval</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\Node.h">
       <Filter>dataset\node</Filter>
@@ -127,9 +121,6 @@
       <Filter>view\preview\operator</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\TerrainLab.h" />
-    <ClInclude Include="..\..\..\include\terrainlab\TerrainGraph.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -138,9 +129,6 @@
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
       <Filter>view\editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\Evaluator.cpp">
-      <Filter>tools\eval</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\Node.cpp">
       <Filter>dataset\node</Filter>
     </ClCompile>
@@ -148,9 +136,6 @@
       <Filter>dataset\pin</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RegistNodes.cpp">
-      <Filter>tools\rtti</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\RegistRTTR.cpp">
       <Filter>tools\rtti</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\PreviewPage.cpp">
@@ -190,8 +175,5 @@
       <Filter>view\preview\operator</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\TerrainLab.cpp" />
-    <ClCompile Include="..\..\..\source\TerrainGraph.cpp">
-      <Filter>tools\trans</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

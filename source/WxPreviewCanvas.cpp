@@ -1,7 +1,6 @@
 #include "terrainlab/WxPreviewCanvas.h"
 #include "terrainlab/PreviewPage.h"
 #include "terrainlab/WxGraphPage.h"
-#include "terrainlab/Evaluator.h"
 #include "terrainlab/MessageID.h"
 #include "terrainlab/GrayRenderer.h"
 #include "terrainlab/SplatRenderer.h"
@@ -332,7 +331,11 @@ terraingraph::DevicePtr WxPreviewCanvas::GetSelectedDevice() const
     }
 
     auto front_node = GetSelectedNode();
-    return front_node ? eval->QueryBackNode(*front_node) : nullptr;
+    if (front_node) {
+        return std::static_pointer_cast<terraingraph::Device>(eval->QueryBackNode(*front_node));
+    } else {
+        return nullptr;
+    }
 }
 
 }

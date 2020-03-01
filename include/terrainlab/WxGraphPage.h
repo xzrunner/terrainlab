@@ -1,13 +1,14 @@
 #pragma once
 
 #include <ee0/WxStagePage.h>
+#include <blueprint/BackendGraph.h>
+
+#include <terraingraph/DeviceVarType.h>
 
 namespace n0 { class CompComplex; }
 
 namespace terrainlab
 {
-
-class Evaluator;
 
 class WxGraphPage : public ee0::WxStagePage
 {
@@ -42,7 +43,7 @@ private:
 
     n0::SceneNodePtr m_root = nullptr;
 
-    std::shared_ptr<Evaluator> m_eval = nullptr;
+    std::shared_ptr<bp::BackendGraph<terraingraph::DeviceVarType>> m_eval = nullptr;
 
 }; // WxGraphPage
 

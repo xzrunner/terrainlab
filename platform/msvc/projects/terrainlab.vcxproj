@@ -16,7 +16,6 @@
     <ClInclude Include="..\..\..\include\terrainlab\TemplateBrushOP.h" />
     <ClInclude Include="..\..\..\include\terrainlab\GrayRenderer.h" />
     <ClInclude Include="..\..\..\include\terrainlab\ImageRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrainlab\Evaluator.h" />
     <ClInclude Include="..\..\..\include\terrainlab\HeightfieldRenderer.h" />
     <ClInclude Include="..\..\..\include\terrainlab\MessageID.h" />
     <ClInclude Include="..\..\..\include\terrainlab\ModelAdapter.h" />
@@ -32,7 +31,6 @@
     <ClInclude Include="..\..\..\include\terrainlab\RegistNodes.h" />
     <ClInclude Include="..\..\..\include\terrainlab\RenderVertex.h" />
     <ClInclude Include="..\..\..\include\terrainlab\SplatRenderer.h" />
-    <ClInclude Include="..\..\..\include\terrainlab\TerrainGraph.h" />
     <ClInclude Include="..\..\..\include\terrainlab\TerrainLab.h" />
     <ClInclude Include="..\..\..\include\terrainlab\WxGraphPage.h" />
     <ClInclude Include="..\..\..\include\terrainlab\WxPreviewCanvas.h" />
@@ -44,7 +42,6 @@
     <ClCompile Include="..\..\..\source\TemplateBrushOP.cpp" />
     <ClCompile Include="..\..\..\source\GrayRenderer.cpp" />
     <ClCompile Include="..\..\..\source\ImageRenderer.cpp" />
-    <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp" />
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
@@ -53,9 +50,7 @@
     <ClCompile Include="..\..\..\source\PreviewPage.cpp" />
     <ClCompile Include="..\..\..\source\SplatPbrRenderer.cpp" />
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
-    <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp" />
-    <ClCompile Include="..\..\..\source\TerrainGraph.cpp" />
     <ClCompile Include="..\..\..\source\TerrainLab.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />

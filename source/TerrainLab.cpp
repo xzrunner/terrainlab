@@ -1,11 +1,18 @@
 #include "terrainlab/TerrainLab.h"
 #include "terrainlab/PinCallback.h"
 #include "terrainlab/Node.h"
+#include "terrainlab/RegistNodes.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
 
 #include <terraingraph/TerrainGraph.h>
+
+namespace bp
+{
+extern void regist_sm_rttr();
+extern void regist_pt0_rttr();
+}
 
 namespace terrainlab
 {
@@ -18,11 +25,20 @@ TerrainLab::TerrainLab()
 {
 	terraingraph::TerrainGraph::Instance();
 
-	regist_rttr();
+    RegistRTTR();
 
 	InitNodes();
 
     InitPinCallback();
+}
+
+void TerrainLab::RegistRTTR()
+{
+    bp::regist_sm_rttr();
+    bp::regist_pt0_rttr();
+
+    //	prop_types_regist_rttr();
+    nodes_regist_rttr();
 }
 
 void TerrainLab::InitNodes()

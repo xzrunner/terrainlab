@@ -16,6 +16,7 @@ public:
     auto& GetAllNodes() { return m_nodes; }
 
 private:
+    void RegistRTTR();
     void InitNodes();
 
 private:
