@@ -1,12 +1,12 @@
 #include "terrainlab/SplatPbrRenderer.h"
 
+#include <heightfield/HeightField.h>
 #include <unirender/Blackboard.h>
 #include <unirender/VertexAttrib.h>
 #include <unirender/RenderContext.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting3/Shader.h>
-#include <terraingraph/HeightField.h>
 #include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
@@ -389,7 +389,7 @@ SplatPbrRenderer::SplatPbrRenderer()
     InitShader();
 }
 
-void SplatPbrRenderer::Setup(const std::shared_ptr<terraingraph::HeightField>& hf)
+void SplatPbrRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
 {
     if (m_shaders.empty()) {
         return;

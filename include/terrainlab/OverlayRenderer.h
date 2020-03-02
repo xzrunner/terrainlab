@@ -1,8 +1,7 @@
 #pragma once
 
 #include <unirender/Texture.h>
-
-#include "terrainlab/HeightfieldRenderer.h"
+#include <renderpipeline/HeightfieldRenderer.h>
 
 namespace terraingraph { class Bitmap; }
 
@@ -17,9 +16,9 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) override {}
+    virtual void Setup(const std::shared_ptr<hf::HeightField>& hf) override {}
 
-    void Setup(const std::shared_ptr<terraingraph::HeightField>& hf,
+    void Setup(const std::shared_ptr<hf::HeightField>& hf,
         const std::shared_ptr<terraingraph::Bitmap>& bmp);
 
 private:

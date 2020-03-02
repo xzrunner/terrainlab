@@ -1,5 +1,6 @@
 #include "terrainlab/ModelAdapter.h"
 
+#include <heightfield/HeightField.h>
 #include <node0/SceneNode.h>
 #include <node0/CompMaterial.h>
 #include <node3/CompModel.h>
@@ -9,7 +10,6 @@
 #include <painting3/MaterialMgr.h>
 #include <model/Model.h>
 #include <model/typedef.h>
-#include <terraingraph/HeightField.h>
 #include <terraingraph/HeightFieldEval.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
@@ -46,7 +46,7 @@ void ModelAdapter::SetupModel(n0::SceneNode& node)
     caabb.SetAABB(model->aabb);
 }
 
-void ModelAdapter::UpdateModel(const terraingraph::HeightField& hf,
+void ModelAdapter::UpdateModel(const hf::HeightField& hf,
                                const n0::SceneNode& node)
 {
     auto model = std::make_shared<model::Model>();
@@ -58,7 +58,7 @@ void ModelAdapter::UpdateModel(const terraingraph::HeightField& hf,
 }
 
 std::unique_ptr<model::Model::Mesh>
-ModelAdapter::HeightFieldToMesh(const terraingraph::HeightField& hf)
+ModelAdapter::HeightFieldToMesh(const hf::HeightField& hf)
 {
     const float tot_w = 1.0f;
     const float tot_h = 1.0f;

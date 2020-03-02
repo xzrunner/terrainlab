@@ -15,7 +15,7 @@ public:
     virtual void Flush() override {}
 
     virtual void Clear() override;
-    virtual void Setup(const std::shared_ptr<terraingraph::HeightField>& hf) override;
+    virtual void Setup(const std::shared_ptr<hf::HeightField>& hf) override;
 
 private:
     void InitTextuers();

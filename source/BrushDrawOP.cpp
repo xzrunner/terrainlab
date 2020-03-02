@@ -24,7 +24,7 @@ BrushDrawOP::BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
 }
 
 void BrushDrawOP::Setup(const std::shared_ptr<Node>& brush_node,
-                        const std::shared_ptr<terraingraph::HeightField>& hf,
+                        const std::shared_ptr<hf::HeightField>& hf,
                         const n0::SceneNodePtr& editor_node)
 {
     if (m_brush_node == brush_node) {

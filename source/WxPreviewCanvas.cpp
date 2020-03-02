@@ -212,7 +212,7 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
         auto type = node->get_type();
         if (type == rttr::type::get<node::TemplateBrush>())
         {
-            std::shared_ptr<terraingraph::HeightField> hf = nullptr;
+            std::shared_ptr<hf::HeightField> hf = nullptr;
 
             auto eval = m_graph_page->GetEval();
             if (eval) {
