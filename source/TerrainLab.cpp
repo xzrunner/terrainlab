@@ -19,8 +19,6 @@ namespace terrainlab
 
 CU_SINGLETON_DEFINITION(TerrainLab);
 
-extern void regist_rttr();
-
 TerrainLab::TerrainLab()
 {
 	terraingraph::TerrainGraph::Instance();
