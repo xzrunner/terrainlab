@@ -18,8 +18,6 @@ public:
 protected:
     void InitPins(const std::string& name);
 
-private:
-
     RTTR_ENABLE(bp::Node)
 
 }; // Node

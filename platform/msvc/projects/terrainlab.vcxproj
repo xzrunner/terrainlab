@@ -32,9 +32,7 @@
     <ClInclude Include="..\..\..\include\terrainlab\RenderVertex.h" />
     <ClInclude Include="..\..\..\include\terrainlab\SplatRenderer.h" />
     <ClInclude Include="..\..\..\include\terrainlab\TerrainLab.h" />
-    <ClInclude Include="..\..\..\include\terrainlab\WxGraphPage.h" />
     <ClInclude Include="..\..\..\include\terrainlab\WxPreviewCanvas.h" />
-    <ClInclude Include="..\..\..\include\terrainlab\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\BrushDrawOP.cpp" />
@@ -52,9 +50,7 @@
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp" />
     <ClCompile Include="..\..\..\source\TerrainLab.cpp" />
-    <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
-    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>terrainlab</ProjectName>

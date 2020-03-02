@@ -6,9 +6,11 @@
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
 #include <blueprint/typedef.h>
+#include <blueprint/WxGraphPage.h>
 
 #include <node0/typedef.h>
 #include <terraingraph/typedef.h>
+#include <terraingraph/DeviceVarType.h>
 
 #include <array>
 
@@ -26,7 +28,7 @@ public:
 
     virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
 
-    void SetGraphPage(const WxGraphPage* graph_page);
+    void SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVarType>* graph_page);
 
     void InitEditOP(const ee0::EditOPPtr& default_op);
 
@@ -57,7 +59,7 @@ private:
     };
 
 private:
-    const WxGraphPage* m_graph_page = nullptr;
+    const bp::WxGraphPage<terraingraph::DeviceVarType>* m_graph_page = nullptr;
 
     n0::SceneNodePtr m_selected = nullptr;
 

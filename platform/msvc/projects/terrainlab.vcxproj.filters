@@ -7,9 +7,6 @@
     <Filter Include="view\preview">
       <UniqueIdentifier>{9794f820-c69b-4da2-b5d1-49c5828a45a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view\editor">
-      <UniqueIdentifier>{8f85b04c-3d50-44ff-915a-89148871e927}</UniqueIdentifier>
-    </Filter>
     <Filter Include="tools">
       <UniqueIdentifier>{5d46b246-a5cb-4be9-a8c7-6d7d6086cddc}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     </Filter>
     <Filter Include="tools\rtti">
       <UniqueIdentifier>{ab1897a7-7861-4be0-a7d7-87a1bb30b798}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\toolbar">
-      <UniqueIdentifier>{3685917e-8df9-47ba-9676-776deae54d5d}</UniqueIdentifier>
     </Filter>
     <Filter Include="view\preview\renderer">
       <UniqueIdentifier>{92eec5c5-cee0-46bc-9441-84218020ab23}</UniqueIdentifier>
@@ -54,9 +48,6 @@
     <ClInclude Include="..\..\..\include\terrainlab\WxPreviewCanvas.h">
       <Filter>view\preview</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\terrainlab\WxGraphPage.h">
-      <Filter>view\editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\Node.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
@@ -77,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\PreviewPage.h">
       <Filter>view\preview</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\terrainlab\WxToolbarPanel.h">
-      <Filter>view\toolbar</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\terrainlab\ModelAdapter.h">
       <Filter>tools\trans</Filter>
@@ -126,9 +114,6 @@
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
       <Filter>view\preview</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
-      <Filter>view\editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\Node.cpp">
       <Filter>dataset\node</Filter>
     </ClCompile>
@@ -140,9 +125,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\PreviewPage.cpp">
       <Filter>view\preview</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
-      <Filter>view\toolbar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\ModelAdapter.cpp">
       <Filter>tools\trans</Filter>

@@ -1,6 +1,5 @@
 #include "terrainlab/WxPreviewCanvas.h"
 #include "terrainlab/PreviewPage.h"
-#include "terrainlab/WxGraphPage.h"
 #include "terrainlab/MessageID.h"
 #include "terrainlab/GrayRenderer.h"
 #include "terrainlab/SplatRenderer.h"
@@ -63,7 +62,7 @@ WxPreviewCanvas::~WxPreviewCanvas()
     sub_mgr->UnregisterObserver(MSG_HEIGHTMAP_CHANGED, this);
 }
 
-void WxPreviewCanvas::SetGraphPage(const WxGraphPage* graph_page)
+void WxPreviewCanvas::SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVarType>* graph_page)
 {
     m_graph_page = graph_page;
 
