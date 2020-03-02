@@ -8,7 +8,7 @@ namespace terraingraph { class Bitmap; }
 namespace terrainlab
 {
 
-class OverlayRenderer : public HeightfieldRenderer
+class OverlayRenderer : public rp::HeightfieldRenderer
 {
 public:
     OverlayRenderer();

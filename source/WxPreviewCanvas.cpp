@@ -1,7 +1,5 @@
 #include "terrainlab/WxPreviewCanvas.h"
-#include "terrainlab/PreviewPage.h"
 #include "terrainlab/MessageID.h"
-#include "terrainlab/GrayRenderer.h"
 #include "terrainlab/SplatRenderer.h"
 #include "terrainlab/SplatPbrRenderer.h"
 #include "terrainlab/TemplateBrushOP.h"
@@ -22,6 +20,7 @@
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
 #include <painting3/Shader.h>
+#include <renderpipeline/HeightfieldGrayRenderer.h>
 #include <tessellation/Painter.h>
 #include <terraingraph/Device.h>
 #include <terraingraph/device/TemplateBrush.h>
@@ -41,7 +40,7 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
-    //m_hf_rd = std::make_shared<GrayRenderer>();
+    //m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>();
     m_hf_rd = std::make_shared<SplatRenderer>();
     //m_hf_rd = std::make_shared<SplatPbrRenderer>();
 

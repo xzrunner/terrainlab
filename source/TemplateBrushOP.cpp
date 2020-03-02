@@ -1,6 +1,7 @@
 #include "terrainlab/TemplateBrushOP.h"
 #include "terrainlab/RegistNodes.h"
-#include "terrainlab/HeightfieldRenderer.h"
+
+#include <renderpipeline/HeightfieldRenderer.h>
 
 namespace terrainlab
 {

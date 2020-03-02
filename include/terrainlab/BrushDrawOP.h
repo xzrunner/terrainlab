@@ -5,11 +5,11 @@
 #include <node0/typedef.h>
 
 namespace hf { class HeightField; }
+namespace rp { class HeightfieldRenderer; }
 
 namespace terrainlab
 {
 
-class HeightfieldRenderer;
 class Node;
 
 class BrushDrawOP : public ee3::CameraDriveOP
@@ -34,7 +34,7 @@ protected:
     void OnEditorChanged();
 
 protected:
-    std::shared_ptr<HeightfieldRenderer> m_renderer = nullptr;
+    std::shared_ptr<rp::HeightfieldRenderer> m_renderer = nullptr;
 
     std::shared_ptr<Node> m_brush_node = nullptr;
 

@@ -1,6 +1,5 @@
 #include "terrainlab/NoiseBrushOP.h"
 #include "terrainlab/RegistNodes.h"
-#include "terrainlab/HeightfieldRenderer.h"
 
 namespace terrainlab
 {

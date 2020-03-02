@@ -1,6 +1,6 @@
 #pragma once
 
-#include "terrainlab/HeightfieldRenderer.h"
+#include <renderpipeline/HeightfieldRenderer.h>
 
 #include <unirender/Texture.h>
 #include <SM_Matrix.h>
@@ -11,7 +11,7 @@
 namespace terrainlab
 {
 
-class SplatRenderer : public HeightfieldRenderer
+class SplatRenderer : public rp::HeightfieldRenderer
 {
 public:
     SplatRenderer();

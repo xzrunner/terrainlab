@@ -63,7 +63,7 @@ private:
 
     n0::SceneNodePtr m_selected = nullptr;
 
-    std::shared_ptr<HeightfieldRenderer> m_hf_rd = nullptr;
+    std::shared_ptr<rp::HeightfieldRenderer> m_hf_rd = nullptr;
     ImageRenderer   m_img_rd;
     OverlayRenderer m_overlay_rd;
 
