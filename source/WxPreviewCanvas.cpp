@@ -61,6 +61,25 @@ WxPreviewCanvas::~WxPreviewCanvas()
     sub_mgr->UnregisterObserver(MSG_HEIGHTMAP_CHANGED, this);
 }
 
+void WxPreviewCanvas::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
+{
+    ee3::WxStageCanvas::OnNotify(msg, variants);
+
+	switch (msg)
+	{
+	case ee0::MSG_NODE_SELECTION_INSERT:
+		OnSelectionInsert(variants);
+		break;
+    case ee0::MSG_NODE_SELECTION_CLEAR:
+        OnSelectionClear(variants);
+        break;
+
+    case MSG_HEIGHTMAP_CHANGED:
+        SetupRenderer();
+        break;
+	}
+}
+
 void WxPreviewCanvas::SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVarType>* graph_page)
 {
     m_graph_page = graph_page;
@@ -91,25 +110,6 @@ void WxPreviewCanvas::InitEditOP(const ee0::EditOPPtr& default_op)
     m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(
         m_camera, GetViewport(), m_stage->GetSubjectMgr()
     );
-}
-
-void WxPreviewCanvas::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
-{
-    ee3::WxStageCanvas::OnNotify(msg, variants);
-
-	switch (msg)
-	{
-	case ee0::MSG_NODE_SELECTION_INSERT:
-		OnSelectionInsert(variants);
-		break;
-    case ee0::MSG_NODE_SELECTION_CLEAR:
-        OnSelectionClear(variants);
-        break;
-
-    case MSG_HEIGHTMAP_CHANGED:
-        SetupRenderer();
-        break;
-	}
 }
 
 void WxPreviewCanvas::DrawBackground3D() const
@@ -205,6 +205,8 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
 
     m_selected = obj;
 
+    SetupRenderer();
+
     auto node = GetSelectedNode();
     if (node)
     {
@@ -239,8 +241,6 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             m_stage->GetImpl().SetEditOP(m_ops[OP_DEFAULT]);
         }
     }
-
-    SetupRenderer();
 }
 
 void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
