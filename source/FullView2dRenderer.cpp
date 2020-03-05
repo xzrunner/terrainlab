@@ -45,6 +45,9 @@ void FullView2dRenderer::Draw() const
             );
         }
     }
+
+    rc.SetZTest(ur::DEPTH_LESS_EQUAL);
+    rc.SetCullMode(ur::CULL_BACK);
 }
 
 void FullView2dRenderer::Clear()

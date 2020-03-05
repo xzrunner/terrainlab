@@ -33,8 +33,12 @@ void ImageRenderer::Draw() const
 
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     rc.SetZTest(ur::DEPTH_DISABLE);
+    rc.SetCullMode(ur::CULL_DISABLE);
 
     pt2::RenderSystem::DrawTexture(*m_tex, sm::rect(512, 512), sm::Matrix2D(), false);
+
+    rc.SetZTest(ur::DEPTH_LESS_EQUAL);
+    rc.SetCullMode(ur::CULL_BACK);
 }
 
 void ImageRenderer::Clear()
