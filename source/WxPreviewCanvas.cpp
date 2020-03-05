@@ -256,6 +256,17 @@ void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
                                    const pt0::RenderContext& rc) const
 {
+    auto node = GetSelectedNode();
+    if (!node) {
+        return;
+    }
+
+    if (node->get_type() == rttr::type::get<node::FullView2D>())
+    {
+        m_full2_rd.Draw();
+        return;
+    }
+
     auto device = GetSelectedDevice();
     if (!device) {
         return;

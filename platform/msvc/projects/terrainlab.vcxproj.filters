@@ -37,6 +37,12 @@
     <Filter Include="view\preview\operator">
       <UniqueIdentifier>{c45312e6-7b5f-44c6-a253-349fabd6f1ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nodes">
+      <UniqueIdentifier>{de409d51-e2a5-4e5e-bdf3-301ec5aa7a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview\renderer\fullview">
+      <UniqueIdentifier>{70879a29-8144-43a9-997f-742aa93ca59e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\terrainlab\WxPreviewCanvas.h">
@@ -94,6 +100,12 @@
     <ClInclude Include="..\..\..\include\terrainlab\SplatRenderer.h">
       <Filter>view\preview\renderer\heightmap</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\node\FullView2D.h">
+      <Filter>nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\FullView2dRenderer.h">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -135,6 +147,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
       <Filter>view\preview\renderer\heightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\FullView2D.cpp">
+      <Filter>nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\FullView2dRenderer.cpp">
+      <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

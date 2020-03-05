@@ -1,4 +1,5 @@
 #include "terrainlab/RegistNodes.h"
+#include "terrainlab/node/FullView2D.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -40,6 +41,10 @@ rttr::registration::class_<terrainlab::node::HeightOutput>("terrainlab::height_o
         rttr::metadata(js::RTTR::FilePathTag(), true),
         rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))
     )
+;
+
+rttr::registration::class_<terrainlab::node::FullView2D>("terrainlab::fullview2d")
+    .constructor<>()
 ;
 
 }

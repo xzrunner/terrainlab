@@ -2,6 +2,7 @@
 
 #include "terrainlab/ImageRenderer.h"
 #include "terrainlab/OverlayRenderer.h"
+#include "terrainlab/FullView2dRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
@@ -66,6 +67,8 @@ private:
     std::shared_ptr<rp::HeightfieldRenderer> m_hf_rd = nullptr;
     ImageRenderer   m_img_rd;
     OverlayRenderer m_overlay_rd;
+
+    FullView2dRenderer m_full2_rd;
 
     std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
 
