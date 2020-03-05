@@ -31,7 +31,7 @@ public:
 
     void SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVarType>* graph_page);
 
-    void InitEditOP(const ee0::EditOPPtr& default_op);
+    void InitEditOP();
 
 protected:
     virtual void DrawBackground3D() const override;
@@ -53,9 +53,12 @@ private:
 private:
     enum OperatorID
     {
-        OP_DEFAULT,
+        OP_CAMERA_2D,
+        OP_CAMERA_3D,
+
         OP_TEMP_BRUSH,
         OP_NOISE_BRUSH,
+
         OP_MAX_NUM
     };
 
@@ -71,6 +74,9 @@ private:
     FullView2dRenderer m_full2_rd;
 
     std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
+
+    pt0::CameraPtr m_cam2d = nullptr;
+    pt0::CameraPtr m_cam3d = nullptr;
 
 }; // WxPreviewCanvas
 

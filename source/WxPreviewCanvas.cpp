@@ -9,6 +9,8 @@
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
+#include <ee2/CamControlOP.h>
+#include <ee3/CameraDriveOP.h>
 #include <blueprint/Node.h>
 #include <blueprint/CompNode.h>
 #include <blueprint/MessageID.h>
@@ -16,6 +18,7 @@
 #include <node0/SceneNode.h>
 #include <node3/RenderSystem.h>
 #include <painting2/RenderSystem.h>
+#include <painting2/OrthoCamera.h>
 #include <painting3/MaterialMgr.h>
 #include <painting3/Blackboard.h>
 #include <painting3/WindowContext.h>
@@ -47,6 +50,9 @@ WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
 
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);
+
+    m_cam3d = m_camera;
+    m_cam2d = std::make_shared<pt2::OrthoCamera>();
 }
 
 WxPreviewCanvas::~WxPreviewCanvas()
@@ -102,15 +108,18 @@ void WxPreviewCanvas::SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVar
     }
 }
 
-void WxPreviewCanvas::InitEditOP(const ee0::EditOPPtr& default_op)
+void WxPreviewCanvas::InitEditOP()
 {
-    m_ops[OP_DEFAULT] = default_op;
-    m_ops[OP_TEMP_BRUSH] = std::make_shared<TemplateBrushOP>(
-        m_camera, GetViewport(), m_stage->GetSubjectMgr(), m_hf_rd
-    );
-    m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(
-        m_camera, GetViewport(), m_stage->GetSubjectMgr(), m_hf_rd
-    );
+    auto cam = m_camera;
+    auto& vp = GetViewport();
+    auto sub = m_stage->GetSubjectMgr();
+
+    m_ops[OP_CAMERA_2D]   = std::make_shared<ee2::CamControlOP>(m_cam2d, sub);
+    m_ops[OP_CAMERA_3D]   = std::make_shared<ee3::CameraDriveOP>(cam, vp, sub);
+    m_ops[OP_TEMP_BRUSH]  = std::make_shared<TemplateBrushOP>(cam, vp, sub, m_hf_rd);
+    m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(cam, vp, sub, m_hf_rd);
+
+    m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
 }
 
 void WxPreviewCanvas::DrawBackground3D() const
@@ -211,6 +220,8 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
     auto node = GetSelectedNode();
     if (node)
     {
+        m_camera = m_cam3d;
+
         auto type = node->get_type();
         if (type == rttr::type::get<node::TemplateBrush>())
         {
@@ -237,9 +248,14 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             brush_op->Setup(std::static_pointer_cast<Node>(node), nullptr, obj);
             m_stage->GetImpl().SetEditOP(m_ops[OP_NOISE_BRUSH]);
         }
+        else if (type == rttr::type::get<node::FullView2D>())
+        {
+            m_camera = m_cam2d;
+            m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
+        }
         else
         {
-            m_stage->GetImpl().SetEditOP(m_ops[OP_DEFAULT]);
+            m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
         }
     }
 }

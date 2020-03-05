@@ -5,11 +5,13 @@
 #include <painting2/RenderSystem.h>
 #include <terraintiler/GeoMipMapping.h>
 
+#include <ee0/RenderContext.h>
+
 namespace
 {
 
 const size_t TILE_SIZE = 128;
-const size_t TILE_GAP  = 16;
+const size_t TILE_GAP  = 0;
 
 }
 
@@ -18,13 +20,14 @@ namespace terrainlab
 
 FullView2dRenderer::FullView2dRenderer()
 {
-    m_mipmap = std::make_shared<terraintiler::GeoMipMapping>(3, 3);
+    m_mipmap = std::make_shared<terraintiler::GeoMipMapping>(16, 16);
 }
 
 void FullView2dRenderer::Draw() const
 {
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     rc.SetZTest(ur::DEPTH_DISABLE);
+    rc.SetCullMode(ur::CULL_DISABLE);
 
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
