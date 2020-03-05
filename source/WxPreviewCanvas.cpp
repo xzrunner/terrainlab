@@ -6,6 +6,7 @@
 #include "terrainlab/NoiseBrushOP.h"
 #include "terrainlab/RegistNodes.h"
 #include "terrainlab/node/FullView2D.h"
+#include "terrainlab/node/FullView3D.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -130,10 +131,10 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
+    auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
     auto& shaders = m_hf_rd->GetAllShaders();
     if (!shaders.empty()) {
         assert(shaders.size() == 1);
-        auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
         if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
             std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
         }
@@ -142,7 +143,6 @@ void WxPreviewCanvas::DrawForeground3D() const
         auto& shaders = m_overlay_rd.GetAllShaders();
         if (!shaders.empty()) {
             assert(shaders.size() == 1);
-            auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
             if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
                 std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
             }
@@ -162,12 +162,12 @@ void WxPreviewCanvas::DrawForeground3D() const
         auto& shaders = renderer->GetAllShaders();
         if (!shaders.empty()) {
             assert(shaders.size() == 1);
-            auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
             if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
                 std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
             }
         }
     }
+    m_full3_rd.Setup(wc);
 
     pt0::RenderContext rc;
     rc.AddVar(
@@ -182,7 +182,6 @@ void WxPreviewCanvas::DrawForeground3D() const
             pt0::RenderVariant(persp->GetPos())
         );
     }
-    auto& wc = pt3::Blackboard::Instance()->GetWindowContext();
     assert(wc);
     rc.AddVar(
         pt3::MaterialMgr::PosTransUniforms::view.name,
@@ -277,9 +276,19 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         return;
     }
 
-    if (node->get_type() == rttr::type::get<node::FullView2D>())
+    auto type = node->get_type();
+    if (type == rttr::type::get<node::FullView2D>())
     {
         m_full2_rd.Draw();
+        return;
+    }
+    else if (type == rttr::type::get<node::FullView3D>())
+    {
+        auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_cam3d);
+
+        const_cast<FullView3dRenderer&>(m_full3_rd).Update();
+        m_full3_rd.Draw(p_cam->GetPos()/*, sm::mat4(), true*/);
+
         return;
     }
 

@@ -3,6 +3,7 @@
 #include "terrainlab/ImageRenderer.h"
 #include "terrainlab/OverlayRenderer.h"
 #include "terrainlab/FullView2dRenderer.h"
+#include "terrainlab/FullView3dRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
@@ -72,6 +73,7 @@ private:
     OverlayRenderer m_overlay_rd;
 
     FullView2dRenderer m_full2_rd;
+    FullView3dRenderer m_full3_rd;
 
     std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
 

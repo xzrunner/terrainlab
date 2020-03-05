@@ -1,5 +1,6 @@
 #include "terrainlab/RegistNodes.h"
 #include "terrainlab/node/FullView2D.h"
+#include "terrainlab/node/FullView3D.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -44,6 +45,10 @@ rttr::registration::class_<terrainlab::node::HeightOutput>("terrainlab::height_o
 ;
 
 rttr::registration::class_<terrainlab::node::FullView2D>("terrainlab::fullview2d")
+    .constructor<>()
+;
+
+rttr::registration::class_<terrainlab::node::FullView3D>("terrainlab::fullview3d")
     .constructor<>()
 ;
 
