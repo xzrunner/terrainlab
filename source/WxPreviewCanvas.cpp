@@ -5,6 +5,7 @@
 #include "terrainlab/TemplateBrushOP.h"
 #include "terrainlab/NoiseBrushOP.h"
 #include "terrainlab/RegistNodes.h"
+#include "terrainlab/node/FullView2D.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -105,10 +106,10 @@ void WxPreviewCanvas::InitEditOP(const ee0::EditOPPtr& default_op)
 {
     m_ops[OP_DEFAULT] = default_op;
     m_ops[OP_TEMP_BRUSH] = std::make_shared<TemplateBrushOP>(
-        m_camera, GetViewport(), m_stage->GetSubjectMgr()
+        m_camera, GetViewport(), m_stage->GetSubjectMgr(), m_hf_rd
     );
     m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(
-        m_camera, GetViewport(), m_stage->GetSubjectMgr()
+        m_camera, GetViewport(), m_stage->GetSubjectMgr(), m_hf_rd
     );
 }
 

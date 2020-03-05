@@ -5,9 +5,9 @@ namespace terrainlab
 {
 
 NoiseBrushOP::NoiseBrushOP(const std::shared_ptr<pt0::Camera>& camera,
-                                 const pt3::Viewport& vp,
-                                 const ee0::SubjectMgrPtr& sub_mgr)
-    : BrushDrawOP(camera, vp, sub_mgr)
+                           const pt3::Viewport& vp, const ee0::SubjectMgrPtr& sub_mgr,
+                           const std::shared_ptr<rp::HeightfieldRenderer>& hf_rd)
+    : BrushDrawOP(camera, vp, sub_mgr, hf_rd)
 {
 }
 

@@ -15,12 +15,13 @@ namespace terrainlab
 {
 
 BrushDrawOP::BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
-                         const pt3::Viewport& vp, const ee0::SubjectMgrPtr& sub_mgr)
+                         const pt3::Viewport& vp, const ee0::SubjectMgrPtr& sub_mgr,
+                         const std::shared_ptr<rp::HeightfieldRenderer>& hf_rd)
     : ee3::CameraDriveOP(camera, vp, sub_mgr)
     , m_vp(vp)
     , m_sub_mgr(sub_mgr)
+    , m_renderer(hf_rd)
 {
-    m_renderer = std::make_shared<SplatRenderer>();
 }
 
 void BrushDrawOP::Setup(const std::shared_ptr<Node>& brush_node,

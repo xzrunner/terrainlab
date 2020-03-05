@@ -15,8 +15,8 @@ class Node;
 class BrushDrawOP : public ee3::CameraDriveOP
 {
 public:
-    BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
-        const pt3::Viewport& vp, const ee0::SubjectMgrPtr& sub_mgr);
+    BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera, const pt3::Viewport& vp,
+        const ee0::SubjectMgrPtr& sub_mgr, const std::shared_ptr<rp::HeightfieldRenderer>& hf_rd);
 
     auto GetRenderer() const { return m_renderer; }
 

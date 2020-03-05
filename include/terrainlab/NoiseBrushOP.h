@@ -10,8 +10,8 @@ namespace node { class TemplateBrush; }
 class NoiseBrushOP : public BrushDrawOP
 {
 public:
-    NoiseBrushOP(const std::shared_ptr<pt0::Camera>& camera,
-        const pt3::Viewport& vp, const ee0::SubjectMgrPtr& sub_mgr);
+    NoiseBrushOP(const std::shared_ptr<pt0::Camera>& camera, const pt3::Viewport& vp,
+        const ee0::SubjectMgrPtr& sub_mgr, const std::shared_ptr<rp::HeightfieldRenderer>& hf_rd);
 
     virtual bool OnMouseLeftDown(int x, int y) override;
     virtual bool OnMouseLeftUp(int x, int y) override;
