@@ -200,6 +200,11 @@ vec4 TexSampleMultiProj(sampler2D samp, in vec3 world_pos, in vec3 weights)
 
 void main()
 {
+    if (v_height == 0) {
+        gl_FragColor = vec4(0.05, 0.05, 0.95, 1.0);
+        return;
+    }
+
 #ifdef BUILD_NORMAL_MAP
     // fixme
     //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
