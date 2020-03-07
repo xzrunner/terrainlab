@@ -1,6 +1,7 @@
 #include "terrainlab/RegistNodes.h"
 #include "terrainlab/node/FullView2D.h"
 #include "terrainlab/node/FullView3D.h"
+#include "terrainlab/node/Clipmap.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -49,6 +50,10 @@ rttr::registration::class_<terrainlab::node::FullView2D>("terrainlab::fullview2d
 ;
 
 rttr::registration::class_<terrainlab::node::FullView3D>("terrainlab::fullview3d")
+    .constructor<>()
+;
+
+rttr::registration::class_<terrainlab::node::Clipmap>("terrainlab::clipmap")
     .constructor<>()
 ;
 

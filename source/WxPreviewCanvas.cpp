@@ -7,6 +7,7 @@
 #include "terrainlab/RegistNodes.h"
 #include "terrainlab/node/FullView2D.h"
 #include "terrainlab/node/FullView3D.h"
+#include "terrainlab/node/Clipmap.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -168,6 +169,7 @@ void WxPreviewCanvas::DrawForeground3D() const
         }
     }
     m_full3_rd.Setup(wc);
+    m_clip_rd.Setup(wc);
 
     pt0::RenderContext rc;
     rc.AddVar(
@@ -289,6 +291,11 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         const_cast<FullView3dRenderer&>(m_full3_rd).Update();
         m_full3_rd.Draw(p_cam->GetPos()/*, sm::mat4(), true*/);
 
+        return;
+    }
+    else if (type == rttr::type::get<node::Clipmap>())
+    {
+        m_clip_rd.Draw();
         return;
     }
 

@@ -12,8 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\terrainlab\BrushDrawOP.h" />
+    <ClInclude Include="..\..\..\include\terrainlab\ClipmapRenderer.h" />
     <ClInclude Include="..\..\..\include\terrainlab\FullView2dRenderer.h" />
     <ClInclude Include="..\..\..\include\terrainlab\FullView3dRenderer.h" />
+    <ClInclude Include="..\..\..\include\terrainlab\node\Clipmap.h" />
     <ClInclude Include="..\..\..\include\terrainlab\node\FullView2D.h" />
     <ClInclude Include="..\..\..\include\terrainlab\node\FullView3D.h" />
     <ClInclude Include="..\..\..\include\terrainlab\NoiseBrushOP.h" />
@@ -37,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\BrushDrawOP.cpp" />
+    <ClCompile Include="..\..\..\source\ClipmapRenderer.cpp" />
     <ClCompile Include="..\..\..\source\FullView2dRenderer.cpp" />
     <ClCompile Include="..\..\..\source\FullView3dRenderer.cpp" />
     <ClCompile Include="..\..\..\source\NoiseBrushOP.cpp" />

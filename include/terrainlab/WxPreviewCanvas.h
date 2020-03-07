@@ -4,6 +4,7 @@
 #include "terrainlab/OverlayRenderer.h"
 #include "terrainlab/FullView2dRenderer.h"
 #include "terrainlab/FullView3dRenderer.h"
+#include "terrainlab/ClipmapRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
@@ -74,6 +75,7 @@ private:
 
     FullView2dRenderer m_full2_rd;
     FullView3dRenderer m_full3_rd;
+    ClipmapRenderer    m_clip_rd;
 
     std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
 

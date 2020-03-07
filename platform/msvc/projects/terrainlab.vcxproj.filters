@@ -112,6 +112,12 @@
     <ClInclude Include="..\..\..\include\terrainlab\node\FullView3D.h">
       <Filter>nodes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\node\Clipmap.h">
+      <Filter>nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\ClipmapRenderer.h">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -154,17 +160,14 @@
     <ClCompile Include="..\..\..\source\SplatRenderer.cpp">
       <Filter>view\preview\renderer\heightmap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\node\FullView2D.cpp">
-      <Filter>nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\FullView2dRenderer.cpp">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\FullView3dRenderer.cpp">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\node\FullView3D.cpp">
-      <Filter>nodes</Filter>
+    <ClCompile Include="..\..\..\source\ClipmapRenderer.cpp">
+      <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
