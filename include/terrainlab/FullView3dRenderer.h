@@ -1,16 +1,15 @@
 #pragma once
 
-#include "renderpipeline/IRenderer.h"
-#include "renderpipeline/RendererImpl.h"
-
 #include <SM_Vector.h>
 #include <SM_Matrix.h>
-#include <unirender/Shader.h>
 
 #include <boost/noncopyable.hpp>
 
+#include <memory>
+
 namespace terraintiler { class GeoMipMapping; }
 namespace pt3 { class WindowContext; }
+namespace ur { class Shader; }
 
 namespace terrainlab
 {

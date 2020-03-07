@@ -1,6 +1,9 @@
 #include "terrainlab/FullView3dRenderer.h"
 
 #include <SM_Calc.h>
+#include <unirender/Blackboard.h>
+#include <unirender/RenderContext.h>
+#include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
 #include <terraintiler/GeoMipMapping.h>
 
