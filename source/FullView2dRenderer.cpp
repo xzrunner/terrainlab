@@ -38,7 +38,8 @@ void FullView2dRenderer::Draw() const
             auto hmap = m_mipmap->QueryHeightmap(x, y);
 
             sm::Matrix2D mt;
-            mt.Translate((TILE_SIZE + TILE_GAP) * x, (TILE_SIZE + TILE_GAP) * y);
+            mt.Translate(static_cast<float>(TILE_SIZE + TILE_GAP) * x,
+                static_cast<float>(TILE_SIZE + TILE_GAP) * y);
 
             pt2::RenderSystem::DrawTexture(
                 *hmap, sm::rect(TILE_SIZE, TILE_SIZE), mt, false

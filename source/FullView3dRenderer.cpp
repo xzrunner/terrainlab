@@ -71,7 +71,7 @@ void FullView3dRenderer::Update()
         for (size_t x = 0; x < w; ++x) {
             m_mipmap->UpdateTile(x, y);
         }
-    }   
+    }
 }
 
 void FullView3dRenderer::Draw(const sm::vec3& cam_pos,
@@ -92,7 +92,7 @@ void FullView3dRenderer::Draw(const sm::vec3& cam_pos,
     {
         for (size_t x = 0; x < w; ++x)
         {
-            const float dist = sm::dis_pos3_to_pos3(cam_pos, sm::vec3(x, 0, y));
+            const float dist = sm::dis_pos3_to_pos3(cam_pos, sm::vec3(static_cast<float>(x), 0, static_cast<float>(y)));
             size_t lod_level = 5;
             if (dist < 2) {
                 lod_level = 0;
@@ -118,7 +118,7 @@ void FullView3dRenderer::Draw(const sm::vec3& cam_pos,
 
             rc.DrawElements(ur::DRAW_TRIANGLES, 0, rd.num, false);
         }
-    }    
+    }
 
     if (debug_draw) {
         rc.SetPolygonMode(ur::POLYGON_FILL);
