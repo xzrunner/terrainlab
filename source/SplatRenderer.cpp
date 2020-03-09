@@ -33,6 +33,7 @@ varying vec3  v_fragpos;
 void main()
 {
     const float h_scale = 0.2;
+    //const float h_scale = 2;
 
 	v_height = texture2D(u_heightmap, texcoord).r;
 
@@ -222,8 +223,7 @@ void main()
 #endif // TEX_NO_TILE
     vec4 distortion = u_layer_distort * (global_col - 0.5) * 0;
 
-    float h = v_height;
-    vec4 real_height = v_height + distortion * 0.03;
+    vec4 real_height = v_height * 0.5 + 0.5 + distortion * 0.03;
     vec4 lerp_weights = clamp(real_height * u_layer_height_scale + u_layer_height_bias, 0.0, 1.0);
     vec4 lerp_weights2 = clamp((distortion.w + length(vec2(N.x, N.z))) * u_layer_slope_scale + u_layer_slope_bias, 0.0, 1.0);
     lerp_weights = lerp_weights * lerp_weights2;
