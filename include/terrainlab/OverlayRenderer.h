@@ -2,8 +2,7 @@
 
 #include <unirender/Texture.h>
 #include <renderpipeline/HeightfieldRenderer.h>
-
-namespace terraingraph { class Bitmap; }
+#include <terraingraph/typedef.h>
 
 namespace terrainlab
 {
@@ -19,7 +18,7 @@ public:
     virtual void Setup(const std::shared_ptr<hf::HeightField>& hf) override {}
 
     void Setup(const std::shared_ptr<hf::HeightField>& hf,
-        const std::shared_ptr<terraingraph::Bitmap>& bmp);
+        const terraingraph::BitmapPtr& bmp);
 
 private:
     void InitShader();

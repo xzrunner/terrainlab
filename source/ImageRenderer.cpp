@@ -9,7 +9,7 @@
 namespace terrainlab
 {
 
-void ImageRenderer::Setup(const std::shared_ptr<terraingraph::Bitmap>& bmp)
+void ImageRenderer::Setup(const terraingraph::BitmapPtr& bmp)
 {
     if (bmp) {
         auto& rc = ur::Blackboard::Instance()->GetRenderContext();

@@ -68,7 +68,7 @@ void OverlayRenderer::Clear()
 }
 
 void OverlayRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf,
-                            const std::shared_ptr<terraingraph::Bitmap>& bmp)
+                            const terraingraph::BitmapPtr& bmp)
 {
     m_hf = hf;
     if (!m_hf) {
