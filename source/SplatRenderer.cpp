@@ -22,6 +22,8 @@ uniform mat4 u_projection;
 uniform mat4 u_view;
 uniform mat4 u_model;
 
+uniform vec2 u_inv_res;
+
 uniform sampler2D u_heightmap;
 
 varying float v_height;
@@ -29,6 +31,33 @@ varying float v_height;
 varying vec2  v_texcoord;
 #endif // BUILD_NORMAL_MAP
 varying vec3  v_fragpos;
+varying vec3  v_normal;
+
+vec3 ComputeNormalCentralDifference(vec2 position, float heightExaggeration)
+{
+    float leftHeight = texture(u_heightmap, position - vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
+    float rightHeight = texture(u_heightmap, position + vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
+    float bottomHeight = texture(u_heightmap, position - vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
+    float topHeight = texture(u_heightmap, position + vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
+    return normalize(vec3(leftHeight - rightHeight, 2.0, bottomHeight - topHeight));
+}
+
+vec3 ComputeNormalSobelFilter(vec2 position, float heightExaggeration)
+{
+    float upperLeft = texture(u_heightmap, position + vec2(-1.0, 1.0) * u_inv_res).r * heightExaggeration;
+    float upperCenter = texture(u_heightmap, position + vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
+    float upperRight = texture(u_heightmap, position + vec2(1.0, 1.0) * u_inv_res).r * heightExaggeration;
+    float left = texture(u_heightmap, position + vec2(-1.0, 0.0) * u_inv_res).r * heightExaggeration;
+    float right = texture(u_heightmap, position + vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
+    float lowerLeft = texture(u_heightmap, position + vec2(-1.0, -1.0) * u_inv_res).r * heightExaggeration;
+    float lowerCenter = texture(u_heightmap, position + vec2(0.0, -1.0) * u_inv_res).r * heightExaggeration;
+    float lowerRight = texture(u_heightmap, position + vec2(1.0, -1.0) * u_inv_res).r * heightExaggeration;
+
+    float x = upperRight + (2.0 * right) + lowerRight - upperLeft - (2.0 * left) - lowerLeft;
+    float y = lowerLeft + (2.0 * lowerCenter) + lowerRight - upperLeft - (2.0 * upperCenter) - upperRight;
+
+    return normalize(vec3(-x, 1.0, y));
+}
 
 void main()
 {
@@ -45,6 +74,8 @@ void main()
     v_texcoord = texcoord;
 #endif // BUILD_NORMAL_MAP
     v_fragpos = vec3(u_model * pos);
+
+    v_normal = ComputeNormalSobelFilter(texcoord, 100.0);
 }
 
 )";
@@ -79,6 +110,7 @@ uniform sampler2D u_shadow_map;
 
 varying float v_height;
 varying vec3  v_fragpos;
+varying vec3  v_normal;
 
 const float UV_SCALE = 32.0;
 
@@ -206,15 +238,16 @@ void main()
         return;
     }
 
-#ifdef BUILD_NORMAL_MAP
-    // fixme
-    //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
-    vec3 N = normalize(texture2D(u_normal_map, v_texcoord).rgb);
-#else
-    vec3 fdx = dFdx(v_fragpos);
-    vec3 fdy = dFdy(v_fragpos);
-    vec3 N = normalize(cross(fdx, fdy));
-#endif // BUILD_NORMAL_MAP
+//#ifdef BUILD_NORMAL_MAP
+//    // fixme
+//    //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
+//    vec3 N = normalize(texture2D(u_normal_map, v_texcoord).rgb);
+//#else
+//    vec3 fdx = dFdx(v_fragpos);
+//    vec3 fdy = dFdy(v_fragpos);
+//    vec3 N = normalize(cross(fdx, fdy));
+//#endif // BUILD_NORMAL_MAP
+    vec3 N = v_normal;
 
 #ifdef TEX_NO_TILE
     vec4 global_col = textureNoTile2(u_noise_map, UV_SCALE * v_fragpos.xz);
@@ -336,7 +369,9 @@ void SplatRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
 
     // update uniforms
     pt0::ShaderUniforms vals;
-    vals.AddVar("u_light_dir", pt0::RenderVariant(m_light_dir));
+    sm::vec2 inv_res(1.0f / m_height_map->Width(), 1.0f / m_height_map->Height());
+    vals.AddVar("u_inv_res",            pt0::RenderVariant(inv_res));
+    vals.AddVar("u_light_dir",          pt0::RenderVariant(m_light_dir));
     vals.AddVar("u_layer_height_scale", pt0::RenderVariant(m_layer_height_scale));
     vals.AddVar("u_layer_height_bias",  pt0::RenderVariant(m_layer_height_bias));
     vals.AddVar("u_layer_slope_scale",  pt0::RenderVariant(m_layer_slope_scale));
