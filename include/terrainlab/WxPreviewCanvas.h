@@ -42,7 +42,6 @@ protected:
 
 private:
     void OnSelectionInsert(const ee0::VariantSet& variants);
-    void OnSelectionClear(const ee0::VariantSet& variants);
 
     void DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         const pt0::RenderContext& rc) const;

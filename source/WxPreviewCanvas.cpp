@@ -63,7 +63,6 @@ WxPreviewCanvas::~WxPreviewCanvas()
     {
         auto sub_mgr = m_graph_page->GetSubjectMgr();
         sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
-        sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
     }
 
     auto sub_mgr = m_stage->GetSubjectMgr();
@@ -79,9 +78,6 @@ void WxPreviewCanvas::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 	case ee0::MSG_NODE_SELECTION_INSERT:
 		OnSelectionInsert(variants);
 		break;
-    case ee0::MSG_NODE_SELECTION_CLEAR:
-        OnSelectionClear(variants);
-        break;
 
     case MSG_HEIGHTMAP_CHANGED:
         SetupRenderer();
@@ -95,7 +91,6 @@ void WxPreviewCanvas::SetGraphPage(const bp::WxGraphPage<terraingraph::DeviceVar
 
     auto sub_mgr = m_graph_page->GetSubjectMgr();
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
-    sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
 
     // regist editor's sub_mgr to brush ops
     for (size_t i = 0; i < OP_MAX_NUM; ++i)
@@ -259,15 +254,6 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
         }
     }
-}
-
-void WxPreviewCanvas::OnSelectionClear(const ee0::VariantSet& variants)
-{
-    m_selected.reset();
-
-    m_hf_rd->Clear();
-    m_img_rd.Clear();
-    m_overlay_rd.Clear();
 }
 
 void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
