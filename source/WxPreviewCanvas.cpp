@@ -251,7 +251,17 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
         }
         else
         {
-            m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
+            auto device = GetSelectedDevice();
+            if (device)
+            {
+                auto hf = device->GetHeightField();
+                if (hf) {
+                    m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
+                } else {
+                    m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
+                }
+            }
+
         }
     }
 }
