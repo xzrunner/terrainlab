@@ -8,6 +8,7 @@
 #include "terrainlab/node/FullView2D.h"
 #include "terrainlab/node/FullView3D.h"
 #include "terrainlab/node/Clipmap.h"
+#include "terrainlab/node/VirtualTexture.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -164,7 +165,7 @@ void WxPreviewCanvas::DrawForeground3D() const
         }
     }
     m_full3_rd.Setup(wc);
-    m_clip_rd.Setup(wc);
+    m_clip3_rd.Setup(wc);
 
     pt0::RenderContext rc;
     rc.AddVar(
@@ -256,10 +257,17 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             {
                 auto hf = device->GetHeightField();
                 if (hf) {
+                    m_camera = m_cam3d;
                     m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
                 } else {
+                    m_camera = m_cam2d;
                     m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
                 }
+            }
+            else
+            {
+                m_camera = m_cam2d;
+                m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
             }
 
         }
@@ -291,7 +299,16 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     }
     else if (type == rttr::type::get<node::Clipmap>())
     {
-        m_clip_rd.Draw();
+        auto cam = GetCamera();
+        assert(cam->TypeID() == pt0::GetCamTypeID<pt2::OrthoCamera>());
+        auto ortho2d = std::static_pointer_cast<pt2::OrthoCamera>(cam);
+        auto& vp = GetViewport();
+        m_clip2_rd.Draw(ortho2d->GetScale(), ortho2d->GetPosition(), vp.Width(), vp.Height());
+        return;
+    }
+    else if (type == rttr::type::get<node::VirtualTexture>())
+    {
+        m_vtex_rd.Draw();
         return;
     }
 

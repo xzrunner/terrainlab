@@ -13,10 +13,10 @@ namespace pt3 { class WindowContext; }
 namespace terrainlab
 {
 
-class ClipmapRenderer : private boost::noncopyable
+class Clipmap3dRenderer : private boost::noncopyable
 {
 public:
-    ClipmapRenderer();
+    Clipmap3dRenderer();
 
     void Setup(std::shared_ptr<pt3::WindowContext>& wc) const;
 
@@ -30,6 +30,6 @@ private:
 
     mutable std::shared_ptr<terraintiler::Clipmap> m_clipmap = nullptr;
 
-}; // ClipmapRenderer
+}; // Clipmap3dRenderer
 
 }

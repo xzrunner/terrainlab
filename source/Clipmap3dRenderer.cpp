@@ -1,4 +1,4 @@
-#include "terrainlab/ClipmapRenderer.h"
+#include "terrainlab/Clipmap3dRenderer.h"
 
 #include <unirender/Blackboard.h>
 #include <unirender/RenderContext.h>
@@ -65,17 +65,17 @@ void main()
 namespace terrainlab
 {
 
-ClipmapRenderer::ClipmapRenderer()
+Clipmap3dRenderer::Clipmap3dRenderer()
 {
     InitShader();
 }
 
-void ClipmapRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
+void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 {
     static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void ClipmapRenderer::Draw(const sm::mat4& mt) const
+void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
 {
     if (!m_clipmap) {
         m_clipmap = std::make_shared<terraintiler::Clipmap>();
@@ -113,7 +113,7 @@ void ClipmapRenderer::Draw(const sm::mat4& mt) const
     rc.SetPolygonMode(ur::POLYGON_FILL);
 }
 
-void ClipmapRenderer::InitShader()
+void Clipmap3dRenderer::InitShader()
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 

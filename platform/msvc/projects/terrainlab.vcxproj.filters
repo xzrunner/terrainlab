@@ -115,7 +115,16 @@
     <ClInclude Include="..\..\..\include\terrainlab\node\Clipmap.h">
       <Filter>nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\terrainlab\ClipmapRenderer.h">
+    <ClInclude Include="..\..\..\include\terrainlab\node\VirtualTexture.h">
+      <Filter>nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\VTexRenderer.h">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\Clipmap3dRenderer.h">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\Clipmap2dRenderer.h">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClInclude>
   </ItemGroup>
@@ -166,7 +175,13 @@
     <ClCompile Include="..\..\..\source\FullView3dRenderer.cpp">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\ClipmapRenderer.cpp">
+    <ClCompile Include="..\..\..\source\VTexRenderer.cpp">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Clipmap3dRenderer.cpp">
+      <Filter>view\preview\renderer\fullview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Clipmap2dRenderer.cpp">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClCompile>
   </ItemGroup>
