@@ -6,7 +6,8 @@
 namespace
 {
 
-const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\world.topo.bathy.200412.3x5400x2700.vtex";
+//const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\world.topo.bathy.200412.3x5400x2700.vtex";
+const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\gebco_08_rev_elev_21600x10800.vtex";
 
 }
 
