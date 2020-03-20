@@ -28,7 +28,8 @@ void Clipmap2dRenderer::Draw(float scale, const sm::vec2& offset,
     }
 
     if (m_tex) {
-        m_tex->Draw(scale, offset, screen_width, screen_height);
+        m_tex->Update(scale, offset);
+        m_tex->Draw(screen_width, screen_height);
     }
 }
 

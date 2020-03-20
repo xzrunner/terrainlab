@@ -266,8 +266,11 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             }
             else
             {
-                m_camera = m_cam2d;
-                m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
+//                m_camera = m_cam2d;
+//                m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_2D]);
+
+                m_camera = m_cam3d;
+                m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
             }
 
         }
@@ -300,10 +303,16 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     else if (type == rttr::type::get<node::Clipmap>())
     {
         auto cam = GetCamera();
-        assert(cam->TypeID() == pt0::GetCamTypeID<pt2::OrthoCamera>());
-        auto ortho2d = std::static_pointer_cast<pt2::OrthoCamera>(cam);
-        auto& vp = GetViewport();
-        m_clip2_rd.Draw(ortho2d->GetScale(), ortho2d->GetPosition(), vp.Width(), vp.Height());
+
+        //assert(cam->TypeID() == pt0::GetCamTypeID<pt2::OrthoCamera>());
+        //auto ortho2d = std::static_pointer_cast<pt2::OrthoCamera>(cam);
+        //auto& vp = GetViewport();
+        //m_clip2_rd.Draw(ortho2d->GetScale(), ortho2d->GetPosition(), vp.Width(), vp.Height());
+
+        assert(cam->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>());
+        auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_cam3d);
+        m_clip3_rd.Draw(p_cam->GetViewMat());
+
         return;
     }
     else if (type == rttr::type::get<node::VirtualTexture>())

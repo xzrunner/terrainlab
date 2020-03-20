@@ -9,6 +9,8 @@
 namespace
 {
 
+const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\gebco_08_rev_elev_21600x10800.vtex";
+
 const char* vs = R"(
 
 attribute vec4 position;
@@ -18,6 +20,7 @@ uniform mat4 u_view;
 uniform mat4 u_model;
 
 uniform vec4 u_block_ori;
+uniform vec4 u_uv_region;
 
 uniform sampler2D u_heightmap;
 
@@ -25,9 +28,12 @@ varying vec3 v_fragpos;
 
 void main()
 {
-    const float h_scale = 0.2;
+    const float h_scale = 0.8;
 
-    vec2 uv = position.xy * u_block_ori.xy + u_block_ori.zw;
+    //vec2 uv = position.xy * 0.5 + 0.5;
+    vec2 uv = position.xy;
+    uv = uv * u_block_ori.xy + u_block_ori.zw;
+    uv = uv * u_uv_region.zw + u_uv_region.xy;
 
     vec4 pos;
     pos.xz = position.xy;
@@ -50,7 +56,7 @@ void main()
     vec3 fdy = dFdy(v_fragpos);
     vec3 N = normalize(cross(fdx, fdy));
 
-    vec3 light_dir = normalize(vec3(0, -10, 10) - v_fragpos);
+    vec3 light_dir = normalize(vec3(0, -100000, 100000) - v_fragpos);
     float diff = max(dot(N, light_dir), 0.0);
     vec3 diffuse = diff * vec3(1.0, 1.0, 1.0);
 	gl_FragColor = vec4(diffuse, 1.0);
@@ -78,26 +84,30 @@ void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
 {
     if (!m_clipmap) {
-        m_clipmap = std::make_shared<terraintiler::Clipmap>();
+        m_clipmap = std::make_shared<terraintiler::Clipmap>(VTEX_FILEPATH);
     }
+    float scale = (mt * sm::vec3(1, 1, 1)).Length() * 0.5f;
+    m_clipmap->Update(scale);
 
     m_shader->Use();
 
     static_cast<pt0::Shader*>(m_shader.get())->UpdateModelMat(mt);
 
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    rc.SetPolygonMode(ur::POLYGON_LINE);
+    //rc.SetPolygonMode(ur::POLYGON_LINE);
     size_t idx = 0;
-    for (auto& layer : m_clipmap->GetAllLayers()) 
+    for (auto& layer : m_clipmap->GetAllLayers())
     {
         if (layer.heightmap) {
             rc.SetPolygonMode(ur::POLYGON_FILL);
             rc.BindTexture(layer.heightmap->TexID(), 0);
         } else {
+            continue;
             rc.SetPolygonMode(ur::POLYGON_LINE);
             rc.BindTexture(0, 0);
         }
 
+        m_shader->SetVec4("u_uv_region", layer.uv_region.xyzw);
         for (auto& block : layer.blocks)
         {
             m_shader->SetVec4("u_block_ori", block.trans.xyzw);
@@ -110,7 +120,9 @@ void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
 
         ++idx;
     }
-    rc.SetPolygonMode(ur::POLYGON_FILL);
+    //rc.SetPolygonMode(ur::POLYGON_FILL);
+
+    m_clipmap->DebugDraw();
 }
 
 void Clipmap3dRenderer::InitShader()
