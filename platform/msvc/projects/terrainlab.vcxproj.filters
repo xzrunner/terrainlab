@@ -127,6 +127,9 @@
     <ClInclude Include="..\..\..\include\terrainlab\Clipmap2dRenderer.h">
       <Filter>view\preview\renderer\fullview</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\ClipmapCamOP.h">
+      <Filter>view\preview\operator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -183,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Clipmap2dRenderer.cpp">
       <Filter>view\preview\renderer\fullview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ClipmapCamOP.cpp">
+      <Filter>view\preview\operator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

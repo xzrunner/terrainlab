@@ -62,6 +62,8 @@ private:
         OP_TEMP_BRUSH,
         OP_NOISE_BRUSH,
 
+        OP_CAM_CLIPMAP,
+
         OP_MAX_NUM
     };
 
