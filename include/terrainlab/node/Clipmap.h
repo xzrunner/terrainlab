@@ -23,7 +23,10 @@ public:
         Layout();
     }
 
-private:
+public:
+    sm::vec3 cam_pos;
+    sm::vec3 cam_target;
+    sm::vec3 cam_up;
 
     RTTR_ENABLE(Node)
 

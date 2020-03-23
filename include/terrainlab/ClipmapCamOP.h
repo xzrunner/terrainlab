@@ -6,9 +6,12 @@
 #include <SM_Vector.h>
 
 namespace clipmap { class Clipmap; }
+namespace terraintiler { class Clipmap; }
 
 namespace terrainlab
 {
+
+namespace node { class Clipmap; }
 
 class ClipmapCamOP : public ee0::EditOP
 {
@@ -21,10 +24,15 @@ public:
     virtual bool OnMouseDrag(int x, int y) override;
     virtual bool OnMouseWheelRotation(int x, int y, int direction) override;
 
-    void SetVTex(const std::shared_ptr<clipmap::Clipmap>& vtex) {
-        if (m_vtex != vtex) {
-            m_vtex = vtex;
-        }
+    //void SetVTex(const std::shared_ptr<clipmap::Clipmap>& vtex) {
+    //    if (m_vtex != vtex) {
+    //        m_vtex = vtex;
+    //    }
+    //}
+    void SetVTex(const std::shared_ptr<terraintiler::Clipmap>& vtex);
+
+    void SetClipmapNode(const std::shared_ptr<node::Clipmap>& clipmap_node) {
+        m_clipmap_node = clipmap_node;
     }
 
 private:
@@ -32,11 +40,14 @@ private:
     bool Scale(float scale);
 
 private:
-    std::shared_ptr<clipmap::Clipmap> m_vtex = nullptr;
+//    std::shared_ptr<clipmap::Clipmap> m_vtex = nullptr;
+    std::shared_ptr<terraintiler::Clipmap> m_vtex = nullptr;
 
     ee0::SubjectMgrPtr m_sub_mgr;
 
     sm::ivec2 m_last_pos;
+
+    std::shared_ptr<node::Clipmap> m_clipmap_node = nullptr;
 
 }; // ClipmapCamOP
 

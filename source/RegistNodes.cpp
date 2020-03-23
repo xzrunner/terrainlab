@@ -56,6 +56,18 @@ rttr::registration::class_<terrainlab::node::FullView3D>("terrainlab::fullview3d
 
 rttr::registration::class_<terrainlab::node::Clipmap>("terrainlab::clipmap")
     .constructor<>()
+    .property("cam_pos", &terrainlab::node::Clipmap::cam_pos)
+    (
+	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cam Pos"))
+    )
+    .property("cam_target", &terrainlab::node::Clipmap::cam_target)
+    (
+	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cam Target"))
+    )
+    .property("cam_up", &terrainlab::node::Clipmap::cam_up)
+    (
+	    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cam Up"))
+    )
 ;
 
 rttr::registration::class_<terrainlab::node::VirtualTexture>("terrainlab::vtex")

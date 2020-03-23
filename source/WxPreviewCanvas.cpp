@@ -117,7 +117,8 @@ void WxPreviewCanvas::InitEditOP()
     m_ops[OP_CAMERA_3D]   = std::make_shared<ee3::CameraDriveOP>(cam, vp, sub);
     m_ops[OP_TEMP_BRUSH]  = std::make_shared<TemplateBrushOP>(cam, vp, sub, m_hf_rd);
     m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(cam, vp, sub, m_hf_rd);
-    m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_cam2d, sub);
+    //m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_cam2d, sub);
+    m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_cam3d, sub);
 
     m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
 }
@@ -254,8 +255,22 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
         }
         else if (type == rttr::type::get<node::Clipmap>())
         {
-            m_camera = m_cam2d;
+            //auto& vp = GetViewport();
+            //m_clip2_rd.Draw(vp.Width(), vp.Height());
+            //std::static_pointer_cast<terrainlab::ClipmapCamOP>
+            //    (m_ops[OP_CAM_CLIPMAP])->SetVTex(m_clip2_rd.GetVTex());
+            std::static_pointer_cast<terrainlab::ClipmapCamOP>
+                (m_ops[OP_CAM_CLIPMAP])->SetVTex(m_clip3_rd.GetVTex());
+            std::static_pointer_cast<terrainlab::ClipmapCamOP>
+                (m_ops[OP_CAM_CLIPMAP])->SetClipmapNode(std::static_pointer_cast<node::Clipmap>(node));
+
+//            m_camera = m_cam2d;
+//            m_stage->GetImpl().SetEditOP(m_ops[OP_CAM_CLIPMAP]);
+
+            m_camera = m_cam3d;
+//            m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
             m_stage->GetImpl().SetEditOP(m_ops[OP_CAM_CLIPMAP]);
+
         }
         else
         {
@@ -309,14 +324,15 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     }
     else if (type == rttr::type::get<node::Clipmap>())
     {
-        auto& vp = GetViewport();
-        m_clip2_rd.Draw(vp.Width(), vp.Height());
-        std::static_pointer_cast<terrainlab::ClipmapCamOP>
-            (m_ops[OP_CAM_CLIPMAP])->SetVTex(m_clip2_rd.GetVTex());
+        //std::static_pointer_cast<terrainlab::ClipmapCamOP>
+        //    (m_ops[OP_CAM_CLIPMAP])->SetVTex(m_clip3_rd.GetVTex());
 
-        //assert(cam->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>());
-        //auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_cam3d);
-        //m_clip3_rd.Draw(p_cam->GetViewMat());
+        assert(m_cam3d->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>());
+        auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_cam3d);
+
+        auto pos = p_cam->GetPos();
+        auto dist = p_cam->GetDistance();
+        m_clip3_rd.Draw(p_cam->GetViewMat());
 
         return;
     }

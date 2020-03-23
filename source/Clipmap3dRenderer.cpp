@@ -5,6 +5,8 @@
 #include <renderpipeline/UniformNames.h>
 #include <painting3/Shader.h>
 #include <terraintiler/Clipmap.h>
+#include <clipmap/TextureStack.h>
+#include <clipmap/Clipmap.h>
 
 namespace
 {
@@ -83,47 +85,29 @@ void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 
 void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
 {
-    if (!m_clipmap) {
-        m_clipmap = std::make_shared<terraintiler::Clipmap>(VTEX_FILEPATH);
+    if (!m_vtex) {
+        m_vtex = std::make_shared<terraintiler::Clipmap>(VTEX_FILEPATH);
     }
-    float scale = (mt * sm::vec3(1, 1, 1)).Length() * 0.5f;
-    m_clipmap->Update(scale);
 
     m_shader->Use();
 
     static_cast<pt0::Shader*>(m_shader.get())->UpdateModelMat(mt);
 
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    //rc.SetPolygonMode(ur::POLYGON_LINE);
-    size_t idx = 0;
-    for (auto& layer : m_clipmap->GetAllLayers())
-    {
-        if (layer.heightmap) {
-            rc.SetPolygonMode(ur::POLYGON_FILL);
-            rc.BindTexture(layer.heightmap->TexID(), 0);
-        } else {
-            continue;
-            rc.SetPolygonMode(ur::POLYGON_LINE);
-            rc.BindTexture(0, 0);
-        }
+    auto& layers = m_vtex->GetAllLayers();
+    float scale;
+    sm::vec2 offset;
+    m_vtex->GetVTex()->GetRegion(scale, offset);
+    auto level = clipmap::TextureStack::CalcMipmapLevel(layers.size(), scale);
+    DrawLayer(level);
 
-        m_shader->SetVec4("u_uv_region", layer.uv_region.xyzw);
-        for (auto& block : layer.blocks)
-        {
-            m_shader->SetVec4("u_block_ori", block.trans.xyzw);
-
-            rc.BindBuffer(ur::INDEXBUFFER, block.rd.ebo);
-            rc.BindBuffer(ur::VERTEXBUFFER, block.rd.vbo);
-
-            rc.DrawElements(ur::DRAW_TRIANGLES, 0, block.rd.num);
-        }
-
-        ++idx;
-    }
-    //rc.SetPolygonMode(ur::POLYGON_FILL);
-
-    m_clipmap->DebugDraw();
+    m_vtex->DebugDraw();
 }
+
+//std::shared_ptr<clipmap::Clipmap>
+//Clipmap3dRenderer::GetVTex() const
+//{
+//    return m_vtex ? m_vtex->GetVTex() : nullptr;
+//}
 
 void Clipmap3dRenderer::InitShader()
 {
@@ -146,6 +130,35 @@ void Clipmap3dRenderer::InitShader()
     //sp.uniform_names.Add(pt0::UniformTypes::CamPos, sw::node::CameraPos::CamPosName());
 
     m_shader = std::make_unique<pt3::Shader>(&rc, sp);
+}
+
+void Clipmap3dRenderer::DrawLayer(size_t start_level) const
+{
+    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+
+    auto& layers = m_vtex->GetAllLayers();
+    for (size_t i = 0, n = 2/*layers.size()*/; i < n; ++i)
+    {
+        if (layers[i].heightmap) {
+            //rc.SetPolygonMode(ur::POLYGON_FILL);
+            rc.BindTexture(layers[std::max(i, start_level)].heightmap->TexID(), 0);
+        } else {
+            //rc.SetPolygonMode(ur::POLYGON_LINE);
+            rc.BindTexture(0, 0);
+            return;
+        }
+
+        m_shader->SetVec4("u_uv_region", layers[i].uv_region.xyzw);
+        for (auto& block : layers[i].blocks)
+        {
+            m_shader->SetVec4("u_block_ori", block.trans.xyzw);
+
+            rc.BindBuffer(ur::INDEXBUFFER, block.rd.ebo);
+            rc.BindBuffer(ur::VERTEXBUFFER, block.rd.vbo);
+
+            rc.DrawElements(ur::DRAW_TRIANGLES, 0, block.rd.num);
+        }
+    }
 }
 
 }
