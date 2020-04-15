@@ -7,12 +7,16 @@
 #include <node3/CompModelInst.h>
 #include <node3/CompAABB.h>
 #include <node3/CompModel.h>
+#include <unirender2/Device.h>
+#include <unirender2/IndexBuffer.h>
+#include <unirender2/VertexBuffer.h>
+#include <unirender2/VertexArray.h>
+#include <unirender2/ComponentDataType.h>
+#include <unirender2/VertexBufferAttribute.h>
 #include <painting3/MaterialMgr.h>
 #include <model/Model.h>
 #include <model/typedef.h>
 #include <terraingraph/HeightFieldEval.h>
-#include <unirender/RenderContext.h>
-#include <unirender/Blackboard.h>
 
 namespace terrainlab
 {
@@ -46,19 +50,20 @@ void ModelAdapter::SetupModel(n0::SceneNode& node)
     caabb.SetAABB(model->aabb);
 }
 
-void ModelAdapter::UpdateModel(const hf::HeightField& hf,
+void ModelAdapter::UpdateModel(const ur2::Device& dev,
+                               const hf::HeightField& hf,
                                const n0::SceneNode& node)
 {
     auto model = std::make_shared<model::Model>();
     model->materials.emplace_back(std::make_unique<model::Model::Material>());
-    model->meshes.push_back(HeightFieldToMesh(hf));
+    model->meshes.push_back(HeightFieldToMesh(dev, hf));
 
     node.GetSharedComp<n3::CompModel>().SetModel(model);
     node.GetUniqueComp<n3::CompModelInst>().SetModel(model, 0);
 }
 
 std::unique_ptr<model::Model::Mesh>
-ModelAdapter::HeightFieldToMesh(const hf::HeightField& hf)
+ModelAdapter::HeightFieldToMesh(const ur2::Device& dev, const hf::HeightField& hf)
 {
     const float tot_w = 1.0f;
     const float tot_h = 1.0f;
@@ -99,22 +104,37 @@ ModelAdapter::HeightFieldToMesh(const hf::HeightField& hf)
         }
     }
 
-    ur::RenderContext::VertexInfo vi;
+    auto va = dev.CreateVertexArray();
 
-    const size_t stride = 8;    // float number
-	vi.vn = w * h;
-	vi.vertices = &vertices[0];
-	vi.stride = stride * sizeof(float);
-    vi.indices = indices.data();
-    vi.in = indices.size();
+    auto usage = ur2::BufferUsageHint::StaticDraw;
 
-	vi.va_list.push_back(ur::VertexAttrib("pos",      3, 4, vi.stride, 0));   // vertices
-    vi.va_list.push_back(ur::VertexAttrib("normal",   3, 4, vi.stride, 12));  // normal
-    vi.va_list.push_back(ur::VertexAttrib("texcoord", 2, 4, vi.stride, 24));  // texcoord
+    auto ibuf_sz = sizeof(unsigned short) * indices.size();
+    auto ibuf = dev.CreateIndexBuffer(usage, ibuf_sz);
+    ibuf->ReadFromMemory(indices.data(), ibuf_sz, 0);
+    va->SetIndexBuffer(ibuf);
 
-	ur::Blackboard::Instance()->GetRenderContext().CreateVAO(
-		vi, mesh->geometry.vao, mesh->geometry.vbo, mesh->geometry.ebo);
-	mesh->geometry.sub_geometries.push_back(model::SubmeshGeometry(true, vi.in, 0));
+    auto vbuf_sz = sizeof(float) * vertices.size();
+    auto vbuf = dev.CreateVertexBuffer(ur2::BufferUsageHint::StaticDraw, vbuf_sz);
+    vbuf->ReadFromMemory(vertices.data(), vbuf_sz, 0);
+    va->SetVertexBuffer(vbuf);
+
+    std::vector<std::shared_ptr<ur2::VertexBufferAttribute>> vbuf_attrs(3);
+    // pos
+    vbuf_attrs[0] = std::make_shared<ur2::VertexBufferAttribute>(
+        ur2::ComponentDataType::Float, 3, 0, 32
+    );
+    // normal
+    vbuf_attrs[1] = std::make_shared<ur2::VertexBufferAttribute>(
+        ur2::ComponentDataType::Float, 3, 12, 32
+    );
+    // texcoord
+    vbuf_attrs[2] = std::make_shared<ur2::VertexBufferAttribute>(
+        ur2::ComponentDataType::Float, 3, 24, 32
+    );
+    va->SetVertexBufferAttrs(vbuf_attrs);
+
+    mesh->geometry.vertex_array = va;
+	mesh->geometry.sub_geometries.push_back(model::SubmeshGeometry(true, indices.size(), 0));
 	mesh->geometry.sub_geometry_materials.push_back(0);
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_NORMALS;
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_TEXCOORDS;

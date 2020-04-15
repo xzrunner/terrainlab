@@ -1,11 +1,13 @@
 #include "terrainlab/OverlayRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender/Blackboard.h>
-#include <unirender/VertexAttrib.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/ShaderProgram.h>
+#include <unirender2/Texture.h>
 #include <renderpipeline/UniformNames.h>
+#include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
+#include <painting3/ViewMatUpdater.h>
+#include <painting3/ProjectMatUpdater.h>
 #include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
@@ -56,9 +58,10 @@ void main()
 namespace terrainlab
 {
 
-OverlayRenderer::OverlayRenderer()
+OverlayRenderer::OverlayRenderer(const ur2::Device& dev)
+    : rp::HeightfieldRenderer(dev)
 {
-    InitShader();
+    InitShader(dev);
 }
 
 void OverlayRenderer::Clear()
@@ -67,7 +70,8 @@ void OverlayRenderer::Clear()
     m_color_map.reset();
 }
 
-void OverlayRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf,
+void OverlayRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+                            const std::shared_ptr<hf::HeightField>& hf,
                             const terraingraph::BitmapPtr& bmp)
 {
     m_hf = hf;
@@ -78,8 +82,7 @@ void OverlayRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf,
     if (!bmp) {
         return;
     }
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    m_color_map = terraingraph::TextureBaker::GenColorMap(*bmp, rc);
+    m_color_map = terraingraph::TextureBaker::GenColorMap(*bmp, dev);
 
     assert(hf);
     auto old = m_height_map;
@@ -88,45 +91,31 @@ void OverlayRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf,
     // textures
     if (m_height_map != old)
     {
-        std::vector<uint32_t> texture_ids;
-        texture_ids.reserve(2);
-        texture_ids.push_back(m_height_map->TexID());
-        texture_ids.push_back(m_color_map->TexID());
-
         assert(m_shaders.size() == 1);
-        m_shaders.front()->SetUsedTextures(texture_ids);
+        auto shader = m_shaders.front();
+        ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
+        ctx.SetTexture(shader->QueryTexSlot("u_colormap"), m_color_map);
     }
 
     // vertex buffer
     if (!old ||
-        old->Width() != m_height_map->Width() ||
-        old->Height() != m_height_map->Height()) {
-        BuildVertBuf();
+        old->GetWidth() != m_height_map->GetWidth() ||
+        old->GetHeight() != m_height_map->GetHeight()) {
+        BuildVertBuf(ctx);
     }
 }
 
-void OverlayRenderer::InitShader()
+void OverlayRenderer::InitShader(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    //std::vector<ur::VertexAttrib> layout;
+    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
+    //layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
+    //rc.CreateVertexLayout(layout);
 
-    std::vector<ur::VertexAttrib> layout;
-    layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
-    layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
-    rc.CreateVertexLayout(layout);
-
-    std::vector<std::string> texture_names;
-    texture_names.push_back("u_heightmap");
-    texture_names.push_back("u_colormap");
-
-    pt3::Shader::Params sp(texture_names, layout);
-    sp.vs = vs;
-    sp.fs = fs;
-
-    sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-
-    auto shader = std::make_shared<pt3::Shader>(&rc, sp);
+    auto shader = dev.CreateShaderProgram(vs, fs);
+    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
     m_shaders.push_back(shader);
 }
 

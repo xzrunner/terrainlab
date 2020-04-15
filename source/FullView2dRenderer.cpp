@@ -1,7 +1,6 @@
 #include "terrainlab/FullView2dRenderer.h"
 
-#include <unirender/Blackboard.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/RenderState.h>
 #include <painting2/RenderSystem.h>
 #include <terraintiler/GeoMipMapping.h>
 
@@ -23,11 +22,11 @@ FullView2dRenderer::FullView2dRenderer()
     m_mipmap = std::make_shared<terraintiler::GeoMipMapping>(16, 16);
 }
 
-void FullView2dRenderer::Draw() const
+void FullView2dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
 {
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    rc.SetZTest(ur::DEPTH_DISABLE);
-    rc.SetCullMode(ur::CULL_DISABLE);
+    ur2::RenderState rs;
+    rs.depth_test.enabled = false;
+    rs.facet_culling.enabled = false;
 
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
@@ -42,13 +41,10 @@ void FullView2dRenderer::Draw() const
                 static_cast<float>(TILE_SIZE + TILE_GAP) * y);
 
             pt2::RenderSystem::DrawTexture(
-                *hmap, sm::rect(TILE_SIZE, TILE_SIZE), mt, false
+                dev, ctx, rs, hmap, sm::rect(TILE_SIZE, TILE_SIZE), mt, false
             );
         }
     }
-
-    rc.SetZTest(ur::DEPTH_LESS_EQUAL);
-    rc.SetCullMode(ur::CULL_BACK);
 }
 
 void FullView2dRenderer::Clear()

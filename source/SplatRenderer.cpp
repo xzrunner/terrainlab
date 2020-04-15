@@ -1,14 +1,18 @@
 #include "terrainlab/SplatRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender/Blackboard.h>
-#include <unirender/VertexAttrib.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/ShaderProgram.h>
+#include <unirender2/Texture.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
+#include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
+#include <painting3/ViewMatUpdater.h>
+#include <painting3/ProjectMatUpdater.h>
 #include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
+
+#include <algorithm>
 
 namespace
 {
@@ -305,14 +309,16 @@ void main()
 namespace terrainlab
 {
 
-SplatRenderer::SplatRenderer()
+SplatRenderer::SplatRenderer(const ur2::Device& dev)
+    : rp::HeightfieldRenderer(dev)
 {
-    InitTextuers();
-    InitShader();
+    InitTextuers(dev);
+    InitShader(dev);
     InitUniforms();
 }
 
-void SplatRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
+void SplatRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+                          const std::shared_ptr<hf::HeightField>& hf)
 {
     if (m_shaders.empty()) {
         return;
@@ -328,7 +334,6 @@ void SplatRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
     auto old = m_height_map;
     m_height_map = hf->GetHeightmap();
 
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 #ifdef BUILD_NORMAL_MAP
     m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);
 #endif // BUILD_NORMAL_MAP
@@ -339,37 +344,33 @@ void SplatRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
     // textures
     if (m_height_map != old)
     {
-        std::vector<uint32_t> texture_ids;
-        texture_ids.reserve(6);
-        texture_ids.push_back(m_height_map->TexID());
+        ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
 #ifdef BUILD_NORMAL_MAP
-        texture_ids.push_back(m_normal_map->TexID());
+        ctx.SetTexture(shader->QueryTexSlot("u_normal_map"), m_normal_map);
 #endif // BUILD_NORMAL_MAP
 #ifdef BUILD_SHADOW_MAP
-        texture_ids.push_back(m_shadow_map->TexID());
+        ctx.SetTexture(shader->QueryTexSlot("u_shadow_map"), m_shadow_map);
 #endif // BUILD_SHADOW_MAP
-        texture_ids.push_back(m_noise_map->TexID());
-        texture_ids.push_back(m_splat_map[0]->TexID());
-        texture_ids.push_back(m_splat_map[1]->TexID());
-        texture_ids.push_back(m_splat_map[2]->TexID());
-        texture_ids.push_back(m_splat_map[3]->TexID());
-
-        shader->SetUsedTextures(texture_ids);
+        ctx.SetTexture(shader->QueryTexSlot("u_noise_map"), m_noise_map);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap0"), m_splat_map[0]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap1"), m_splat_map[1]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap2"), m_splat_map[2]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap3"), m_splat_map[3]);
     }
 
     // vertex buffer
     if (!old ||
-        old->Width() != m_height_map->Width() ||
-        old->Height() != m_height_map->Height()) {
-        BuildVertBuf();
+        old->GetWidth() != m_height_map->GetWidth() ||
+        old->GetHeight() != m_height_map->GetHeight()) {
+        BuildVertBuf(ctx);
     }
 
     // bind shader
-    shader->Use();
+    shader->Bind();
 
     // update uniforms
     pt0::ShaderUniforms vals;
-    sm::vec2 inv_res(1.0f / m_height_map->Width(), 1.0f / m_height_map->Height());
+    sm::vec2 inv_res(1.0f / m_height_map->GetWidth(), 1.0f / m_height_map->GetHeight());
     vals.AddVar("u_inv_res",            pt0::RenderVariant(inv_res));
     vals.AddVar("u_light_dir",          pt0::RenderVariant(m_light_dir));
     vals.AddVar("u_layer_height_scale", pt0::RenderVariant(m_layer_height_scale));
@@ -385,13 +386,13 @@ void SplatRenderer::Clear()
     m_height_map.reset();
 }
 
-void SplatRenderer::InitTextuers()
+void SplatRenderer::InitTextuers(const ur2::Device& dev)
 {
     const std::string filedir = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\";
     const int mipmap_levels = 32;
 
     auto noise_path = filedir + "fractalnoise.jpg";
-    m_noise_map = model::TextureLoader::LoadFromFile(noise_path.c_str());
+    m_noise_map = model::TextureLoader::LoadFromFile(dev, noise_path.c_str());
 
     const std::string filenames[4] = {
         "dark_dirt.jpg",
@@ -401,34 +402,17 @@ void SplatRenderer::InitTextuers()
     };
     for (size_t i = 0; i < 4; ++i) {
         std::string filepath = filedir + filenames[i];
-        m_splat_map[i] = model::TextureLoader::LoadFromFile(filepath.c_str(), mipmap_levels);
+        m_splat_map[i] = model::TextureLoader::LoadFromFile(dev, filepath.c_str(), mipmap_levels);
     }
 }
 
-void SplatRenderer::InitShader()
+void SplatRenderer::InitShader(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    //std::vector<ur::VertexAttrib> layout;
+    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
+    //layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
+    //rc.CreateVertexLayout(layout);
 
-    std::vector<ur::VertexAttrib> layout;
-    layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
-    layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
-    rc.CreateVertexLayout(layout);
-
-    std::vector<std::string> texture_names;
-    texture_names.push_back("u_heightmap");
-#ifdef BUILD_NORMAL_MAP
-    texture_names.push_back("u_normal_map");
-#endif // BUILD_NORMAL_MAP
-#ifdef BUILD_SHADOW_MAP
-    texture_names.push_back("u_shadow_map");
-#endif // BUILD_SHADOW_MAP
-    texture_names.push_back("u_noise_map");
-    texture_names.push_back("u_splatmap0");
-    texture_names.push_back("u_splatmap1");
-    texture_names.push_back("u_splatmap2");
-    texture_names.push_back("u_splatmap3");
-
-    pt3::Shader::Params sp(texture_names, layout);
     std::string _vs(vs);
     std::string _fs(fs);
 #ifdef BUILD_NORMAL_MAP
@@ -438,15 +422,10 @@ void SplatRenderer::InitShader()
     _vs = "#version 130\n" + _vs;
     _fs = "#version 130\n" + _fs;
 #endif // BUILD_NORMAL_MAP
-    sp.vs = _vs.c_str();
-    sp.fs = _fs.c_str();
-
-    sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-    //sp.uniform_names.Add(pt0::UniformTypes::CamPos,   "u_cam_pos");
-
-    auto shader = std::make_shared<pt3::Shader>(&rc, sp);
+    auto shader = dev.CreateShaderProgram(vs, fs);
+    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
     m_shaders.push_back(shader);
 }
 

@@ -1,44 +1,39 @@
 #include "terrainlab/ImageRenderer.h"
 
 #include <terraingraph/TextureBaker.h>
-#include <unirender/Blackboard.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/Context.h>
+#include <unirender2/RenderState.h>
 #include <painting2/RenderSystem.h>
 #include <renderpipeline/RenderMgr.h>
 
 namespace terrainlab
 {
 
-void ImageRenderer::Setup(const terraingraph::BitmapPtr& bmp)
+void ImageRenderer::Setup(const ur2::Device& dev, const terraingraph::BitmapPtr& bmp)
 {
     if (bmp) {
-        auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = terraingraph::TextureBaker::GenColorMap(*bmp, rc);
+        m_tex = terraingraph::TextureBaker::GenColorMap(*bmp, dev);
     }
 }
 
-void ImageRenderer::Setup(const std::shared_ptr<terraingraph::Mask>& mask)
+void ImageRenderer::Setup(const ur2::Device& dev, const std::shared_ptr<terraingraph::Mask>& mask)
 {
     if (mask) {
-        auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        m_tex = terraingraph::TextureBaker::GenColorMap(*mask, rc);
+        m_tex = terraingraph::TextureBaker::GenColorMap(*mask, dev);
     }
 }
 
-void ImageRenderer::Draw() const
+void ImageRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
 {
     if (!m_tex) {
         return;
     }
 
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    rc.SetZTest(ur::DEPTH_DISABLE);
-    rc.SetCullMode(ur::CULL_DISABLE);
+    ur2::RenderState rs;
+    rs.depth_test.enabled = false;
+    rs.facet_culling.enabled = false;
 
-    pt2::RenderSystem::DrawTexture(*m_tex, sm::rect(512, 512), sm::Matrix2D(), false);
-
-    rc.SetZTest(ur::DEPTH_LESS_EQUAL);
-    rc.SetCullMode(ur::CULL_BACK);
+    pt2::RenderSystem::DrawTexture(dev, ctx, rs, m_tex, sm::rect(512, 512), sm::Matrix2D(), false);
 }
 
 void ImageRenderer::Clear()

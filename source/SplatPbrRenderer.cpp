@@ -1,12 +1,15 @@
 #include "terrainlab/SplatPbrRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender/Blackboard.h>
-#include <unirender/VertexAttrib.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/ShaderProgram.h>
+#include <unirender2/Texture.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
+#include <painting0/ModelMatUpdater.h>
+#include <painting0/CamPosUpdater.h>
 #include <painting3/Shader.h>
+#include <painting3/ViewMatUpdater.h>
+#include <painting3/ProjectMatUpdater.h>
 #include <terraingraph/TextureBaker.h>
 #include <model/TextureLoader.h>
 
@@ -383,13 +386,15 @@ void main()
 namespace terrainlab
 {
 
-SplatPbrRenderer::SplatPbrRenderer()
+SplatPbrRenderer::SplatPbrRenderer(const ur2::Device& dev)
+    : rp::HeightfieldRenderer(dev)
 {
-    InitTextuers();
-    InitShader();
+    InitTextuers(dev);
+    InitShader(dev);
 }
 
-void SplatPbrRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
+void SplatPbrRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+                             const std::shared_ptr<hf::HeightField>& hf)
 {
     if (m_shaders.empty()) {
         return;
@@ -402,38 +407,33 @@ void SplatPbrRenderer::Setup(const std::shared_ptr<hf::HeightField>& hf)
         return;
     }
     assert(hf);
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     auto old = m_height_map;
     m_height_map = hf->GetHeightmap();
 
-    m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);
-    m_ao_map = terraingraph::TextureBaker::GenAmbientOcclusionMap(*hf, rc);
+    m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, dev);
+    m_ao_map = terraingraph::TextureBaker::GenAmbientOcclusionMap(*hf, dev);
 
     // textures
     if (m_height_map != old)
     {
-        std::vector<uint32_t> texture_ids;
-        texture_ids.reserve(6);
-        texture_ids.push_back(m_height_map->TexID());
-        texture_ids.push_back(m_normal_map->TexID());
-        texture_ids.push_back(m_ao_map->TexID());
-        texture_ids.push_back(m_splat_map[0]->TexID());
-        texture_ids.push_back(m_splat_map[1]->TexID());
-        texture_ids.push_back(m_splat_map[2]->TexID());
-        texture_ids.push_back(m_splat_map[3]->TexID());
-
-        shader->SetUsedTextures(texture_ids);
+        ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
+        ctx.SetTexture(shader->QueryTexSlot("u_normal_map"), m_normal_map);
+        ctx.SetTexture(shader->QueryTexSlot("u_ao_map"), m_ao_map);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap0"), m_splat_map[0]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap1"), m_splat_map[1]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap2"), m_splat_map[2]);
+        ctx.SetTexture(shader->QueryTexSlot("u_splatmap3"), m_splat_map[3]);
     }
 
     // vertex buffer
     if (!old ||
-        old->Width() != m_height_map->Width() ||
-        old->Height() != m_height_map->Height()) {
-        BuildVertBuf();
+        old->GetWidth() != m_height_map->GetWidth() ||
+        old->GetHeight() != m_height_map->GetHeight()) {
+        BuildVertBuf(ctx);
     }
 
     // bind shader
-    shader->Use();
+    shader->Bind();
 
     // update uniforms
     pt0::ShaderUniforms vals;
@@ -446,42 +446,26 @@ void SplatPbrRenderer::Clear()
     m_height_map.reset();
 }
 
-void SplatPbrRenderer::InitTextuers()
+void SplatPbrRenderer::InitTextuers(const ur2::Device& dev)
 {
-    m_splat_map[0] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\dark_dirt.jpg");
-    m_splat_map[1] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\rock.jpg");
-    m_splat_map[2] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\grass.jpg");
-    m_splat_map[3] = model::TextureLoader::LoadFromFile("D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\snow.png");
+    m_splat_map[0] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\dark_dirt.jpg");
+    m_splat_map[1] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\rock.jpg");
+    m_splat_map[2] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\grass.jpg");
+    m_splat_map[3] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\snow.png");
 }
 
-void SplatPbrRenderer::InitShader()
+void SplatPbrRenderer::InitShader(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    //std::vector<ur::VertexAttrib> layout;
+    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
+    //layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
+    //rc.CreateVertexLayout(layout);
 
-    std::vector<ur::VertexAttrib> layout;
-    layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
-    layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
-    rc.CreateVertexLayout(layout);
-
-    std::vector<std::string> texture_names;
-    texture_names.push_back("u_heightmap");
-    texture_names.push_back("u_normal_map");
-    texture_names.push_back("u_ao_map");
-    texture_names.push_back("u_splatmap0");
-    texture_names.push_back("u_splatmap1");
-    texture_names.push_back("u_splatmap2");
-    texture_names.push_back("u_splatmap3");
-
-    pt3::Shader::Params sp(texture_names, layout);
-    sp.vs = vs;
-    sp.fs = fs;
-
-    sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::CamPos,   "u_cam_pos");
-
-    auto shader = std::make_shared<pt3::Shader>(&rc, sp);
+    auto shader = dev.CreateShaderProgram(vs, fs);
+    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
+    shader->AddUniformUpdater(std::make_shared<pt0::CamPosUpdater>(*shader, "u_cam_pos"));
     m_shaders.push_back(shader);
 }
 

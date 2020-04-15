@@ -1,10 +1,15 @@
 #include "terrainlab/FullView3dRenderer.h"
 
 #include <SM_Calc.h>
-#include <unirender/Blackboard.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/Device.h>
+#include <unirender2/ShaderProgram.h>
+#include <unirender2/DrawState.h>
+#include <unirender2/Context.h>
 #include <renderpipeline/UniformNames.h>
+#include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
+#include <painting3/ViewMatUpdater.h>
+#include <painting3/ProjectMatUpdater.h>
 #include <terraintiler/GeoMipMapping.h>
 
 namespace
@@ -51,16 +56,16 @@ void main()
 namespace terrainlab
 {
 
-FullView3dRenderer::FullView3dRenderer()
+FullView3dRenderer::FullView3dRenderer(const ur2::Device& dev)
 {
-    InitShader();
+    InitShader(dev);
 
     m_mipmap = std::make_shared<terraintiler::GeoMipMapping>(5, 5);
 }
 
 void FullView3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 {
-    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
+//    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
 void FullView3dRenderer::Update()
@@ -74,16 +79,21 @@ void FullView3dRenderer::Update()
     }
 }
 
-void FullView3dRenderer::Draw(const sm::vec3& cam_pos,
+void FullView3dRenderer::Draw(ur2::Context& ctx, const sm::vec3& cam_pos,
                               const sm::mat4& mt, bool debug_draw) const
 {
-    m_shader->Use();
+    m_shader->Bind();
 
-    static_cast<pt0::Shader*>(m_shader.get())->UpdateModelMat(mt);
+    auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    if (model_updater) {
+        std::static_pointer_cast<pt0::ModelMatUpdater>(model_updater)->Update(mt);
+    }
 
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    ur2::DrawState ds;
+    ds.program = m_shader;
+
     if (debug_draw) {
-        rc.SetPolygonMode(ur::POLYGON_LINE);
+        ds.render_state.rasterization_mode = ur2::RasterizationMode::Line;
     }
 
     auto w = m_mipmap->GetWidth();
@@ -109,42 +119,26 @@ void FullView3dRenderer::Draw(const sm::vec3& cam_pos,
             }
 
             auto rd = m_mipmap->QueryRenderable(x, y, lod_level);
-            if (rd.num == 0) {
+            if (!rd.va) {
                 continue;
             }
 
-            rc.BindBuffer(ur::INDEXBUFFER, rd.ebo);
-            rc.BindBuffer(ur::VERTEXBUFFER, rd.vbo);
-
-            rc.DrawElements(ur::DRAW_TRIANGLES, 0, rd.num, false);
+            ds.vertex_array = rd.va;
+            ctx.Draw(ur2::PrimitiveType::Triangles, ds, nullptr);
         }
-    }
-
-    if (debug_draw) {
-        rc.SetPolygonMode(ur::POLYGON_FILL);
     }
 }
 
-void FullView3dRenderer::InitShader()
+void FullView3dRenderer::InitShader(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    //std::vector<ur::VertexAttrib> layout;
+    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 12, 0));
+    //rc.CreateVertexLayout(layout);
 
-    std::vector<ur::VertexAttrib> layout;
-    layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 12, 0));
-    rc.CreateVertexLayout(layout);
-
-    std::vector<std::string> texture_names;
-
-    pt3::Shader::Params sp(texture_names, layout);
-    sp.vs = vs;
-    sp.fs = fs;
-
-    sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-    //sp.uniform_names.Add(pt0::UniformTypes::CamPos, sw::node::CameraPos::CamPosName());
-
-    m_shader = std::make_unique<pt3::Shader>(&rc, sp);
+    m_shader = dev.CreateShaderProgram(vs, fs);
+    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, rp::MODEL_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, rp::VIEW_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
 }
 
 }

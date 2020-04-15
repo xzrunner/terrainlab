@@ -1,9 +1,16 @@
 #include "terrainlab/Clipmap3dRenderer.h"
 
-#include <unirender/Blackboard.h>
-#include <unirender/RenderContext.h>
+#include <unirender2/ShaderProgram.h>
+#include <unirender2/UniformUpdater.h>
+#include <unirender2/Uniform.h>
+#include <unirender2/Context.h>
+#include <unirender2/DrawState.h>
+#include <unirender2/Device.h>
 #include <renderpipeline/UniformNames.h>
+#include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
+#include <painting3/ViewMatUpdater.h>
+#include <painting3/ProjectMatUpdater.h>
 #include <terraintiler/Clipmap.h>
 #include <clipmap/TextureStack.h>
 #include <clipmap/Clipmap.h>
@@ -73,32 +80,35 @@ void main()
 namespace terrainlab
 {
 
-Clipmap3dRenderer::Clipmap3dRenderer()
+Clipmap3dRenderer::Clipmap3dRenderer(const ur2::Device& dev)
 {
-    InitShader();
+    InitShader(dev);
 }
 
 void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 {
-    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
+//    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
+void Clipmap3dRenderer::Draw(ur2::Context& ctx, const sm::mat4& mt) const
 {
     if (!m_vtex) {
         m_vtex = std::make_shared<terraintiler::Clipmap>(VTEX_FILEPATH);
     }
 
-    m_shader->Use();
+    m_shader->Bind();
 
-    static_cast<pt0::Shader*>(m_shader.get())->UpdateModelMat(mt);
+    auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    if (model_updater) {
+        std::static_pointer_cast<pt0::ModelMatUpdater>(model_updater)->Update(mt);
+    }
 
     auto& layers = m_vtex->GetAllLayers();
     float scale;
     sm::vec2 offset;
     m_vtex->GetVTex()->GetRegion(scale, offset);
     auto level = clipmap::TextureStack::CalcMipmapLevel(layers.size(), scale);
-    DrawLayer(level);
+    DrawLayer(ctx, level);
 
     m_vtex->DebugDraw();
 }
@@ -109,54 +119,46 @@ void Clipmap3dRenderer::Draw(const sm::mat4& mt) const
 //    return m_vtex ? m_vtex->GetVTex() : nullptr;
 //}
 
-void Clipmap3dRenderer::InitShader()
+void Clipmap3dRenderer::InitShader(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    //std::vector<ur::VertexAttrib> layout;
+    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 2, 4, 8, 0));
+    //rc.CreateVertexLayout(layout);
 
-    std::vector<ur::VertexAttrib> layout;
-    layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 2, 4, 8, 0));
-    rc.CreateVertexLayout(layout);
-
-    std::vector<std::string> texture_names;
-    texture_names.push_back("u_heightmap");
-
-    pt3::Shader::Params sp(texture_names, layout);
-    sp.vs = vs;
-    sp.fs = fs;
-
-    sp.uniform_names.Add(pt0::UniformTypes::ModelMat, rp::MODEL_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ViewMat,  rp::VIEW_MAT_NAME);
-    sp.uniform_names.Add(pt0::UniformTypes::ProjMat,  rp::PROJ_MAT_NAME);
-    //sp.uniform_names.Add(pt0::UniformTypes::CamPos, sw::node::CameraPos::CamPosName());
-
-    m_shader = std::make_unique<pt3::Shader>(&rc, sp);
+    m_shader = dev.CreateShaderProgram(vs, fs);
+    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, rp::MODEL_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, rp::VIEW_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
 }
 
-void Clipmap3dRenderer::DrawLayer(size_t start_level) const
+void Clipmap3dRenderer::DrawLayer(ur2::Context& ctx, size_t start_level) const
 {
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    auto heightmap_slot = m_shader->QueryTexSlot("u_heightmap");
+
+    ur2::DrawState draw;
+    draw.program = m_shader;
 
     auto& layers = m_vtex->GetAllLayers();
     for (size_t i = 0, n = 2/*layers.size()*/; i < n; ++i)
     {
         if (layers[i].heightmap) {
             //rc.SetPolygonMode(ur::POLYGON_FILL);
-            rc.BindTexture(layers[std::max(i, start_level)].heightmap->TexID(), 0);
+            ctx.SetTexture(heightmap_slot, layers[std::max(i, start_level)].heightmap);
         } else {
             //rc.SetPolygonMode(ur::POLYGON_LINE);
-            rc.BindTexture(0, 0);
+            ctx.SetTexture(heightmap_slot, nullptr);
             return;
         }
 
-        m_shader->SetVec4("u_uv_region", layers[i].uv_region.xyzw);
+        auto uv_region = m_shader->QueryUniform("u_uv_region");
+        uv_region->SetValue(layers[i].uv_region.xyzw, 4);
         for (auto& block : layers[i].blocks)
         {
-            m_shader->SetVec4("u_block_ori", block.trans.xyzw);
+            auto block_ori = m_shader->QueryUniform("u_block_ori");
+            block_ori->SetValue(block.trans.xyzw, 4);
 
-            rc.BindBuffer(ur::INDEXBUFFER, block.rd.ebo);
-            rc.BindBuffer(ur::VERTEXBUFFER, block.rd.vbo);
-
-            rc.DrawElements(ur::DRAW_TRIANGLES, 0, block.rd.num);
+            draw.vertex_array = block.rd.va;
+            ctx.Draw(ur2::PrimitiveType::Triangles, draw, nullptr);
         }
     }
 }
