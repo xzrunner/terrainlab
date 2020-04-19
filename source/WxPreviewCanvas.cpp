@@ -44,12 +44,15 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 namespace terrainlab
 {
 
-WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
+WxPreviewCanvas::WxPreviewCanvas(const ur2::Device& dev, ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
-    : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
+    : ee3::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc, nullptr, true)
+    , m_overlay_rd(dev)
+    , m_full3_rd(dev)
+    , m_clip3_rd(dev)
 {
     //m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>();
-    m_hf_rd = std::make_shared<SplatRenderer>();
+    m_hf_rd = std::make_shared<SplatRenderer>(dev);
     //m_hf_rd = std::make_shared<SplatPbrRenderer>();
 
     auto sub_mgr = stage->GetSubjectMgr();
@@ -118,7 +121,7 @@ void WxPreviewCanvas::InitEditOP()
     m_ops[OP_TEMP_BRUSH]  = std::make_shared<TemplateBrushOP>(cam, vp, sub, m_hf_rd);
     m_ops[OP_NOISE_BRUSH] = std::make_shared<NoiseBrushOP>(cam, vp, sub, m_hf_rd);
     //m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_cam2d, sub);
-    m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_cam3d, sub);
+    m_ops[OP_CAM_CLIPMAP] = std::make_shared<ClipmapCamOP>(m_dev, *GetRenderContext().ur_ctx, m_cam3d, sub);
 
     m_stage->GetImpl().SetEditOP(m_ops[OP_CAMERA_3D]);
 }
@@ -131,23 +134,23 @@ void WxPreviewCanvas::DrawBackground3D() const
 
 void WxPreviewCanvas::DrawForeground3D() const
 {
-    auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
-    auto& shaders = m_hf_rd->GetAllShaders();
-    if (!shaders.empty()) {
-        assert(shaders.size() == 1);
-        if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
-            std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
-        }
-    }
-    {
-        auto& shaders = m_overlay_rd.GetAllShaders();
-        if (!shaders.empty()) {
-            assert(shaders.size() == 1);
-            if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
-                std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
-            }
-        }
-    }
+    //auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
+    //auto& shaders = m_hf_rd->GetAllShaders();
+    //if (!shaders.empty()) {
+    //    assert(shaders.size() == 1);
+    //    if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+    //        std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+    //    }
+    //}
+    //{
+    //    auto& shaders = m_overlay_rd.GetAllShaders();
+    //    if (!shaders.empty()) {
+    //        assert(shaders.size() == 1);
+    //        if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+    //            std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+    //        }
+    //    }
+    //}
     // update brush op's renderer
     for (size_t i = 0; i < OP_MAX_NUM; ++i)
     {
@@ -162,13 +165,13 @@ void WxPreviewCanvas::DrawForeground3D() const
         auto& shaders = renderer->GetAllShaders();
         if (!shaders.empty()) {
             assert(shaders.size() == 1);
-            if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
-                std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
-            }
+            //if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+            //    std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+            //}
         }
     }
-    m_full3_rd.Setup(wc);
-    m_clip3_rd.Setup(wc);
+    //m_full3_rd.Setup(wc);
+    //m_clip3_rd.Setup(wc);
 
     pt0::RenderContext rc;
     rc.AddVar(
@@ -183,15 +186,15 @@ void WxPreviewCanvas::DrawForeground3D() const
             pt0::RenderVariant(persp->GetPos())
         );
     }
-    assert(wc);
-    rc.AddVar(
-        pt3::MaterialMgr::PosTransUniforms::view.name,
-        pt0::RenderVariant(wc->GetViewMat())
-    );
-    rc.AddVar(
-        pt3::MaterialMgr::PosTransUniforms::projection.name,
-        pt0::RenderVariant(wc->GetProjMat())
-    );
+    //assert(wc);
+    //rc.AddVar(
+    //    pt3::MaterialMgr::PosTransUniforms::view.name,
+    //    pt0::RenderVariant(wc->GetViewMat())
+    //);
+    //rc.AddVar(
+    //    pt3::MaterialMgr::PosTransUniforms::projection.name,
+    //    pt0::RenderVariant(wc->GetProjMat())
+    //);
 
     tess::Painter pt;
 
@@ -199,7 +202,8 @@ void WxPreviewCanvas::DrawForeground3D() const
 
     DrawSelected(pt, cam_mat, rc);
 
-    pt2::RenderSystem::DrawPainter(pt);
+    ur2::RenderState rs;
+    pt2::RenderSystem::DrawPainter(m_dev, *GetRenderContext().ur_ctx, rs, pt);
 }
 
 void WxPreviewCanvas::DrawForeground2D() const
@@ -222,6 +226,8 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
     {
         m_camera = m_cam3d;
 
+        auto& ctx = *GetRenderContext().ur_ctx;
+
         auto type = node->get_type();
         if (type == rttr::type::get<node::TemplateBrush>())
         {
@@ -238,14 +244,14 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
             if (hf)
             {
                 auto brush_op = std::static_pointer_cast<TemplateBrushOP>(m_ops[OP_TEMP_BRUSH]);
-                brush_op->Setup(std::static_pointer_cast<Node>(node), hf, obj);
+                brush_op->Setup(m_dev, ctx, std::static_pointer_cast<Node>(node), hf, obj);
                 m_stage->GetImpl().SetEditOP(m_ops[OP_TEMP_BRUSH]);
             }
         }
         else if (type == rttr::type::get<node::NoiseBrush>())
         {
             auto brush_op = std::static_pointer_cast<NoiseBrushOP>(m_ops[OP_NOISE_BRUSH]);
-            brush_op->Setup(std::static_pointer_cast<Node>(node), nullptr, obj);
+            brush_op->Setup(m_dev, ctx, std::static_pointer_cast<Node>(node), nullptr, obj);
             m_stage->GetImpl().SetEditOP(m_ops[OP_NOISE_BRUSH]);
         }
         else if (type == rttr::type::get<node::FullView2D>())
@@ -307,18 +313,20 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         return;
     }
 
+    auto& ctx = *GetRenderContext().ur_ctx;
+
     auto type = node->get_type();
     if (type == rttr::type::get<node::FullView2D>())
     {
-        m_full2_rd.Draw();
+        m_full2_rd.Draw(m_dev, ctx);
         return;
     }
     else if (type == rttr::type::get<node::FullView3D>())
     {
         auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_cam3d);
 
-        const_cast<FullView3dRenderer&>(m_full3_rd).Update();
-        m_full3_rd.Draw(p_cam->GetPos()/*, sm::mat4(), true*/);
+        const_cast<FullView3dRenderer&>(m_full3_rd).Update(m_dev);
+        m_full3_rd.Draw(ctx, p_cam->GetPos()/*, sm::mat4(), true*/);
 
         return;
     }
@@ -332,13 +340,13 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
 
         auto pos = p_cam->GetPos();
         auto dist = p_cam->GetDistance();
-        m_clip3_rd.Draw(p_cam->GetViewMat());
+        m_clip3_rd.Draw(m_dev, ctx, p_cam->GetViewMat());
 
         return;
     }
     else if (type == rttr::type::get<node::VirtualTexture>())
     {
-        m_vtex_rd.Draw();
+        m_vtex_rd.Draw(m_dev, *GetRenderContext().ur_ctx);
         return;
     }
 
@@ -351,13 +359,13 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     auto bmp = device->GetBitmap();
     auto mask = device->GetMask();
     if (hf && bmp) {
-        m_overlay_rd.Draw();
+        m_overlay_rd.Draw(ctx);
     } else if (hf) {
-        m_hf_rd->Draw();
+        m_hf_rd->Draw(ctx);
     } else if (bmp) {
-        m_img_rd.Draw();
+        m_img_rd.Draw(m_dev, ctx);
     } else if (mask) {
-        m_img_rd.Draw();
+        m_img_rd.Draw(m_dev, ctx);
     }
 }
 
@@ -368,17 +376,19 @@ void WxPreviewCanvas::SetupRenderer()
         return;
     }
 
+    auto& ctx = *GetRenderContext().ur_ctx;
+
     auto hf = device->GetHeightField();
     auto bmp = device->GetBitmap();
     auto mask = device->GetMask();
     if (hf && bmp) {
-        m_overlay_rd.Setup(hf, bmp);
+        m_overlay_rd.Setup(m_dev, ctx, hf, bmp);
     } else if (hf) {
-        m_hf_rd->Setup(hf);
+        m_hf_rd->Setup(m_dev, ctx, hf);
     } else if (bmp) {
-        m_img_rd.Setup(bmp);
+        m_img_rd.Setup(m_dev, bmp);
     } else if (mask) {
-        m_img_rd.Setup(mask);
+        m_img_rd.Setup(m_dev, mask);
     }
 
     SetDirty();

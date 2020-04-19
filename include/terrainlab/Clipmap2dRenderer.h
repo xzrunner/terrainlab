@@ -5,6 +5,7 @@
 #include <memory>
 
 namespace clipmap { class Clipmap; }
+namespace ur2 { class Device; class Context; }
 
 namespace terrainlab
 {
@@ -14,7 +15,8 @@ class Clipmap2dRenderer
 public:
     Clipmap2dRenderer() {}
 
-    void Draw(float screen_width, float screen_height) const;
+    void Draw(const ur2::Device& dev, ur2::Context& ctx,
+        float screen_width, float screen_height) const;
 
     auto GetVTex() const { return m_vtex; }
 

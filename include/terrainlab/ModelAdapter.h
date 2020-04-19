@@ -12,7 +12,7 @@ namespace terrainlab
 class ModelAdapter
 {
 public:
-    static void SetupModel(n0::SceneNode& node);
+    static void SetupModel(const ur2::Device& dev, n0::SceneNode& node);
 
     static void UpdateModel(const ur2::Device& dev,
         const hf::HeightField& hf, const n0::SceneNode& node);

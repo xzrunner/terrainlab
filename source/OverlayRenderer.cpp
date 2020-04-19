@@ -86,7 +86,7 @@ void OverlayRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
 
     assert(hf);
     auto old = m_height_map;
-    m_height_map = hf->GetHeightmap();
+    m_height_map = hf->GetHeightmap(dev);
 
     // textures
     if (m_height_map != old)

@@ -68,13 +68,13 @@ void FullView3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 //    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void FullView3dRenderer::Update()
+void FullView3dRenderer::Update(const ur2::Device& dev)
 {
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
     for (size_t y = 0; y < h; ++y) {
         for (size_t x = 0; x < w; ++x) {
-            m_mipmap->UpdateTile(x, y);
+            m_mipmap->UpdateTile(dev, x, y);
         }
     }
 }

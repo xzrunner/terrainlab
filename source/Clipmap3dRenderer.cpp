@@ -90,10 +90,10 @@ void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 //    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void Clipmap3dRenderer::Draw(ur2::Context& ctx, const sm::mat4& mt) const
+void Clipmap3dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx, const sm::mat4& mt) const
 {
     if (!m_vtex) {
-        m_vtex = std::make_shared<terraintiler::Clipmap>(VTEX_FILEPATH);
+        m_vtex = std::make_shared<terraintiler::Clipmap>(dev, VTEX_FILEPATH);
     }
 
     m_shader->Bind();
@@ -110,7 +110,7 @@ void Clipmap3dRenderer::Draw(ur2::Context& ctx, const sm::mat4& mt) const
     auto level = clipmap::TextureStack::CalcMipmapLevel(layers.size(), scale);
     DrawLayer(ctx, level);
 
-    m_vtex->DebugDraw();
+    m_vtex->DebugDraw(dev, ctx);
 }
 
 //std::shared_ptr<clipmap::Clipmap>

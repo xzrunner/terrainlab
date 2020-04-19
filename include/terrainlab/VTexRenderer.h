@@ -6,6 +6,7 @@
 
 #include <memory>
 
+namespace ur2 { class Device; class Context; }
 namespace terraintiler { class VirtualTexture; }
 
 namespace terrainlab
@@ -16,7 +17,8 @@ class VTexRenderer : private boost::noncopyable
 public:
     VTexRenderer();
 
-    void Draw(const sm::mat4& mt = sm::mat4()) const;
+    void Draw(const ur2::Device& dev, ur2::Context& ctx,
+        const sm::mat4& mt = sm::mat4()) const;
 
 private:
     mutable std::shared_ptr<terraintiler::VirtualTexture> m_vtex = nullptr;

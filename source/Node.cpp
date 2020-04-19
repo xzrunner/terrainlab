@@ -14,9 +14,10 @@ Node::Node(const std::string& title)
 {
 }
 
-void Node::Draw(const n2::RenderParams& rp) const
+void Node::Draw(const ur2::Device& dev, ur2::Context& ctx,
+                const n2::RenderParams& rp) const
 {
-    bp::Node::Draw(rp);
+    bp::Node::Draw(dev, ctx, rp);
 
     //if (m_preview) {
     //    auto eval = Blackboard::Instance()->GetEval();

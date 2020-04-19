@@ -21,7 +21,8 @@ public:
 
     void Setup(std::shared_ptr<pt3::WindowContext>& wc) const;
 
-    void Draw(ur2::Context& ctx, const sm::mat4& mt = sm::mat4()) const;
+    void Draw(const ur2::Device& dev, ur2::Context& ctx,
+        const sm::mat4& mt = sm::mat4()) const;
 
     //std::shared_ptr<clipmap::Clipmap> GetVTex() const;
     auto GetVTex() const { return m_vtex; }

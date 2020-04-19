@@ -21,7 +21,7 @@ public:
 
     void Setup(std::shared_ptr<pt3::WindowContext>& wc) const;
 
-    void Update();
+    void Update(const ur2::Device& dev);
     void Draw(ur2::Context& ctx, const sm::vec3& cam_pos,
         const sm::mat4& mt = sm::mat4(), bool debug_draw = false) const;
 

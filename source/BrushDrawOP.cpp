@@ -24,7 +24,8 @@ BrushDrawOP::BrushDrawOP(const std::shared_ptr<pt0::Camera>& camera,
 {
 }
 
-void BrushDrawOP::Setup(const std::shared_ptr<Node>& brush_node,
+void BrushDrawOP::Setup(const ur2::Device& dev, ur2::Context& ctx,
+                        const std::shared_ptr<Node>& brush_node,
                         const std::shared_ptr<hf::HeightField>& hf,
                         const n0::SceneNodePtr& editor_node)
 {
@@ -34,7 +35,7 @@ void BrushDrawOP::Setup(const std::shared_ptr<Node>& brush_node,
 
     m_brush_node = brush_node;
 
-    m_renderer->Setup(hf);
+    m_renderer->Setup(dev, ctx, hf);
 
     m_editor_node = editor_node;
 }

@@ -332,7 +332,7 @@ void SplatRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
     }
     assert(hf);
     auto old = m_height_map;
-    m_height_map = hf->GetHeightmap();
+    m_height_map = hf->GetHeightmap(dev);
 
 #ifdef BUILD_NORMAL_MAP
     m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, rc);

@@ -22,7 +22,7 @@ namespace terrainlab
 {
 
 // todo: copy from sop::GeoAdaptor::Init
-void ModelAdapter::SetupModel(n0::SceneNode& node)
+void ModelAdapter::SetupModel(const ur2::Device& dev, n0::SceneNode& node)
 {
     auto& cmodel = node.AddSharedComp<n3::CompModel>();
     //cmodel.DisableSerialize();
@@ -39,7 +39,7 @@ void ModelAdapter::SetupModel(n0::SceneNode& node)
     mat->AddVar(UNIFORMS::shininess.name, pt0::RenderVariant(50.0f));
     cmaterial.SetMaterial(mat);
 
-    auto model = std::make_shared<model::Model>();
+    auto model = std::make_shared<model::Model>(&dev);
     cmodel.SetModel(model);
 
     cmodel_inst.SetModel(model, 0);
@@ -54,7 +54,7 @@ void ModelAdapter::UpdateModel(const ur2::Device& dev,
                                const hf::HeightField& hf,
                                const n0::SceneNode& node)
 {
-    auto model = std::make_shared<model::Model>();
+    auto model = std::make_shared<model::Model>(&dev);
     model->materials.emplace_back(std::make_unique<model::Model::Material>());
     model->meshes.push_back(HeightFieldToMesh(dev, hf));
 
@@ -79,10 +79,10 @@ ModelAdapter::HeightFieldToMesh(const ur2::Device& dev, const hf::HeightField& h
     {
         for (size_t x = 0; x < w; ++x)
         {
-            auto pos = sm::vec3(x, hf.Get(x, y), y) * scale;
+            auto pos = sm::vec3(x, hf.Get(dev, x, y), y) * scale;
             vertices.insert(vertices.end(), pos.xyz, pos.xyz + 3);
 
-            auto norm = terraingraph::HeightFieldEval::Normal(hf, x, y, scale);
+            auto norm = terraingraph::HeightFieldEval::Normal(dev, hf, x, y, scale);
             vertices.insert(vertices.end(), norm.xyz, norm.xyz + 3);
 
             // texcoords

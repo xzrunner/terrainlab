@@ -14,7 +14,8 @@ const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\gebco_08_rev_elev_216
 namespace terrainlab
 {
 
-void Clipmap2dRenderer::Draw(float screen_width, float screen_height) const
+void Clipmap2dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx,
+                             float screen_width, float screen_height) const
 {
     if (!m_vtex)
     {
@@ -24,11 +25,11 @@ void Clipmap2dRenderer::Draw(float screen_width, float screen_height) const
         fin.close();
 
         m_vtex = std::make_shared<clipmap::Clipmap>(VTEX_FILEPATH, info);
-        m_vtex->Update(1.0f, sm::vec2(0, 0));
+        m_vtex->Update(dev, ctx, 1.0f, sm::vec2(0, 0));
     }
 
     if (m_vtex) {
-        m_vtex->Draw(screen_width, screen_height);
+        m_vtex->Draw(dev, ctx, screen_width, screen_height);
     }
 }
 

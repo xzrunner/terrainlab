@@ -10,7 +10,8 @@ class Node : public bp::Node
 public:
     Node(const std::string& title);
 
-    virtual void Draw(const n2::RenderParams& rp) const override;
+    virtual void Draw(const ur2::Device& dev, ur2::Context& ctx,
+        const n2::RenderParams& rp) const override;
 
 public:
     static constexpr char* const STR_PROP_DISPLAY = "Display";

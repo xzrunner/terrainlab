@@ -408,7 +408,7 @@ void SplatPbrRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
     }
     assert(hf);
     auto old = m_height_map;
-    m_height_map = hf->GetHeightmap();
+    m_height_map = hf->GetHeightmap(dev);
 
     m_normal_map = terraingraph::TextureBaker::GenNormalMap(*hf, dev);
     m_ao_map = terraingraph::TextureBaker::GenAmbientOcclusionMap(*hf, dev);

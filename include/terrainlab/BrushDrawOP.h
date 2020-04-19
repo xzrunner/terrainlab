@@ -6,6 +6,7 @@
 
 namespace hf { class HeightField; }
 namespace rp { class HeightfieldRenderer; }
+namespace ur2 { class Device; class Context; }
 
 namespace terrainlab
 {
@@ -20,9 +21,8 @@ public:
 
     auto GetRenderer() const { return m_renderer; }
 
-    void Setup(const std::shared_ptr<Node>& brush_node,
-        const std::shared_ptr<hf::HeightField>& hf,
-        const n0::SceneNodePtr& editor_node);
+    void Setup(const ur2::Device& dev, ur2::Context& ctx, const std::shared_ptr<Node>& brush_node,
+        const std::shared_ptr<hf::HeightField>& hf, const n0::SceneNodePtr& editor_node);
 
     void SetEditorSubMgr(const ee0::SubjectMgrPtr& editor_sub_mgr) {
         m_editor_sub_mgr = editor_sub_mgr;

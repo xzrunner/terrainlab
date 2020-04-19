@@ -43,9 +43,9 @@ bool TemplateBrushOP::OnMouseMove(int x, int y)
     return false;
 }
 
-bool TemplateBrushOP::OnDraw() const
+bool TemplateBrushOP::OnDraw(const ur2::Device& dev, ur2::Context& ctx) const
 {
-    if (BrushDrawOP::OnDraw()) {
+    if (BrushDrawOP::OnDraw(dev, ctx)) {
         return true;
     }
 
@@ -53,7 +53,7 @@ bool TemplateBrushOP::OnDraw() const
         return false;
     }
 
-    m_renderer->Draw(m_brush_trans);
+    m_renderer->Draw(ctx, m_brush_trans);
 
     return false;
 }

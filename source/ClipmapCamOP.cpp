@@ -24,9 +24,12 @@ const float CAM3D_SCALE = 0.01f;
 namespace terrainlab
 {
 
-ClipmapCamOP::ClipmapCamOP(const std::shared_ptr<pt0::Camera>& camera,
+ClipmapCamOP::ClipmapCamOP(const ur2::Device& dev, ur2::Context& ctx,
+                           const std::shared_ptr<pt0::Camera>& camera,
                            const ee0::SubjectMgrPtr& sub_mgr)
     : ee0::EditOP(camera)
+    , m_dev(dev)
+    , m_ctx(ctx)
     , m_sub_mgr(sub_mgr)
 {
     m_last_pos.MakeInvalid();
@@ -54,7 +57,7 @@ bool ClipmapCamOP::OnKeyDown(int key_code)
             p_cam->Reset(sm::vec3(0, 0, -2), sm::vec3(0, 0, 0), sm::vec3(0, 1, 0));
         }
 
-        m_vtex->Update(1.0f, sm::vec2(0, 0));
+        m_vtex->Update(m_dev, m_ctx, 1.0f, sm::vec2(0, 0));
         dirty = true;
     }
 		break;
@@ -147,10 +150,10 @@ void ClipmapCamOP::SetVTex(const std::shared_ptr<terraintiler::Clipmap>& vtex)
     }
     if (m_vtex)
     {
-        m_vtex->GetVTex()->Init();
+        m_vtex->GetVTex()->Init(m_dev);
 
         m_camera->Reset();
-        m_vtex->Update(1.0f, sm::vec2(0, 0));
+        m_vtex->Update(m_dev, m_ctx, 1.0f, sm::vec2(0, 0));
     }
 }
 
@@ -167,7 +170,7 @@ bool ClipmapCamOP::Translate(const sm::vec2& offset)
 
         float s = o_cam->GetScale();
         sm::vec2 p = o_cam->GetPosition() + offset * s;
-        m_vtex->Update(s, p);
+        m_vtex->Update(m_dev, m_ctx, s, p);
         m_vtex->GetVTex()->GetRegion(s, p);
         o_cam->Set(p, s);
     }
@@ -176,7 +179,7 @@ bool ClipmapCamOP::Translate(const sm::vec2& offset)
         float scale;
         sm::vec2 pos;
         m_vtex->GetVTex()->GetRegion(scale, pos);
-        m_vtex->Update(scale, pos + offset);
+        m_vtex->Update(m_dev, m_ctx, scale, pos + offset);
 
         //auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_camera);
         //p_cam->Translate(offset.x * CAM3D_SCALE, offset.y * CAM3D_SCALE);
@@ -198,7 +201,7 @@ bool ClipmapCamOP::Scale(float scale)
 
         float s = o_cam->GetScale() * scale;
         sm::vec2 p = o_cam->GetPosition();
-        m_vtex->Update(s, p);
+        m_vtex->Update(m_dev, m_ctx, s, p);
 
         m_vtex->GetVTex()->GetRegion(s, p);
         o_cam->Set(p, s);
@@ -208,7 +211,7 @@ bool ClipmapCamOP::Scale(float scale)
         float s;
         sm::vec2 pos;
         m_vtex->GetVTex()->GetRegion(s, pos);
-        m_vtex->Update(s * scale, pos);
+        m_vtex->Update(m_dev, m_ctx, s * scale, pos);
 
         //auto p_cam = std::dynamic_pointer_cast<pt3::PerspCam>(m_camera);
         //auto dist = p_cam->GetDistance();
