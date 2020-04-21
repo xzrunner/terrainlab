@@ -33,6 +33,12 @@ void ImageRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
     rs.depth_test.enabled = false;
     rs.facet_culling.enabled = false;
 
+    rs.blending.enabled = true;
+    rs.blending.separately = false;
+    rs.blending.src = ur2::BlendingFactor::One;
+    rs.blending.dst = ur2::BlendingFactor::OneMinusSrcAlpha;
+    rs.blending.equation = ur2::BlendEquation::Add;
+
     pt2::RenderSystem::DrawTexture(dev, ctx, rs, m_tex, sm::rect(512, 512), sm::Matrix2D(), false);
 }
 

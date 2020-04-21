@@ -28,6 +28,12 @@ void FullView2dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
     rs.depth_test.enabled = false;
     rs.facet_culling.enabled = false;
 
+    rs.blending.enabled = true;
+    rs.blending.separately = false;
+    rs.blending.src = ur2::BlendingFactor::One;
+    rs.blending.dst = ur2::BlendingFactor::OneMinusSrcAlpha;
+    rs.blending.equation = ur2::BlendEquation::Add;
+
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
     for (size_t y = 0; y < h; ++y)
