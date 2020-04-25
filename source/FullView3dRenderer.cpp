@@ -82,7 +82,7 @@ void FullView3dRenderer::Update(const ur2::Device& dev)
 void FullView3dRenderer::Draw(ur2::Context& ctx, const sm::vec3& cam_pos,
                               const sm::mat4& mt, bool debug_draw) const
 {
-    m_shader->Bind();
+//    m_shader->Bind();
 
     auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
     if (model_updater) {

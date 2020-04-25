@@ -366,7 +366,7 @@ void SplatRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
     }
 
     // bind shader
-    shader->Bind();
+//    shader->Bind();
 
     // update uniforms
     pt0::ShaderUniforms vals;

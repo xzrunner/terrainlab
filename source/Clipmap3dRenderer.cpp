@@ -96,7 +96,7 @@ void Clipmap3dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx, const sm
         m_vtex = std::make_shared<terraintiler::Clipmap>(dev, VTEX_FILEPATH);
     }
 
-    m_shader->Bind();
+//    m_shader->Bind();
 
     auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
     if (model_updater) {
