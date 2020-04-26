@@ -1,6 +1,7 @@
 #include "terrainlab/ImageRenderer.h"
 
 #include <terraingraph/TextureBaker.h>
+#include <unirender2/Factory.h>
 #include <unirender2/Context.h>
 #include <unirender2/RenderState.h>
 #include <painting2/RenderSystem.h>
@@ -29,16 +30,7 @@ void ImageRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
         return;
     }
 
-    ur2::RenderState rs;
-    rs.depth_test.enabled = false;
-    rs.facet_culling.enabled = false;
-
-    rs.blending.enabled = true;
-    rs.blending.separately = false;
-    rs.blending.src = ur2::BlendingFactor::One;
-    rs.blending.dst = ur2::BlendingFactor::OneMinusSrcAlpha;
-    rs.blending.equation = ur2::BlendEquation::Add;
-
+    auto rs = ur2::DefaultRenderState2D();
     pt2::RenderSystem::DrawTexture(dev, ctx, rs, m_tex, sm::rect(512, 512), sm::Matrix2D(), false);
 }
 
