@@ -43,7 +43,7 @@ bool TemplateBrushOP::OnMouseMove(int x, int y)
     return false;
 }
 
-bool TemplateBrushOP::OnDraw(const ur2::Device& dev, ur2::Context& ctx) const
+bool TemplateBrushOP::OnDraw(const ur::Device& dev, ur::Context& ctx) const
 {
     if (BrushDrawOP::OnDraw(dev, ctx)) {
         return true;

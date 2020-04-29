@@ -16,7 +16,7 @@ namespace node { class Clipmap; }
 class ClipmapCamOP : public ee0::EditOP
 {
 public:
-    ClipmapCamOP(const ur2::Device& dev, ur2::Context& ctx,
+    ClipmapCamOP(const ur::Device& dev, ur::Context& ctx,
         const std::shared_ptr<pt0::Camera>& camera,
         const ee0::SubjectMgrPtr& sub_mgr);
 
@@ -41,8 +41,8 @@ private:
     bool Scale(float scale);
 
 private:
-    const ur2::Device& m_dev;
-    ur2::Context& m_ctx;
+    const ur::Device& m_dev;
+    ur::Context& m_ctx;
 
 //    std::shared_ptr<clipmap::Clipmap> m_vtex = nullptr;
     std::shared_ptr<terraintiler::Clipmap> m_vtex = nullptr;

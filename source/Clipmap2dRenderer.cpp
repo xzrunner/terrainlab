@@ -14,7 +14,7 @@ const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\gebco_08_rev_elev_216
 namespace terrainlab
 {
 
-void Clipmap2dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx,
+void Clipmap2dRenderer::Draw(const ur::Device& dev, ur::Context& ctx,
                              float screen_width, float screen_height) const
 {
     if (!m_vtex)

@@ -44,7 +44,7 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 namespace terrainlab
 {
 
-WxPreviewCanvas::WxPreviewCanvas(const ur2::Device& dev, ee0::WxStagePage* stage, ECS_WORLD_PARAM
+WxPreviewCanvas::WxPreviewCanvas(const ur::Device& dev, ee0::WxStagePage* stage, ECS_WORLD_PARAM
                                  const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc, nullptr, true)
     , m_overlay_rd(dev)
@@ -202,7 +202,7 @@ void WxPreviewCanvas::DrawForeground3D() const
 
     DrawSelected(pt, cam_mat, rc);
 
-    ur2::RenderState rs;
+    ur::RenderState rs;
     pt2::RenderSystem::DrawPainter(m_dev, *GetRenderContext().ur_ctx, rs, pt);
 }
 

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace ur2 { class Device; class Context; }
+namespace ur { class Device; class Context; }
 namespace terraintiler { class GeoMipMapping; }
 
 namespace terrainlab
@@ -13,7 +13,7 @@ class FullView2dRenderer
 public:
     FullView2dRenderer();
 
-    void Draw(const ur2::Device& dev, ur2::Context& ctx) const;
+    void Draw(const ur::Device& dev, ur::Context& ctx) const;
 
     void Clear();
 

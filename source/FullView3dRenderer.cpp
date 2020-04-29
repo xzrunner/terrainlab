@@ -1,10 +1,10 @@
 #include "terrainlab/FullView3dRenderer.h"
 
 #include <SM_Calc.h>
-#include <unirender2/Device.h>
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/DrawState.h>
-#include <unirender2/Context.h>
+#include <unirender/Device.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/DrawState.h>
+#include <unirender/Context.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
@@ -56,7 +56,7 @@ void main()
 namespace terrainlab
 {
 
-FullView3dRenderer::FullView3dRenderer(const ur2::Device& dev)
+FullView3dRenderer::FullView3dRenderer(const ur::Device& dev)
 {
     InitShader(dev);
 
@@ -68,7 +68,7 @@ void FullView3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 //    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void FullView3dRenderer::Update(const ur2::Device& dev)
+void FullView3dRenderer::Update(const ur::Device& dev)
 {
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
@@ -79,21 +79,21 @@ void FullView3dRenderer::Update(const ur2::Device& dev)
     }
 }
 
-void FullView3dRenderer::Draw(ur2::Context& ctx, const sm::vec3& cam_pos,
+void FullView3dRenderer::Draw(ur::Context& ctx, const sm::vec3& cam_pos,
                               const sm::mat4& mt, bool debug_draw) const
 {
 //    m_shader->Bind();
 
-    auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    auto model_updater = m_shader->QueryUniformUpdater(ur::GetUpdaterTypeID<pt0::ModelMatUpdater>());
     if (model_updater) {
         std::static_pointer_cast<pt0::ModelMatUpdater>(model_updater)->Update(mt);
     }
 
-    ur2::DrawState ds;
+    ur::DrawState ds;
     ds.program = m_shader;
 
     if (debug_draw) {
-        ds.render_state.rasterization_mode = ur2::RasterizationMode::Line;
+        ds.render_state.rasterization_mode = ur::RasterizationMode::Line;
     }
 
     auto w = m_mipmap->GetWidth();
@@ -124,12 +124,12 @@ void FullView3dRenderer::Draw(ur2::Context& ctx, const sm::vec3& cam_pos,
             }
 
             ds.vertex_array = rd.va;
-            ctx.Draw(ur2::PrimitiveType::Triangles, ds, nullptr);
+            ctx.Draw(ur::PrimitiveType::Triangles, ds, nullptr);
         }
     }
 }
 
-void FullView3dRenderer::InitShader(const ur2::Device& dev)
+void FullView3dRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 12, 0));

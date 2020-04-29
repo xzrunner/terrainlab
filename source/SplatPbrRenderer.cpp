@@ -1,8 +1,8 @@
 #include "terrainlab/SplatPbrRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/Texture.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/Texture.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting0/ModelMatUpdater.h>
@@ -386,14 +386,14 @@ void main()
 namespace terrainlab
 {
 
-SplatPbrRenderer::SplatPbrRenderer(const ur2::Device& dev)
+SplatPbrRenderer::SplatPbrRenderer(const ur::Device& dev)
     : rp::HeightfieldRenderer(dev)
 {
     InitTextuers(dev);
     InitShader(dev);
 }
 
-void SplatPbrRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+void SplatPbrRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
                              const std::shared_ptr<hf::HeightField>& hf)
 {
     if (m_shaders.empty()) {
@@ -446,7 +446,7 @@ void SplatPbrRenderer::Clear()
     m_height_map.reset();
 }
 
-void SplatPbrRenderer::InitTextuers(const ur2::Device& dev)
+void SplatPbrRenderer::InitTextuers(const ur::Device& dev)
 {
     m_splat_map[0] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\dark_dirt.jpg");
     m_splat_map[1] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\rock.jpg");
@@ -454,7 +454,7 @@ void SplatPbrRenderer::InitTextuers(const ur2::Device& dev)
     m_splat_map[3] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\snow.png");
 }
 
-void SplatPbrRenderer::InitShader(const ur2::Device& dev)
+void SplatPbrRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));

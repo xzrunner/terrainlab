@@ -1,7 +1,7 @@
 #include "terrainlab/FullView2dRenderer.h"
 
-#include <unirender2/Factory.h>
-#include <unirender2/RenderState.h>
+#include <unirender/Factory.h>
+#include <unirender/RenderState.h>
 #include <painting2/RenderSystem.h>
 #include <terraintiler/GeoMipMapping.h>
 
@@ -23,9 +23,9 @@ FullView2dRenderer::FullView2dRenderer()
     m_mipmap = std::make_shared<terraintiler::GeoMipMapping>(16, 16);
 }
 
-void FullView2dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx) const
+void FullView2dRenderer::Draw(const ur::Device& dev, ur::Context& ctx) const
 {
-    auto rs = ur2::DefaultRenderState2D();
+    auto rs = ur::DefaultRenderState2D();
     auto w = m_mipmap->GetWidth();
     auto h = m_mipmap->GetHeight();
     for (size_t y = 0; y < h; ++y)

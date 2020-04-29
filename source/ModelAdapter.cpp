@@ -7,12 +7,12 @@
 #include <node3/CompModelInst.h>
 #include <node3/CompAABB.h>
 #include <node3/CompModel.h>
-#include <unirender2/Device.h>
-#include <unirender2/IndexBuffer.h>
-#include <unirender2/VertexBuffer.h>
-#include <unirender2/VertexArray.h>
-#include <unirender2/ComponentDataType.h>
-#include <unirender2/VertexBufferAttribute.h>
+#include <unirender/Device.h>
+#include <unirender/IndexBuffer.h>
+#include <unirender/VertexBuffer.h>
+#include <unirender/VertexArray.h>
+#include <unirender/ComponentDataType.h>
+#include <unirender/VertexBufferAttribute.h>
 #include <painting3/MaterialMgr.h>
 #include <model/Model.h>
 #include <model/typedef.h>
@@ -22,7 +22,7 @@ namespace terrainlab
 {
 
 // todo: copy from sop::GeoAdaptor::Init
-void ModelAdapter::SetupModel(const ur2::Device& dev, n0::SceneNode& node)
+void ModelAdapter::SetupModel(const ur::Device& dev, n0::SceneNode& node)
 {
     auto& cmodel = node.AddSharedComp<n3::CompModel>();
     //cmodel.DisableSerialize();
@@ -50,7 +50,7 @@ void ModelAdapter::SetupModel(const ur2::Device& dev, n0::SceneNode& node)
     caabb.SetAABB(model->aabb);
 }
 
-void ModelAdapter::UpdateModel(const ur2::Device& dev,
+void ModelAdapter::UpdateModel(const ur::Device& dev,
                                const hf::HeightField& hf,
                                const n0::SceneNode& node)
 {
@@ -63,7 +63,7 @@ void ModelAdapter::UpdateModel(const ur2::Device& dev,
 }
 
 std::unique_ptr<model::Model::Mesh>
-ModelAdapter::HeightFieldToMesh(const ur2::Device& dev, const hf::HeightField& hf)
+ModelAdapter::HeightFieldToMesh(const ur::Device& dev, const hf::HeightField& hf)
 {
     const float tot_w = 1.0f;
     const float tot_h = 1.0f;
@@ -106,7 +106,7 @@ ModelAdapter::HeightFieldToMesh(const ur2::Device& dev, const hf::HeightField& h
 
     auto va = dev.CreateVertexArray();
 
-    auto usage = ur2::BufferUsageHint::StaticDraw;
+    auto usage = ur::BufferUsageHint::StaticDraw;
 
     auto ibuf_sz = sizeof(unsigned short) * indices.size();
     auto ibuf = dev.CreateIndexBuffer(usage, ibuf_sz);
@@ -114,22 +114,22 @@ ModelAdapter::HeightFieldToMesh(const ur2::Device& dev, const hf::HeightField& h
     va->SetIndexBuffer(ibuf);
 
     auto vbuf_sz = sizeof(float) * vertices.size();
-    auto vbuf = dev.CreateVertexBuffer(ur2::BufferUsageHint::StaticDraw, vbuf_sz);
+    auto vbuf = dev.CreateVertexBuffer(ur::BufferUsageHint::StaticDraw, vbuf_sz);
     vbuf->ReadFromMemory(vertices.data(), vbuf_sz, 0);
     va->SetVertexBuffer(vbuf);
 
-    std::vector<std::shared_ptr<ur2::VertexBufferAttribute>> vbuf_attrs(3);
+    std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(3);
     // pos
-    vbuf_attrs[0] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 3, 0, 32
+    vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 0, 32
     );
     // normal
-    vbuf_attrs[1] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 3, 12, 32
+    vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 12, 32
     );
     // texcoord
-    vbuf_attrs[2] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 3, 24, 32
+    vbuf_attrs[2] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 24, 32
     );
     va->SetVertexBufferAttrs(vbuf_attrs);
 

@@ -24,7 +24,7 @@ const float CAM3D_SCALE = 0.01f;
 namespace terrainlab
 {
 
-ClipmapCamOP::ClipmapCamOP(const ur2::Device& dev, ur2::Context& ctx,
+ClipmapCamOP::ClipmapCamOP(const ur::Device& dev, ur::Context& ctx,
                            const std::shared_ptr<pt0::Camera>& camera,
                            const ee0::SubjectMgrPtr& sub_mgr)
     : ee0::EditOP(camera)

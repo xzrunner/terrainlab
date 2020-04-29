@@ -17,7 +17,7 @@ public:
 
     virtual bool OnMouseLeftDown(int x, int y) override;
     virtual bool OnMouseMove(int x, int y) override;
-    virtual bool OnDraw(const ur2::Device& dev, ur2::Context& ctx) const override;
+    virtual bool OnDraw(const ur::Device& dev, ur::Context& ctx) const override;
 
 private:
     sm::mat4 CalcBrushTrans(int x, int y) const;

@@ -1,8 +1,8 @@
 #include "terrainlab/SplatRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/Texture.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/Texture.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting0/ModelMatUpdater.h>
@@ -309,7 +309,7 @@ void main()
 namespace terrainlab
 {
 
-SplatRenderer::SplatRenderer(const ur2::Device& dev)
+SplatRenderer::SplatRenderer(const ur::Device& dev)
     : rp::HeightfieldRenderer(dev)
 {
     InitTextuers(dev);
@@ -317,7 +317,7 @@ SplatRenderer::SplatRenderer(const ur2::Device& dev)
     InitUniforms();
 }
 
-void SplatRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
                           const std::shared_ptr<hf::HeightField>& hf)
 {
     if (m_shaders.empty()) {
@@ -386,7 +386,7 @@ void SplatRenderer::Clear()
     m_height_map.reset();
 }
 
-void SplatRenderer::InitTextuers(const ur2::Device& dev)
+void SplatRenderer::InitTextuers(const ur::Device& dev)
 {
     const std::string filedir = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\";
     const int mipmap_levels = 32;
@@ -406,7 +406,7 @@ void SplatRenderer::InitTextuers(const ur2::Device& dev)
     }
 }
 
-void SplatRenderer::InitShader(const ur2::Device& dev)
+void SplatRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));

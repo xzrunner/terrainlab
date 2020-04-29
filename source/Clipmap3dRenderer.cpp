@@ -1,11 +1,11 @@
 #include "terrainlab/Clipmap3dRenderer.h"
 
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/UniformUpdater.h>
-#include <unirender2/Uniform.h>
-#include <unirender2/Context.h>
-#include <unirender2/DrawState.h>
-#include <unirender2/Device.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/UniformUpdater.h>
+#include <unirender/Uniform.h>
+#include <unirender/Context.h>
+#include <unirender/DrawState.h>
+#include <unirender/Device.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
@@ -80,7 +80,7 @@ void main()
 namespace terrainlab
 {
 
-Clipmap3dRenderer::Clipmap3dRenderer(const ur2::Device& dev)
+Clipmap3dRenderer::Clipmap3dRenderer(const ur::Device& dev)
 {
     InitShader(dev);
 }
@@ -90,7 +90,7 @@ void Clipmap3dRenderer::Setup(std::shared_ptr<pt3::WindowContext>& wc) const
 //    static_cast<pt3::Shader*>(m_shader.get())->AddNotify(wc);
 }
 
-void Clipmap3dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx, const sm::mat4& mt) const
+void Clipmap3dRenderer::Draw(const ur::Device& dev, ur::Context& ctx, const sm::mat4& mt) const
 {
     if (!m_vtex) {
         m_vtex = std::make_shared<terraintiler::Clipmap>(dev, VTEX_FILEPATH);
@@ -98,7 +98,7 @@ void Clipmap3dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx, const sm
 
 //    m_shader->Bind();
 
-    auto model_updater = m_shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    auto model_updater = m_shader->QueryUniformUpdater(ur::GetUpdaterTypeID<pt0::ModelMatUpdater>());
     if (model_updater) {
         std::static_pointer_cast<pt0::ModelMatUpdater>(model_updater)->Update(mt);
     }
@@ -119,7 +119,7 @@ void Clipmap3dRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx, const sm
 //    return m_vtex ? m_vtex->GetVTex() : nullptr;
 //}
 
-void Clipmap3dRenderer::InitShader(const ur2::Device& dev)
+void Clipmap3dRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 2, 4, 8, 0));
@@ -131,11 +131,11 @@ void Clipmap3dRenderer::InitShader(const ur2::Device& dev)
     m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
 }
 
-void Clipmap3dRenderer::DrawLayer(ur2::Context& ctx, size_t start_level) const
+void Clipmap3dRenderer::DrawLayer(ur::Context& ctx, size_t start_level) const
 {
     auto heightmap_slot = m_shader->QueryTexSlot("u_heightmap");
 
-    ur2::DrawState draw;
+    ur::DrawState draw;
     draw.program = m_shader;
 
     auto& layers = m_vtex->GetAllLayers();
@@ -158,7 +158,7 @@ void Clipmap3dRenderer::DrawLayer(ur2::Context& ctx, size_t start_level) const
             block_ori->SetValue(block.trans.xyzw, 4);
 
             draw.vertex_array = block.rd.va;
-            ctx.Draw(ur2::PrimitiveType::Triangles, draw, nullptr);
+            ctx.Draw(ur::PrimitiveType::Triangles, draw, nullptr);
         }
     }
 }

@@ -1,8 +1,8 @@
 #include "terrainlab/OverlayRenderer.h"
 
 #include <heightfield/HeightField.h>
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/Texture.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/Texture.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
@@ -58,7 +58,7 @@ void main()
 namespace terrainlab
 {
 
-OverlayRenderer::OverlayRenderer(const ur2::Device& dev)
+OverlayRenderer::OverlayRenderer(const ur::Device& dev)
     : rp::HeightfieldRenderer(dev)
 {
     InitShader(dev);
@@ -70,7 +70,7 @@ void OverlayRenderer::Clear()
     m_color_map.reset();
 }
 
-void OverlayRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+void OverlayRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
                             const std::shared_ptr<hf::HeightField>& hf,
                             const terraingraph::BitmapPtr& bmp)
 {
@@ -105,7 +105,7 @@ void OverlayRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
     }
 }
 
-void OverlayRenderer::InitShader(const ur2::Device& dev)
+void OverlayRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
