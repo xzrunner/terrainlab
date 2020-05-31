@@ -2,7 +2,11 @@
 #error "You must define EXE_FILEPATH macro before include this file"
 #endif
 
+//////////////////////////////////////////////////////////////////////////
 // generator
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Generator
 
 #define PARM_NODE_CLASS Color
 #define PARM_NODE_NAME color
@@ -102,7 +106,13 @@
 #define PARM_NODE_NAME rock
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // output
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Output
 
 #ifndef SKIP_FILE_NODE
 #define PARM_NODE_CLASS HeightOutput
@@ -114,7 +124,13 @@
 #define PARM_NODE_NAME overlay_view
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // combiner
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Combiner
 
 #define PARM_NODE_CLASS Chooser
 #define PARM_NODE_NAME chooser
@@ -124,7 +140,13 @@
 #define PARM_NODE_NAME combiner
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // filter
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Filter
 
 #define PARM_NODE_CLASS Clamp
 #define PARM_NODE_NAME clamp
@@ -158,7 +180,13 @@
 #define PARM_NODE_NAME transform
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // natural
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Natural
 
 #define PARM_NODE_CLASS Erosion
 #define PARM_NODE_NAME erosion
@@ -180,7 +208,13 @@
 #define PARM_NODE_NAME wind
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // selector
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Selector
 
 #define PARM_NODE_CLASS SelectHeight
 #define PARM_NODE_NAME select_height
@@ -194,7 +228,13 @@
 #define PARM_NODE_NAME select_slope
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // converter
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Converter
 
 #define PARM_NODE_CLASS AlbedoMap
 #define PARM_NODE_NAME albedo_map
@@ -227,3 +267,5 @@
 #define PARM_NODE_CLASS Resample
 #define PARM_NODE_NAME resample
 #include EXE_FILEPATH
+
+#undef NODES_GROUP_NAME
