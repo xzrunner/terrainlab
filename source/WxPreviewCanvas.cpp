@@ -233,7 +233,7 @@ void WxPreviewCanvas::OnSelectionInsert(const ee0::VariantSet& variants)
         {
             std::shared_ptr<hf::HeightField> hf = nullptr;
 
-            auto eval = m_graph_page->GetEval();
+            auto eval = m_graph_page->GetSceneTree()->GetCurrEval();
             if (eval) {
                 auto back_node = eval->QueryBackNode(*node);
                 if (back_node) {
@@ -400,7 +400,7 @@ bp::NodePtr WxPreviewCanvas::GetSelectedNode() const
         return nullptr;
     }
 
-    auto eval = m_graph_page->GetEval();
+    auto eval = m_graph_page->GetSceneTree()->GetCurrEval();
     if (!eval) {
         return nullptr;
     }
@@ -420,7 +420,7 @@ terraingraph::DevicePtr WxPreviewCanvas::GetSelectedDevice() const
         return nullptr;
     }
 
-    auto eval = m_graph_page->GetEval();
+    auto eval = m_graph_page->GetSceneTree()->GetCurrEval();
     if (!eval) {
         return nullptr;
     }
