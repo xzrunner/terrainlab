@@ -430,17 +430,6 @@ void SplatRenderer::InitTextuers(const ur::Device& dev)
 
 void SplatRenderer::InitShader(const ur::Device& dev)
 {
-    std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(2);
-    // rp::VERT_POSITION_NAME
-    vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
-        ur::ComponentDataType::Float, 3, 0, 20
-    );
-    // rp::VERT_TEXCOORD_NAME
-    vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
-        ur::ComponentDataType::Float, 2, 12, 20
-    );
-    m_va->SetVertexBufferAttrs(vbuf_attrs);
-
     std::string _vs(vs);
     std::string _fs(fs);
 #ifdef BUILD_NORMAL_MAP
@@ -455,6 +444,13 @@ void SplatRenderer::InitShader(const ur::Device& dev)
     shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
     m_shaders.push_back(shader);
+
+    m_va->SetVertexBufferAttrs({
+        std::make_shared<ur::VertexBufferAttribute>(shader->QueryAttrLoc("position"), 
+            ur::ComponentDataType::Float, 3, 0, 20),
+        std::make_shared<ur::VertexBufferAttribute>(shader->QueryAttrLoc("texcoord"), 
+            ur::ComponentDataType::Float, 2, 12, 20)
+    });
 }
 
 void SplatRenderer::InitUniforms()
