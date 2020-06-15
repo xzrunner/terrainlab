@@ -121,15 +121,15 @@ ModelAdapter::HeightFieldToMesh(const ur::Device& dev, const hf::HeightField& hf
     std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(3);
     // pos
     vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
-        ur::ComponentDataType::Float, 3, 0, 32
+        0, ur::ComponentDataType::Float, 3, 0, 32
     );
     // normal
     vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
-        ur::ComponentDataType::Float, 3, 12, 32
+        1, ur::ComponentDataType::Float, 3, 12, 32
     );
     // texcoord
     vbuf_attrs[2] = std::make_shared<ur::VertexBufferAttribute>(
-        ur::ComponentDataType::Float, 3, 24, 32
+        2, ur::ComponentDataType::Float, 3, 24, 32
     );
     va->SetVertexBufferAttrs(vbuf_attrs);
 
