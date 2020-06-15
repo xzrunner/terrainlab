@@ -49,11 +49,11 @@ bool TemplateBrushOP::OnDraw(const ur::Device& dev, ur::Context& ctx) const
         return true;
     }
 
-    if (!m_brush_node) {
+    if (!m_brush_node || !m_wc) {
         return false;
     }
 
-    m_renderer->Draw(ctx, m_brush_trans);
+    m_renderer->Draw(dev, ctx, *m_wc, m_brush_trans);
 
     return false;
 }

@@ -4,6 +4,8 @@
 
 #include <SM_Matrix.h>
 
+namespace pt3 { class WindowContext; }
+
 namespace terrainlab
 {
 
@@ -19,11 +21,15 @@ public:
     virtual bool OnMouseMove(int x, int y) override;
     virtual bool OnDraw(const ur::Device& dev, ur::Context& ctx) const override;
 
+    void SetWindowContext(const std::shared_ptr<pt3::WindowContext>& wc) { m_wc = wc; }
+
 private:
     sm::mat4 CalcBrushTrans(int x, int y) const;
 
 private:
     sm::mat4 m_brush_trans;
+
+    std::shared_ptr<pt3::WindowContext> m_wc = nullptr;
 
 }; // TemplateBrushOP
 

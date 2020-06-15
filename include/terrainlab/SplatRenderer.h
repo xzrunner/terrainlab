@@ -21,6 +21,9 @@ public:
     virtual void Setup(const ur::Device& dev, ur::Context& ctx,
         const std::shared_ptr<hf::HeightField>& hf) override;
 
+protected:
+    virtual void BeforeDraw(ur::Context& ctx) const override;
+
 private:
     void InitTextuers(const ur::Device& dev);
     void InitShader(const ur::Device& dev);

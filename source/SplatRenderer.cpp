@@ -3,6 +3,8 @@
 #include <heightfield/HeightField.h>
 #include <unirender/ShaderProgram.h>
 #include <unirender/Texture.h>
+#include <unirender/ComponentDataType.h>
+#include <unirender/VertexBufferAttribute.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting0/ModelMatUpdater.h>
@@ -323,8 +325,6 @@ void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
     if (m_shaders.empty()) {
         return;
     }
-    assert(m_shaders.size() == 1);
-    auto shader = m_shaders.front();
 
     m_hf = hf;
     if (!m_hf) {
@@ -341,22 +341,22 @@ void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
     m_shadow_map = terraingraph::TextureBaker::GenShadowMap(*hf, rc, m_light_dir);
 #endif // BUILD_SHADOW_MAP
 
-    // textures
-    if (m_height_map != old)
-    {
-        ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
-#ifdef BUILD_NORMAL_MAP
-        ctx.SetTexture(shader->QueryTexSlot("u_normal_map"), m_normal_map);
-#endif // BUILD_NORMAL_MAP
-#ifdef BUILD_SHADOW_MAP
-        ctx.SetTexture(shader->QueryTexSlot("u_shadow_map"), m_shadow_map);
-#endif // BUILD_SHADOW_MAP
-        ctx.SetTexture(shader->QueryTexSlot("u_noise_map"), m_noise_map);
-        ctx.SetTexture(shader->QueryTexSlot("u_splatmap0"), m_splat_map[0]);
-        ctx.SetTexture(shader->QueryTexSlot("u_splatmap1"), m_splat_map[1]);
-        ctx.SetTexture(shader->QueryTexSlot("u_splatmap2"), m_splat_map[2]);
-        ctx.SetTexture(shader->QueryTexSlot("u_splatmap3"), m_splat_map[3]);
-    }
+//    // textures
+//    if (m_height_map != old)
+//    {
+//        ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
+//#ifdef BUILD_NORMAL_MAP
+//        ctx.SetTexture(shader->QueryTexSlot("u_normal_map"), m_normal_map);
+//#endif // BUILD_NORMAL_MAP
+//#ifdef BUILD_SHADOW_MAP
+//        ctx.SetTexture(shader->QueryTexSlot("u_shadow_map"), m_shadow_map);
+//#endif // BUILD_SHADOW_MAP
+//        ctx.SetTexture(shader->QueryTexSlot("u_noise_map"), m_noise_map);
+//        ctx.SetTexture(shader->QueryTexSlot("u_splatmap0"), m_splat_map[0]);
+//        ctx.SetTexture(shader->QueryTexSlot("u_splatmap1"), m_splat_map[1]);
+//        ctx.SetTexture(shader->QueryTexSlot("u_splatmap2"), m_splat_map[2]);
+//        ctx.SetTexture(shader->QueryTexSlot("u_splatmap3"), m_splat_map[3]);
+//    }
 
     // vertex buffer
     if (!old ||
@@ -366,6 +366,7 @@ void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
     }
 
     // bind shader
+    auto shader = m_shaders.front();
 //    shader->Bind();
 
     // update uniforms
@@ -383,7 +384,28 @@ void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
 
 void SplatRenderer::Clear()
 {
+    HeightfieldRenderer::Clear();
+
     m_height_map.reset();
+}
+
+void SplatRenderer::BeforeDraw(ur::Context& ctx) const
+{
+    assert(m_shaders.size() == 1);
+    auto shader = m_shaders.front();
+
+    ctx.SetTexture(shader->QueryTexSlot("u_heightmap"), m_height_map);
+#ifdef BUILD_NORMAL_MAP
+    ctx.SetTexture(shader->QueryTexSlot("u_normal_map"), m_normal_map);
+#endif // BUILD_NORMAL_MAP
+#ifdef BUILD_SHADOW_MAP
+    ctx.SetTexture(shader->QueryTexSlot("u_shadow_map"), m_shadow_map);
+#endif // BUILD_SHADOW_MAP
+    ctx.SetTexture(shader->QueryTexSlot("u_noise_map"), m_noise_map);
+    ctx.SetTexture(shader->QueryTexSlot("u_splatmap0"), m_splat_map[0]);
+    ctx.SetTexture(shader->QueryTexSlot("u_splatmap1"), m_splat_map[1]);
+    ctx.SetTexture(shader->QueryTexSlot("u_splatmap2"), m_splat_map[2]);
+    ctx.SetTexture(shader->QueryTexSlot("u_splatmap3"), m_splat_map[3]);
 }
 
 void SplatRenderer::InitTextuers(const ur::Device& dev)
@@ -408,10 +430,16 @@ void SplatRenderer::InitTextuers(const ur::Device& dev)
 
 void SplatRenderer::InitShader(const ur::Device& dev)
 {
-    //std::vector<ur::VertexAttrib> layout;
-    //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
-    //layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
-    //rc.CreateVertexLayout(layout);
+    std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(2);
+    // rp::VERT_POSITION_NAME
+    vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 0, 20
+    );
+    // rp::VERT_TEXCOORD_NAME
+    vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 2, 12, 20
+    );
+    m_va->SetVertexBufferAttrs(vbuf_attrs);
 
     std::string _vs(vs);
     std::string _fs(fs);
@@ -422,7 +450,7 @@ void SplatRenderer::InitShader(const ur::Device& dev)
     _vs = "#version 130\n" + _vs;
     _fs = "#version 130\n" + _fs;
 #endif // BUILD_NORMAL_MAP
-    auto shader = dev.CreateShaderProgram(vs, fs);
+    auto shader = dev.CreateShaderProgram(_vs, _fs);
     shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));

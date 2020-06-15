@@ -51,7 +51,7 @@ WxPreviewCanvas::WxPreviewCanvas(const ur::Device& dev, ee0::WxStagePage* stage,
     , m_full3_rd(dev)
     , m_clip3_rd(dev)
 {
-    //m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>();
+    //m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>(dev);
     m_hf_rd = std::make_shared<SplatRenderer>(dev);
     //m_hf_rd = std::make_shared<SplatPbrRenderer>();
 
@@ -355,13 +355,15 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
         return;
     }
 
+    auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
+
     auto hf = device->GetHeightField();
     auto bmp = device->GetBitmap();
     auto mask = device->GetMask();
     if (hf && bmp) {
-        m_overlay_rd.Draw(ctx);
+        m_overlay_rd.Draw(m_dev, ctx, *wc);
     } else if (hf) {
-        m_hf_rd->Draw(ctx);
+        m_hf_rd->Draw(m_dev, ctx, *wc);
     } else if (bmp) {
         m_img_rd.Draw(m_dev, ctx);
     } else if (mask) {
