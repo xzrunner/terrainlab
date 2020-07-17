@@ -5,6 +5,7 @@
 #include <unirender/Texture.h>
 #include <unirender/ComponentDataType.h>
 #include <unirender/VertexBufferAttribute.h>
+#include <shadertrans/ShaderTrans.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting0/ModelMatUpdater.h>
@@ -439,7 +440,10 @@ void SplatRenderer::InitShader(const ur::Device& dev)
     _vs = "#version 130\n" + _vs;
     _fs = "#version 130\n" + _fs;
 #endif // BUILD_NORMAL_MAP
-    auto shader = dev.CreateShaderProgram(_vs, _fs);
+    std::vector<unsigned int> __vs, __fs;
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, _vs, __vs);
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, _fs, __fs);
+    auto shader = dev.CreateShaderProgram(__vs, __fs);
     shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));

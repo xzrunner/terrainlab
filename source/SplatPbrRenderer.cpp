@@ -3,6 +3,7 @@
 #include <heightfield/HeightField.h>
 #include <unirender/ShaderProgram.h>
 #include <unirender/Texture.h>
+#include <shadertrans/ShaderTrans.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
 #include <painting0/ModelMatUpdater.h>
@@ -461,11 +462,16 @@ void SplatPbrRenderer::InitShader(const ur::Device& dev)
     //layout.push_back(ur::VertexAttrib(rp::VERT_TEXCOORD_NAME, 2, 4, 20, 12));
     //rc.CreateVertexLayout(layout);
 
-    auto shader = dev.CreateShaderProgram(vs, fs);
+    std::vector<unsigned int> _vs, _fs;
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, vs, _vs);
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, fs, _fs);
+    auto shader = dev.CreateShaderProgram(_vs, _fs);
+
     shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
     shader->AddUniformUpdater(std::make_shared<pt0::CamPosUpdater>(*shader, "u_cam_pos"));
+
     m_shaders.push_back(shader);
 }
 

@@ -5,6 +5,7 @@
 #include <unirender/ShaderProgram.h>
 #include <unirender/DrawState.h>
 #include <unirender/Context.h>
+#include <shadertrans/ShaderTrans.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting3/Shader.h>
@@ -135,7 +136,11 @@ void FullView3dRenderer::InitShader(const ur::Device& dev)
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 12, 0));
     //rc.CreateVertexLayout(layout);
 
-    m_shader = dev.CreateShaderProgram(vs, fs);
+    std::vector<unsigned int> _vs, _fs;
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, vs, _vs);
+    shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, fs, _fs);
+    m_shader = dev.CreateShaderProgram(_vs, _fs);
+
     m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, rp::MODEL_MAT_NAME));
     m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, rp::VIEW_MAT_NAME));
     m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
