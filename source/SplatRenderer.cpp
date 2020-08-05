@@ -4,7 +4,7 @@
 #include <unirender/ShaderProgram.h>
 #include <unirender/Texture.h>
 #include <unirender/ComponentDataType.h>
-#include <unirender/VertexBufferAttribute.h>
+#include <unirender/VertexInputAttribute.h>
 #include <shadertrans/ShaderTrans.h>
 #include <renderpipeline/UniformNames.h>
 #include <painting0/ShaderUniforms.h>
@@ -450,9 +450,9 @@ void SplatRenderer::InitShader(const ur::Device& dev)
     m_shaders.push_back(shader);
 
     m_va->SetVertexBufferAttrs({
-        std::make_shared<ur::VertexBufferAttribute>(shader->QueryAttrLoc("position"), 
+        std::make_shared<ur::VertexInputAttribute>(shader->QueryAttrLoc("position"), 
             ur::ComponentDataType::Float, 3, 0, 20),
-        std::make_shared<ur::VertexBufferAttribute>(shader->QueryAttrLoc("texcoord"), 
+        std::make_shared<ur::VertexInputAttribute>(shader->QueryAttrLoc("texcoord"), 
             ur::ComponentDataType::Float, 2, 12, 20)
     });
 }
