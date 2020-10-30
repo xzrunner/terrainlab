@@ -18,36 +18,49 @@ namespace
 
 const char* vs = R"(
 
-attribute vec4 position;
+#version 330 core
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_model;
+layout (location = 0) in vec4 position;
 
-varying vec3 v_fragpos;
+layout(std140) uniform UBO_VS
+{
+    mat4 projection;
+    mat4 view;
+    mat4 model;
+} ubo_vs;
+
+out VS_OUT {
+    vec3 frag_pos;
+} vs_out;
 
 void main()
 {
-    v_fragpos = vec3(u_model * position);
-	gl_Position = u_projection * u_view * u_model * position;
+    vs_out.frag_pos = vec3(ubo_vs.model * position);
+	gl_Position = ubo_vs.projection * ubo_vs.view * ubo_vs.model * position;
 }
 
 )";
 
 const char* fs = R"(
 
-varying vec3 v_fragpos;
+#version 330 core
+
+out vec4 FragColor;
+
+in VS_OUT {
+    vec3 frag_pos;
+} fs_in;
 
 void main()
 {
-    vec3 fdx = dFdx(v_fragpos);
-    vec3 fdy = dFdy(v_fragpos);
+    vec3 fdx = dFdx(fs_in.frag_pos);
+    vec3 fdy = dFdy(fs_in.frag_pos);
     vec3 N = normalize(cross(fdx, fdy));
 
-    vec3 light_dir = normalize(vec3(0, -10, 10) - v_fragpos);
+    vec3 light_dir = normalize(vec3(0, -10, 10) - fs_in.frag_pos);
     float diff = max(dot(N, light_dir), 0.0);
     vec3 diffuse = diff * vec3(1.0, 1.0, 1.0);
-	gl_FragColor = vec4(diffuse, 1.0);
+	FragColor = vec4(diffuse, 1.0);
 }
 
 )";
@@ -140,10 +153,11 @@ void FullView3dRenderer::InitShader(const ur::Device& dev)
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, vs, _vs);
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, fs, _fs);
     m_shader = dev.CreateShaderProgram(_vs, _fs);
+    assert(m_shader);
 
-    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, rp::MODEL_MAT_NAME));
-    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, rp::VIEW_MAT_NAME));
-    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, "ubo_vs.model"));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, "ubo_vs.view"));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, "ubo_vs.projection"));
 }
 
 }

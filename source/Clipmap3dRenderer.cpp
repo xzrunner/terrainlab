@@ -23,18 +23,25 @@ const char* VTEX_FILEPATH = "D:\\OneDrive\\asset\\terrain\\gebco_08_rev_elev_216
 
 const char* vs = R"(
 
-attribute vec4 position;
+#version 330 core
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_model;
+layout (location = 0) in vec4 position;
 
-uniform vec4 u_block_ori;
-uniform vec4 u_uv_region;
+layout(std140) uniform UBO_VS
+{
+    mat4 projection;
+    mat4 view;
+    mat4 model;
+
+    vec4 block_ori;
+    vec4 uv_region;
+} ubo_vs;
 
 uniform sampler2D u_heightmap;
 
-varying vec3 v_fragpos;
+out VS_OUT {
+    vec3 frag_pos;
+} vs_out;
 
 void main()
 {
@@ -42,36 +49,42 @@ void main()
 
     //vec2 uv = position.xy * 0.5 + 0.5;
     vec2 uv = position.xy;
-    uv = uv * u_block_ori.xy + u_block_ori.zw;
-    uv = uv * u_uv_region.zw + u_uv_region.xy;
+    uv = uv * ubo_vs.block_ori.xy + ubo_vs.block_ori.zw;
+    uv = uv * ubo_vs.uv_region.zw + ubo_vs.uv_region.xy;
 
     vec4 pos;
     pos.xz = position.xy;
-    pos.y = texture2D(u_heightmap, uv).r * h_scale;
+    pos.y = texture(u_heightmap, uv).r * h_scale;
     pos.w = 1;
 
-    v_fragpos = vec3(u_model * pos);
-	gl_Position = u_projection * u_view * u_model * pos;
+    vs_out.frag_pos = vec3(ubo_vs.model * pos);
+	gl_Position = ubo_vs.projection * ubo_vs.view * ubo_vs.model * pos;
 }
 
 )";
 
 const char* fs = R"(
 
-varying vec3 v_fragpos;
+#version 330 core
+
+out vec4 FragColor;
+
+in VS_OUT {
+    vec3 frag_pos;
+} fs_in;
 
 void main()
 {
-    vec3 fdx = dFdx(v_fragpos);
-    vec3 fdy = dFdy(v_fragpos);
+    vec3 fdx = dFdx(fs_in.frag_pos);
+    vec3 fdy = dFdy(fs_in.frag_pos);
     vec3 N = normalize(cross(fdx, fdy));
 
-    vec3 light_dir = normalize(vec3(0, -100000, 100000) - v_fragpos);
+    vec3 light_dir = normalize(vec3(0, -100000, 100000) - fs_in.frag_pos);
     float diff = max(dot(N, light_dir), 0.0);
     vec3 diffuse = diff * vec3(1.0, 1.0, 1.0);
-	gl_FragColor = vec4(diffuse, 1.0);
+	FragColor = vec4(diffuse, 1.0);
 
-//	gl_FragColor = vec4(0, 0, 0, 1.0);
+//	FragColor = vec4(0, 0, 0, 1.0);
 }
 
 )";
@@ -130,10 +143,11 @@ void Clipmap3dRenderer::InitShader(const ur::Device& dev)
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, vs, _vs);
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, fs, _fs);
     m_shader = dev.CreateShaderProgram(_vs, _fs);
+    assert(m_shader);
 
-    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, rp::MODEL_MAT_NAME));
-    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, rp::VIEW_MAT_NAME));
-    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, rp::PROJ_MAT_NAME));
+    m_shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*m_shader, "ubo_vs.model"));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*m_shader, "ubo_vs.view"));
+    m_shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*m_shader, "ubo_vs.projection"));
 }
 
 void Clipmap3dRenderer::DrawLayer(ur::Context& ctx, size_t start_level) const
@@ -155,11 +169,11 @@ void Clipmap3dRenderer::DrawLayer(ur::Context& ctx, size_t start_level) const
             return;
         }
 
-        auto uv_region = m_shader->QueryUniform("u_uv_region");
+        auto uv_region = m_shader->QueryUniform("ubo_vs.uv_region");
         uv_region->SetValue(layers[i].uv_region.xyzw, 4);
         for (auto& block : layers[i].blocks)
         {
-            auto block_ori = m_shader->QueryUniform("u_block_ori");
+            auto block_ori = m_shader->QueryUniform("ubo_vs.block_ori");
             block_ori->SetValue(block.trans.xyzw, 4);
 
             draw.vertex_array = block.rd.va;

@@ -19,42 +19,53 @@ namespace
 
 const char* vs = R"(
 
-#version 130
+#version 330 core
 
-attribute vec4 position;
-attribute vec2 texcoord;
+layout (location = 0) in vec4 position;
+layout (location = 1) in vec2 texcoord;
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_model;
+layout(std140) uniform UBO_VS
+{
+    mat4 projection;
+    mat4 view;
+    mat4 model;
+} ubo_vs;
 
 uniform sampler2D u_heightmap;
 
-varying float v_height;
-varying vec2  v_texcoord;
-varying vec3  v_fragpos;
+out VS_OUT {
+    float v_height;
+    vec2  v_texcoord;
+    vec3  v_fragpos;
+} vs_out;
 
 void main()
 {
     const float h_scale = 0.2;
 
-	v_height = texture2D(u_heightmap, texcoord).r;
+	vs_out.v_height = texture(u_heightmap, texcoord).r;
 
 	vec4 pos = position;
-	pos.y = v_height * h_scale;
-	gl_Position = u_projection * u_view * u_model * pos;
+	pos.y = vs_out.v_height * h_scale;
+	gl_Position = ubo_vs.projection * ubo_vs.view * ubo_vs.model * pos;
 
-	v_texcoord = texcoord;
-    v_fragpos = vec3(u_model * pos);
+	vs_out.v_texcoord = texcoord;
+    vs_out.v_fragpos = vec3(ubo_vs.model * pos);
 }
 
 )";
 
 const char* fs = R"(
 
-#version 130
+#version 330 core
 
-uniform vec3 u_light_dir;
+out vec4 FragColor;
+
+layout(std140) uniform UBO_FS
+{
+    vec3 light_dir;
+    vec3 cam_pos;
+} ubo_fs;
 
 uniform sampler2D u_normal_map;
 uniform sampler2D u_ao_map;
@@ -64,12 +75,12 @@ uniform sampler2D u_splatmap1;
 uniform sampler2D u_splatmap2;
 uniform sampler2D u_splatmap3;
 
-uniform vec3 u_cam_pos;
-
-varying float v_height;
-varying vec2  v_texcoord;
-varying vec3  v_fragpos;
-varying vec3  v_normal;
+in VS_OUT {
+    float v_height;
+    vec2  v_texcoord;
+    vec3  v_fragpos;
+    vec3  v_normal;
+} fs_in;
 
 vec4 hash4( vec2 p ) { return fract(sin(vec4( 1.0+dot(p,vec2(37.0,17.0)),
                                               2.0+dot(p,vec2(11.0,47.0)),
@@ -198,12 +209,12 @@ const float PI = 3.14159265359;
 //// technique somewhere later in the normal mapping tutorial.
 //vec3 getNormalFromMap()
 //{
-//    vec3 tangentNormal = texture(u_normal_map, v_texcoord).xyz * 2.0 - 1.0;
+//    vec3 tangentNormal = texture(u_normal_map, fs_in.texcoord).xyz * 2.0 - 1.0;
 //
 //    vec3 Q1  = dFdx(WorldPos);
 //    vec3 Q2  = dFdy(WorldPos);
-//    vec2 st1 = dFdx(v_texcoord);
-//    vec2 st2 = dFdy(v_texcoord);
+//    vec2 st1 = dFdx(fs_in.texcoord);
+//    vec2 st2 = dFdy(fs_in.texcoord);
 //
 //    vec3 N   = normalize(Normal);
 //    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
@@ -258,12 +269,12 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 void main()
 {
     // normal
-    vec3 fdx = dFdx(v_fragpos);
-    vec3 fdy = dFdy(v_fragpos);
+    vec3 fdx = dFdx(fs_in.fragpos);
+    vec3 fdy = dFdy(fs_in.fragpos);
 //    vec3 N = normalize(cross(fdx, fdy));
-    vec3 N = texture(u_normal_map, v_texcoord).rgb;
+    vec3 N = texture(u_normal_map, fs_in.texcoord).rgb;
 
-    float h = v_fragpos.y;
+    float h = fs_in.fragpos.y;
     vec4 real_height = vec4(h, h, h, h);
 
     const float height[4] = { 0, 0.2, 0.12, 0.14 };
@@ -293,13 +304,13 @@ void main()
 
     vec3 lerp_weights_norm = N * N;
 
-    vec3 splat_col = TexSample(u_splatmap0, v_fragpos, lerp_weights_norm).rgb;
-    splat_col = mix(splat_col, TexSample(u_splatmap1, v_fragpos, lerp_weights_norm).rgb, lerp_weights.x);
-    splat_col = mix(splat_col, TexSample(u_splatmap2, v_fragpos, lerp_weights_norm).rgb, lerp_weights.y);
-    splat_col = mix(splat_col, TexSample(u_splatmap3, v_fragpos, lerp_weights_norm).rgb, lerp_weights.z);
+    vec3 splat_col = TexSample(u_splatmap0, fs_in.fragpos, lerp_weights_norm).rgb;
+    splat_col = mix(splat_col, TexSample(u_splatmap1, fs_in.fragpos, lerp_weights_norm).rgb, lerp_weights.x);
+    splat_col = mix(splat_col, TexSample(u_splatmap2, fs_in.fragpos, lerp_weights_norm).rgb, lerp_weights.y);
+    splat_col = mix(splat_col, TexSample(u_splatmap3, fs_in.fragpos, lerp_weights_norm).rgb, lerp_weights.z);
 
     // N dot L
-    vec3 light_dir = normalize(u_light_dir);
+    vec3 light_dir = normalize(ubo_fs.light_dir);
     float n_dot_l = clamp(dot(N, light_dir), 0, 1);
 
     vec4 sky_col = vec4(0.48, 0.52, 0.6, 0.0);
@@ -310,7 +321,7 @@ void main()
     vec3 env_col = mix(sky_col * sky_overbright, sun_col * sub_overbright, n_dot_l).rgb;
 //    vec3 color = env_col * splat_col;
 
-//    gl_FragColor = vec4(color, 1.0);
+//    FragColor = vec4(color, 1.0);
 
 
 
@@ -320,9 +331,9 @@ void main()
     vec3 albedo     = splat_col;
     float metallic  = 0.5;
     float roughness = 0.5;
-    float ao        = texture(u_ao_map, v_texcoord).r;
+    float ao        = texture(u_ao_map, fs_in.texcoord).r;
 
-    vec3 V = normalize(u_cam_pos - v_fragpos);
+    vec3 V = normalize(ubo_fs.cam_pos - fs_in.fragpos);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -333,9 +344,9 @@ void main()
     const vec3 light_pos = vec3(-0.5, 1.5, 1.0);
     const vec3 light_col = vec3(40, 40, 40);
 
-    vec3 L = normalize(light_pos - v_fragpos);
+    vec3 L = normalize(light_pos - fs_in.fragpos);
     vec3 H = normalize(V + L);
-    float distance = length(light_pos - v_fragpos);
+    float distance = length(light_pos - fs_in.fragpos);
     float attenuation = 1.0 / (distance * distance);
     vec3 radiance = light_col * attenuation;
 
@@ -377,7 +388,7 @@ void main()
     // gamma correct
 //    color = pow(color, vec3(1.0/2.2));
 
-    gl_FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, 1.0);
 }
 
 )";
@@ -438,7 +449,7 @@ void SplatPbrRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
 
     // update uniforms
     pt0::ShaderUniforms vals;
-    vals.AddVar("u_light_dir", pt0::RenderVariant(sm::vec3(1, -1, 2)));
+    vals.AddVar("ubo_fs.light_dir", pt0::RenderVariant(sm::vec3(1, -1, 2)));
     vals.Bind(*shader);
 }
 
@@ -466,11 +477,12 @@ void SplatPbrRenderer::InitShader(const ur::Device& dev)
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, vs, _vs);
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, fs, _fs);
     auto shader = dev.CreateShaderProgram(_vs, _fs);
+    assert(shader);
 
-    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
-    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
-    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
-    shader->AddUniformUpdater(std::make_shared<pt0::CamPosUpdater>(*shader, "u_cam_pos"));
+    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, "ubo_vs.model"));
+    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, "ubo_vs.view"));
+    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, "ubo_vs.projection"));
+    shader->AddUniformUpdater(std::make_shared<pt0::CamPosUpdater>(*shader, "ubo_fs.cam_pos"));
 
     m_shaders.push_back(shader);
 }

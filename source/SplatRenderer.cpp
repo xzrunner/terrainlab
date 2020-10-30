@@ -22,43 +22,50 @@ namespace
 
 const char* vs = R"(
 
-attribute vec4 position;
-attribute vec2 texcoord;
+#version 330 core
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_model;
+layout (location = 0) in vec4 position;
+layout (location = 1) in vec2 texcoord;
 
-uniform vec2 u_inv_res;
+layout(std140) uniform UBO_VS
+{
+    mat4 projection;
+    mat4 view;
+    mat4 model;
+
+    vec2 inv_res;
+} ubo_vs;
 
 uniform sampler2D u_heightmap;
 
-varying float v_height;
+out VS_OUT {
+    float height;
 #ifdef BUILD_NORMAL_MAP
-varying vec2  v_texcoord;
+    vec2  texcoord;
 #endif // BUILD_NORMAL_MAP
-varying vec3  v_fragpos;
-varying vec3  v_normal;
+    vec3  frag_pos;
+    vec3  normal;
+} vs_out;
 
 vec3 ComputeNormalCentralDifference(vec2 position, float heightExaggeration)
 {
-    float leftHeight = texture(u_heightmap, position - vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
-    float rightHeight = texture(u_heightmap, position + vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
-    float bottomHeight = texture(u_heightmap, position - vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
-    float topHeight = texture(u_heightmap, position + vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
+    float leftHeight = texture(u_heightmap, position - vec2(1.0, 0.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float rightHeight = texture(u_heightmap, position + vec2(1.0, 0.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float bottomHeight = texture(u_heightmap, position - vec2(0.0, 1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float topHeight = texture(u_heightmap, position + vec2(0.0, 1.0) * ubo_vs.inv_res).r * heightExaggeration;
     return normalize(vec3(leftHeight - rightHeight, 2.0, bottomHeight - topHeight));
 }
 
 vec3 ComputeNormalSobelFilter(vec2 position, float heightExaggeration)
 {
-    float upperLeft = texture(u_heightmap, position + vec2(-1.0, 1.0) * u_inv_res).r * heightExaggeration;
-    float upperCenter = texture(u_heightmap, position + vec2(0.0, 1.0) * u_inv_res).r * heightExaggeration;
-    float upperRight = texture(u_heightmap, position + vec2(1.0, 1.0) * u_inv_res).r * heightExaggeration;
-    float left = texture(u_heightmap, position + vec2(-1.0, 0.0) * u_inv_res).r * heightExaggeration;
-    float right = texture(u_heightmap, position + vec2(1.0, 0.0) * u_inv_res).r * heightExaggeration;
-    float lowerLeft = texture(u_heightmap, position + vec2(-1.0, -1.0) * u_inv_res).r * heightExaggeration;
-    float lowerCenter = texture(u_heightmap, position + vec2(0.0, -1.0) * u_inv_res).r * heightExaggeration;
-    float lowerRight = texture(u_heightmap, position + vec2(1.0, -1.0) * u_inv_res).r * heightExaggeration;
+    float upperLeft = texture(u_heightmap, position + vec2(-1.0, 1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float upperCenter = texture(u_heightmap, position + vec2(0.0, 1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float upperRight = texture(u_heightmap, position + vec2(1.0, 1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float left = texture(u_heightmap, position + vec2(-1.0, 0.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float right = texture(u_heightmap, position + vec2(1.0, 0.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float lowerLeft = texture(u_heightmap, position + vec2(-1.0, -1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float lowerCenter = texture(u_heightmap, position + vec2(0.0, -1.0) * ubo_vs.inv_res).r * heightExaggeration;
+    float lowerRight = texture(u_heightmap, position + vec2(1.0, -1.0) * ubo_vs.inv_res).r * heightExaggeration;
 
     float x = upperRight + (2.0 * right) + lowerRight - upperLeft - (2.0 * left) - lowerLeft;
     float y = lowerLeft + (2.0 * lowerCenter) + lowerRight - upperLeft - (2.0 * upperCenter) - upperRight;
@@ -71,34 +78,41 @@ void main()
     const float h_scale = 0.2;
     //const float h_scale = 2;
 
-	v_height = texture2D(u_heightmap, texcoord).r;
+	vs_out.height = texture(u_heightmap, texcoord).r;
 
 	vec4 pos = position;
-	pos.y = v_height * h_scale;
-	gl_Position = u_projection * u_view * u_model * pos;
+	pos.y = vs_out.height * h_scale;
+	gl_Position = ubo_vs.projection * ubo_vs.view * ubo_vs.model * pos;
 
 #ifdef BUILD_NORMAL_MAP
-    v_texcoord = texcoord;
+    vs_out.texcoord = texcoord;
 #endif // BUILD_NORMAL_MAP
-    v_fragpos = vec3(u_model * pos);
+    vs_out.frag_pos = vec3(ubo_vs.model * pos);
 
-    v_normal = ComputeNormalSobelFilter(texcoord, 100.0);
+    vs_out.normal = ComputeNormalSobelFilter(texcoord, 100.0);
 }
 
 )";
 
 const char* fs = R"(
 
+#version 330 core
+
+out vec4 FragColor;
+
 #define MULTIPROJECT
 //#define TEX_NO_TILE
 
-uniform vec3 u_light_dir;
+layout(std140) uniform UBO_FS
+{
+    vec3 light_dir;
 
-uniform vec4 u_layer_height_scale;
-uniform vec4 u_layer_height_bias;
-uniform vec4 u_layer_slope_scale;
-uniform vec4 u_layer_slope_bias;
-uniform mat4 u_layer_distort;
+    vec4 layer_height_scale;
+    vec4 layer_height_bias;
+    vec4 layer_slope_scale;
+    vec4 layer_slope_bias;
+    mat4 layer_distort;
+} ubo_fs;
 
 uniform sampler2D u_noise_map;
 
@@ -109,15 +123,19 @@ uniform sampler2D u_splatmap3;
 
 #ifdef BUILD_NORMAL_MAP
 uniform sampler2D u_normal_map;
-varying vec2 v_texcoord;
 #endif // BUILD_NORMAL_MAP
 #ifdef BUILD_SHADOW_MAP
 uniform sampler2D u_shadow_map;
 #endif // BUILD_SHADOW_MAP
 
-varying float v_height;
-varying vec3  v_fragpos;
-varying vec3  v_normal;
+in VS_OUT {
+    float height;
+#ifdef BUILD_NORMAL_MAP
+    vec2  texcoord;
+#endif // BUILD_NORMAL_MAP
+    vec3  frag_pos;
+    vec3  normal;
+} fs_in;
 
 const float UV_SCALE = 32.0;
 
@@ -240,42 +258,42 @@ vec4 TexSampleMultiProj(sampler2D samp, in vec3 world_pos, in vec3 weights)
 
 void main()
 {
-    if (v_height == 0) {
-        gl_FragColor = vec4(0.05, 0.05, 0.95, 1.0);
+    if (fs_in.height == 0) {
+        FragColor = vec4(0.05, 0.05, 0.95, 1.0);
         return;
     }
 
 //#ifdef BUILD_NORMAL_MAP
 //    // fixme
-//    //vec3 N = texture2D(u_normal_map, v_texcoord).rgb;
-//    vec3 N = normalize(texture2D(u_normal_map, v_texcoord).rgb);
+//    //vec3 N = texture(u_normal_map, fs_in.texcoord).rgb;
+//    vec3 N = normalize(texture(u_normal_map, fs_in.texcoord).rgb);
 //#else
-//    vec3 fdx = dFdx(v_fragpos);
-//    vec3 fdy = dFdy(v_fragpos);
+//    vec3 fdx = dFdx(fs_in.frag_pos);
+//    vec3 fdy = dFdy(fs_in.frag_pos);
 //    vec3 N = normalize(cross(fdx, fdy));
 //#endif // BUILD_NORMAL_MAP
-    vec3 N = v_normal;
+    vec3 N = fs_in.normal;
 
 #ifdef TEX_NO_TILE
-    vec4 global_col = textureNoTile2(u_noise_map, UV_SCALE * v_fragpos.xz);
+    vec4 global_col = textureNoTile2(u_noise_map, UV_SCALE * fs_in.frag_pos.xz);
 #else
-    vec4 global_col = texture(u_noise_map, UV_SCALE * v_fragpos.xz);
+    vec4 global_col = texture(u_noise_map, UV_SCALE * fs_in.frag_pos.xz);
 #endif // TEX_NO_TILE
-    vec4 distortion = u_layer_distort * (global_col - 0.5) * 0;
+    vec4 distortion = ubo_fs.layer_distort * (global_col - 0.5) * 0;
 
-    vec4 real_height = v_height * 0.5 + 0.5 + distortion * 0.03;
-    vec4 lerp_weights = clamp(real_height * u_layer_height_scale + u_layer_height_bias, 0.0, 1.0);
-    vec4 lerp_weights2 = clamp((distortion.w + length(vec2(N.x, N.z))) * u_layer_slope_scale + u_layer_slope_bias, 0.0, 1.0);
+    vec4 real_height = fs_in.height * 0.5 + 0.5 + distortion * 0.03;
+    vec4 lerp_weights = clamp(real_height * ubo_fs.layer_height_scale + ubo_fs.layer_height_bias, 0.0, 1.0);
+    vec4 lerp_weights2 = clamp((distortion.w + length(vec2(N.x, N.z))) * ubo_fs.layer_slope_scale + ubo_fs.layer_slope_bias, 0.0, 1.0);
     lerp_weights = lerp_weights * lerp_weights2;
 
 #ifdef MULTIPROJECT
     vec3 lerp_weights_norm = N * N;
-    vec3 splat_col = TexSampleMultiProj(u_splatmap0, v_fragpos, lerp_weights_norm).rgb;
-    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap1, v_fragpos, lerp_weights_norm).rgb, lerp_weights.x);
-    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap2, v_fragpos, lerp_weights_norm).rgb, lerp_weights.y);
-    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap3, v_fragpos, lerp_weights_norm).rgb, lerp_weights.z);
+    vec3 splat_col = TexSampleMultiProj(u_splatmap0, fs_in.frag_pos, lerp_weights_norm).rgb;
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap1, fs_in.frag_pos, lerp_weights_norm).rgb, lerp_weights.x);
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap2, fs_in.frag_pos, lerp_weights_norm).rgb, lerp_weights.y);
+    splat_col = mix(splat_col, TexSampleMultiProj(u_splatmap3, fs_in.frag_pos, lerp_weights_norm).rgb, lerp_weights.z);
 #else
-    vec2 tex_coord = UV_SCALE * v_fragpos.xz;
+    vec2 tex_coord = UV_SCALE * fs_in.frag_pos.xz;
     vec3 splat_col = texture(u_splatmap0, tex_coord).rgb;
     splat_col = lerp(color, texture(u_splatmap1, tex_coord).rgb, lerp_weights.x);
     splat_col = lerp(color, texture(u_splatmap2, tex_coord).rgb, lerp_weights.y);
@@ -283,7 +301,7 @@ void main()
 #endif // MULTIPROJECT
 
     // N dot L
-    vec3 light_dir = normalize(u_light_dir);
+    vec3 light_dir = normalize(ubo_fs.light_dir);
     float n_dot_l = clamp(dot(N, light_dir), 0, 1);
 
     vec4 sky_col = vec4(0.48, 0.52, 0.6, 0.0);
@@ -292,7 +310,7 @@ void main()
     float sub_overbright = 1.6;
 
 #ifdef BUILD_SHADOW_MAP
-    vec3 shadow = texture2D(u_shadow_map, v_texcoord).rgb;
+    vec3 shadow = texture(u_shadow_map, fs_in.texcoord).rgb;
 #endif
 
     vec3 env_col = mix(sky_col * sky_overbright, sun_col * sub_overbright, n_dot_l).rgb;
@@ -302,7 +320,7 @@ void main()
     vec3 color = env_col * splat_col;
 #endif // BUILD_SHADOW_MAP
 
-    gl_FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, 1.0);
 }
 
 )";
@@ -373,13 +391,13 @@ void SplatRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
     // update uniforms
     pt0::ShaderUniforms vals;
     sm::vec2 inv_res(1.0f / m_height_map->GetWidth(), 1.0f / m_height_map->GetHeight());
-    vals.AddVar("u_inv_res",            pt0::RenderVariant(inv_res));
-    vals.AddVar("u_light_dir",          pt0::RenderVariant(m_light_dir));
-    vals.AddVar("u_layer_height_scale", pt0::RenderVariant(m_layer_height_scale));
-    vals.AddVar("u_layer_height_bias",  pt0::RenderVariant(m_layer_height_bias));
-    vals.AddVar("u_layer_slope_scale",  pt0::RenderVariant(m_layer_slope_scale));
-    vals.AddVar("u_layer_slope_bias",   pt0::RenderVariant(m_layer_slope_bias));
-    vals.AddVar("u_layer_distort",      pt0::RenderVariant(m_layer_distort));
+    vals.AddVar("ubo_vs.inv_res",            pt0::RenderVariant(inv_res));
+    vals.AddVar("ubo_fs.light_dir",          pt0::RenderVariant(m_light_dir));
+    vals.AddVar("ubo_fs.layer_height_scale", pt0::RenderVariant(m_layer_height_scale));
+    vals.AddVar("ubo_fs.layer_height_bias",  pt0::RenderVariant(m_layer_height_bias));
+    vals.AddVar("ubo_fs.layer_slope_scale",  pt0::RenderVariant(m_layer_slope_scale));
+    vals.AddVar("ubo_fs.layer_slope_bias",   pt0::RenderVariant(m_layer_slope_bias));
+    vals.AddVar("ubo_fs.layer_distort",      pt0::RenderVariant(m_layer_distort));
     vals.Bind(*shader);
 }
 
@@ -434,19 +452,18 @@ void SplatRenderer::InitShader(const ur::Device& dev)
     std::string _vs(vs);
     std::string _fs(fs);
 #ifdef BUILD_NORMAL_MAP
-    _vs = "#version 130\n#define BUILD_NORMAL_MAP\n" + _vs;
-    _fs = "#version 130\n#define BUILD_NORMAL_MAP\n" + _fs;
-#else
-    _vs = "#version 130\n" + _vs;
-    _fs = "#version 130\n" + _fs;
+    _vs = "#define BUILD_NORMAL_MAP\n" + _vs;
+    _fs = "#define BUILD_NORMAL_MAP\n" + _fs;
 #endif // BUILD_NORMAL_MAP
     std::vector<unsigned int> __vs, __fs;
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::VertexShader, _vs, __vs);
     shadertrans::ShaderTrans::GLSL2SpirV(shadertrans::ShaderStage::PixelShader, _fs, __fs);
     auto shader = dev.CreateShaderProgram(__vs, __fs);
-    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, rp::MODEL_MAT_NAME));
-    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, rp::VIEW_MAT_NAME));
-    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, rp::PROJ_MAT_NAME));
+    assert(shader);
+
+    shader->AddUniformUpdater(std::make_shared<pt0::ModelMatUpdater>(*shader, "ubo_vs.model"));
+    shader->AddUniformUpdater(std::make_shared<pt3::ViewMatUpdater>(*shader, "ubo_vs.view"));
+    shader->AddUniformUpdater(std::make_shared<pt3::ProjectMatUpdater>(*shader, "ubo_vs.projection"));
     m_shaders.push_back(shader);
 
     m_va->SetVertexBufferAttrs({
