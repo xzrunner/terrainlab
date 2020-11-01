@@ -429,7 +429,7 @@ void SplatRenderer::BeforeDraw(ur::Context& ctx) const
 
 void SplatRenderer::InitTextuers(const ur::Device& dev)
 {
-    const std::string filedir = "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\";
+    const std::string filedir = "assets/textures/terrain/";
     const int mipmap_levels = 32;
 
     auto noise_path = filedir + "fractalnoise.jpg";
