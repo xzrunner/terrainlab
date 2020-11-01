@@ -6,7 +6,9 @@
 // generator
 //////////////////////////////////////////////////////////////////////////
 
-#define NODES_GROUP_NAME Generator
+// value
+
+#define NODES_GROUP_NAME Generator-Value
 
 #define PARM_NODE_CLASS Color
 #define PARM_NODE_NAME color
@@ -19,6 +21,12 @@
 #define PARM_NODE_CLASS Gradient
 #define PARM_NODE_NAME gradient
 #include EXE_FILEPATH
+
+#undef NODES_GROUP_NAME
+
+// input
+
+#define NODES_GROUP_NAME Generator-Input
 
 #define PARM_NODE_CLASS NoiseBrush
 #define PARM_NODE_NAME noise_brush
@@ -42,6 +50,12 @@
 #define PARM_NODE_NAME layout_gen
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+// iteration
+
+#define NODES_GROUP_NAME Generator-Iteration
+
 #define PARM_NODE_CLASS FaultFractal
 #define PARM_NODE_NAME fault_fractal
 #include EXE_FILEPATH
@@ -49,6 +63,12 @@
 #define PARM_NODE_CLASS PlasmaFractal
 #define PARM_NODE_NAME plasma_fractal
 #include EXE_FILEPATH
+
+#undef NODES_GROUP_NAME
+
+// noise
+
+#define NODES_GROUP_NAME Generator-Noise
 
 #define PARM_NODE_CLASS BasicNoise
 #define PARM_NODE_NAME basic_noise
@@ -89,6 +109,12 @@
 #define PARM_NODE_CLASS Voronoi
 #define PARM_NODE_NAME voronoi
 #include EXE_FILEPATH
+
+#undef NODES_GROUP_NAME
+
+// geography
+
+#define NODES_GROUP_NAME Generator-Geography
 
 #define PARM_NODE_CLASS Archipelago
 #define PARM_NODE_NAME archipelago
