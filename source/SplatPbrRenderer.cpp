@@ -460,10 +460,10 @@ void SplatPbrRenderer::Clear()
 
 void SplatPbrRenderer::InitTextuers(const ur::Device& dev)
 {
-    m_splat_map[0] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\dark_dirt.jpg");
-    m_splat_map[1] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\rock.jpg");
-    m_splat_map[2] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\grass.jpg");
-    m_splat_map[3] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\scape\\Terrain\\snow.png");
+    m_splat_map[0] = model::TextureLoader::LoadFromFile(dev, "assets/texture/terrain/dark_dirt.jpg");
+    m_splat_map[1] = model::TextureLoader::LoadFromFile(dev, "assets/texture/terrain/rock.jpg");
+    m_splat_map[2] = model::TextureLoader::LoadFromFile(dev, "assets/texture/terrain/grass.jpg");
+    m_splat_map[3] = model::TextureLoader::LoadFromFile(dev, "assets/texture/terrain/snow.png");
 }
 
 void SplatPbrRenderer::InitShader(const ur::Device& dev)
