@@ -7,6 +7,7 @@
 #include "terrainlab/Clipmap2dRenderer.h"
 #include "terrainlab/Clipmap3dRenderer.h"
 #include "terrainlab/VTexRenderer.h"
+#include "terrainlab/TerrainRenderer.h"
 
 #include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
@@ -81,6 +82,8 @@ private:
     Clipmap2dRenderer  m_clip2_rd;
     Clipmap3dRenderer  m_clip3_rd;
     VTexRenderer       m_vtex_rd;
+
+    TerrainRenderer m_terr_rd;
 
     std::array<ee0::EditOPPtr, OP_MAX_NUM> m_ops;
 

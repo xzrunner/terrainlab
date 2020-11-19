@@ -130,6 +130,9 @@
     <ClInclude Include="..\..\..\include\terrainlab\ClipmapCamOP.h">
       <Filter>view\preview\operator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\terrainlab\TerrainRenderer.h">
+      <Filter>view\preview\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
@@ -189,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\ClipmapCamOP.cpp">
       <Filter>view\preview\operator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\TerrainRenderer.cpp">
+      <Filter>view\preview\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

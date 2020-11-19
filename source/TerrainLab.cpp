@@ -3,10 +3,13 @@
 #include "terrainlab/Node.h"
 #include "terrainlab/RegistNodes.h"
 
+#include <blueprint/Blueprint.h>
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
+#include <renderlab/RenderLab.h>
 
 #include <terraingraph/TerrainGraph.h>
+#include <ns/RegistCallback.h>
 
 namespace bp
 {
@@ -22,6 +25,9 @@ CU_SINGLETON_DEFINITION(TerrainLab);
 TerrainLab::TerrainLab()
 {
 	terraingraph::TerrainGraph::Instance();
+	ns::RegistCallback::Init();
+	bp::Blueprint::Instance();
+	renderlab::RenderLab::Instance();
 
     RegistRTTR();
 

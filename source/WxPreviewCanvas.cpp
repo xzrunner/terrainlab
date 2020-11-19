@@ -32,6 +32,7 @@
 #include <tessellation/Painter.h>
 #include <terraingraph/Device.h>
 #include <terraingraph/device/TemplateBrush.h>
+#include <heightfield/HeightField.h>
 
 namespace
 {
@@ -50,10 +51,11 @@ WxPreviewCanvas::WxPreviewCanvas(const ur::Device& dev, ee0::WxStagePage* stage,
     , m_overlay_rd(dev)
     , m_full3_rd(dev)
     , m_clip3_rd(dev)
+    , m_terr_rd(dev)
 {
-    //m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>(dev);
-    m_hf_rd = std::make_shared<SplatRenderer>(dev);
-    //m_hf_rd = std::make_shared<SplatPbrRenderer>();
+    m_hf_rd = std::make_shared<rp::HeightfieldGrayRenderer>(dev);
+    //m_hf_rd = std::make_shared<SplatRenderer>(dev);
+    //m_hf_rd = std::make_shared<OverlayRenderer>(dev);
 
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_HEIGHTMAP_CHANGED, this);
@@ -358,16 +360,22 @@ void WxPreviewCanvas::DrawSelected(tess::Painter& pt, const sm::mat4& cam_mat,
     auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
 
     auto hf = device->GetHeightField();
-    auto bmp = device->GetBitmap();
-    auto mask = device->GetMask();
-    if (hf && bmp) {
-        m_overlay_rd.Draw(m_dev, ctx, *wc);
-    } else if (hf) {
-        m_hf_rd->Draw(m_dev, ctx, *wc);
-    } else if (bmp) {
-        m_img_rd.Draw(m_dev, ctx);
-    } else if (mask) {
-        m_img_rd.Draw(m_dev, ctx);
+    //auto bmp = device->GetBitmap();
+    //auto mask = device->GetMask();
+    //if (hf && bmp) {
+    //    m_overlay_rd.Draw(m_dev, ctx, *wc);
+    //} else if (hf) {
+    //    m_hf_rd->Draw(m_dev, ctx, *wc);
+    //} else if (bmp) {
+    //    m_img_rd.Draw(m_dev, ctx);
+    //} else if (mask) {
+    //    m_img_rd.Draw(m_dev, ctx);
+    //}
+
+    if (hf && hf->GetHeightmap(m_dev))
+    {
+        ctx.SetTexture(0, hf->GetHeightmap(m_dev));
+        m_terr_rd.Draw(m_dev, ctx, GetCamera());
     }
 }
 
@@ -386,6 +394,7 @@ void WxPreviewCanvas::SetupRenderer()
     if (hf && bmp) {
         m_overlay_rd.Setup(m_dev, ctx, hf, bmp);
     } else if (hf) {
+        m_terr_rd.SetHeightmap(hf->GetHeightmap(m_dev));
         m_hf_rd->Setup(m_dev, ctx, hf);
     } else if (bmp) {
         m_img_rd.Setup(m_dev, bmp);
